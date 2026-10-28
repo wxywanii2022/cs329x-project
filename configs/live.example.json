@@ -1,0 +1,17 @@
+{
+  "seed": 329,
+  "mode": "research",
+  "split": "development",
+  "profiles": ["novice_a"],
+  "pairs": ["briefs_01"],
+  "replicates": 1,
+  "orientations": ["AB", "BA"],
+  "require_distinct_families": true,
+  "budget": {"max_coaching_turns": 2, "max_coaching_tokens": 16000, "max_output_tokens": 1500, "max_context_bytes": 200000, "transport_attempts": 3},
+  "models": {
+    "learner": {"adapter":"command","model_id":"REPLACE_WITH_EXACT_LEARNER_ID","family":"REPLACE_FAMILY_A","command":["python","-m","adaptive_tutor.adapters.http_bridge"],"supports_seed":false},
+    "assessment": {"adapter":"command","model_id":"REPLACE_WITH_FROZEN_RQ1_MODEL_ID","family":"REPLACE_FAMILY_B","command":["python","-m","adaptive_tutor.adapters.http_bridge"],"supports_seed":false},
+    "coach": {"adapter":"command","model_id":"REPLACE_WITH_EXACT_COACH_ID","family":"REPLACE_FAMILY_B","command":["python","-m","adaptive_tutor.adapters.http_bridge"],"supports_seed":false},
+    "evaluator": {"adapter":"command","model_id":"REPLACE_WITH_EXACT_EVALUATOR_ID","family":"REPLACE_FAMILY_C","command":["python","-m","adaptive_tutor.adapters.http_bridge"],"supports_seed":false}
+  }
+}

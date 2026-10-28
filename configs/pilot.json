@@ -1,0 +1,16 @@
+{
+  "seed": 329,
+  "mode": "demo",
+  "split": "development",
+  "profiles": ["novice_a", "novice_b", "intermediate_a", "intermediate_b", "expert_a", "expert_b"],
+  "pairs": ["briefs_01", "accurate_01", "no_trigger_01", "incomplete_01"],
+  "replicates": 2,
+  "orientations": ["AB", "BA"],
+  "budget": {"max_coaching_turns": 2, "max_coaching_tokens": 12000, "max_output_tokens": 700, "max_context_bytes": 200000, "transport_attempts": 3},
+  "models": {
+    "learner": {"adapter": "mock", "model_id": "offline-learner-v1", "family": "mock", "supports_seed": true},
+    "assessment": {"adapter": "mock", "model_id": "offline-assessment-v1", "family": "mock", "supports_seed": true},
+    "coach": {"adapter": "mock", "model_id": "offline-coach-v1", "family": "mock", "supports_seed": true},
+    "evaluator": {"adapter": "mock", "model_id": "offline-evaluator-v1", "family": "mock", "supports_seed": true}
+  }
+}
