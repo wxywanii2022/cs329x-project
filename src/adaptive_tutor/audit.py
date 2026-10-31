@@ -30,7 +30,13 @@ def audit_run(output: Path) -> dict:
         if role == "learner":
             require(set(payload) == {"initial_background", "observed_history", "task", "stage"}, "Learner payload leak")
         elif role == "assessment":
-            require(set(payload) == {"task", "messages", "opportunities", "rubric_version"}, "Assessment payload leak")
+            from .rq1.core import validate_payload
+            from .assessment import assessment_payload
+            validate_payload(payload)
+            # Compare with a fresh prefix of the original task, not merely the
+            # model's quoted IDs. Oracle status and future text must be absent.
+            pre = read_json(output / "blocks" / event["block_id"] / "pre.json")["record"]
+            require(payload == assessment_payload(pre, payload["behavior"]), "Assessment prefix mismatch")
         elif role == "coach":
             condition = event["branch_id"]
             allowed = {"task", "messages", "exercise_bank"}
@@ -42,7 +48,8 @@ def audit_run(output: Path) -> dict:
         else:
             require(set(payload) == {"blind_record_id", "task", "messages", "opportunities", "answer_key", "final_artifact", "rubric_version"},
                     "Evaluator payload leak")
-        require(set(payload["task"]) == {"instructions", "sources", "requirements"}, "Private task metadata leaked")
+        if role != "assessment":
+            require(set(payload["task"]) == {"instructions", "sources", "requirements"}, "Private task metadata leaked")
     count = 0
     for block in manifest["blocks"]:
         if not block.get("snapshot_hash"):

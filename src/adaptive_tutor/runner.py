@@ -28,7 +28,7 @@ def build_bundle(config: ExperimentConfig) -> dict:
             require(tasks[pair, form]["split"] == config.split, "Task split does not match experiment split")
             selected_tasks.append(tasks[pair, form])
     package = Path(__file__).parent
-    files = sorted([*package.rglob("*.py"), *package.glob("prompts/*.txt")])
+    files = sorted([*package.rglob("*.py"), *package.glob("prompts/*.txt"), *package.glob("rq1/rubrics/*.md")])
     return {"config": asdict(config), "profiles": [asdict(profiles[p]) for p in config.profiles],
             "tasks": selected_tasks, "exercise_bank": bank,
             "implementation_hashes": {p.relative_to(package).as_posix(): digest(p.read_text(encoding="utf-8")) for p in files}}

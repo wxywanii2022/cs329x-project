@@ -10,3 +10,6 @@ outputs/
 .env
 .env.*
 !.env.example
+# Local model settings and human-reference/source records
+/configs/*.local.json
+/private/

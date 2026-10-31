@@ -11,9 +11,10 @@ dependencies = []
 
 [project.scripts]
 tutor-sim = "adaptive_tutor.cli:main"
+tutor-assess = "adaptive_tutor.rq1.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-adaptive_tutor = ["data/*.json", "prompts/*.txt"]
+adaptive_tutor = ["data/*.json", "prompts/*.txt", "rq1/rubrics/*.md"]
