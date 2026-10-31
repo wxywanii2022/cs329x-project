@@ -6,7 +6,7 @@
 | File | Contents |
 | --- | --- |
 | `items.jsonl` | 60 label-free inputs, structured `messages` through the target user turn (SHA-256 `d550b6dc830361d76598c01fa4133822f17be04a8099abb0efeccf5ffde84fc9`) |
-| `reference_A.csv` | Annotator A, 60/60 labeled. **Model-assisted** (Codex first pass plus model re-check); user review still pending. Use `--reference-provenance model-assisted` |
+| `reference_A.csv` | Annotator A, 60/60 labeled by the annotator. Use `--reference-provenance independent-human` |
 | `reference_B.csv` | Annotator B, 59/60 labeled (M1-053 blank = unfinished, not N/A) |
 | `agreement.A-B.json` | Pre-adjudication A vs B: 59 pairs, raw 0.780, κ 0.590. Matches the workbook Summary rows 110–138 |
 
@@ -15,13 +15,13 @@
 - Sampling: 12 sessions per agent × 5 agents, 3 per behavior per agent, one random valid user turn per session (seeds 329204/329205/329206). Session-held-out from the 20 pilots. No screening by expected label, so many items are legitimately N/A.
 - Evidence: released extracted-log records through the target, in source order, empty and `/` user records removed, with the same deterministic redaction used for the annotators' packets (including the M1-015 credential fix). The converter re-renders every item and asserts it is byte-identical to the packet A and B labeled.
 - Each source record's `type` (e.g. `tool_call`, `status`) is not carried into `messages`; only role and content are. `visible_instructions` is empty because the release has no original task text.
+- Annotator A confirmed labeling Main 1 personally. Workbook README notes that describe the A labels as Codex-generated are an erroneous log and do not describe these labels.
 - `participant_id` is absent: participant identity is unknown, so this set supports only session-level held-out claims, not participant-disjoint ones.
 
 ## Not done yet
 
 1. **Adjudication.** 13 A/B disagreements plus the blank M1-053 need discussion and an adjudicated label, saved as a separate `reference_adjudicated.csv`. Disagreements: M1-005, 008, 016, 021, 026, 030, 031, 034, 040, 044, 047, 048, 055.
-2. **A review.** A is model-assisted, so B is the only independent human reference until A is reviewed by a person.
-3. **Model run.** No real assessor has labeled these items.
+2. **Model run.** No real assessor has labeled these items.
 
 ## Rules for using this data
 
@@ -34,5 +34,5 @@ tutor-assess run --items data/rq1/main60/items.jsonl --config configs/team.local
 tutor-assess evaluate --run outputs/main60-<model>-v1 --reference data/rq1/main60/reference_B.csv \
   --reference-provenance independent-human --save outputs/main60-<model>-v1/vs-B.json
 tutor-assess evaluate --run outputs/main60-<model>-v1 --reference data/rq1/main60/reference_A.csv \
-  --reference-provenance model-assisted --save outputs/main60-<model>-v1/vs-A.json
+  --reference-provenance independent-human --save outputs/main60-<model>-v1/vs-A.json
 ```
