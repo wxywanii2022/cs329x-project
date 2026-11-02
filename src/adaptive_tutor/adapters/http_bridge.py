@@ -34,7 +34,8 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
 
 def main() -> int:
     try:
-        request = json.load(sys.stdin)
+        # Bytes, not the locale codec: the contract is UTF-8 on every OS.
+        request = json.load(sys.stdin.buffer)
         prefix = "TUTOR_" + request["role"].upper()
         endpoint, key = os.environ[prefix + "_URL"], os.environ[prefix + "_API_KEY"]
         parsed = urllib.parse.urlsplit(endpoint)

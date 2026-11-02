@@ -149,7 +149,7 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual((result["failed"], result["labels"]), (4, {}))
         with patch.object(MockAdapter, "generate", side_effect=AssertionError("Retry")):
             run(ITEMS, CONFIG, self.output)
-        with (self.output / "labels.csv").open() as f:
+        with (self.output / "labels.csv").open(encoding="utf-8") as f:
             self.assertTrue(all(r["label"] == "" for r in csv.DictReader(f)))
         report = evaluate(self.output, ROOT / "examples/assessment_reference.synthetic.csv")
         self.assertEqual(report["overall"]["n"], 0)
@@ -163,7 +163,7 @@ class PipelineTests(unittest.TestCase):
             return response
         with patch.object(MockAdapter, "generate", new=formula):
             run(ITEMS, CONFIG, self.output)
-        with (self.output / "labels.csv").open() as f:
+        with (self.output / "labels.csv").open(encoding="utf-8") as f:
             self.assertTrue(all(row["reason"] == "'=1+1" for row in csv.DictReader(f)))
         _, rows = audit_run(self.output)
         self.assertTrue(all(row["annotation"]["reason"] == "=1+1" for row in rows))
@@ -174,11 +174,11 @@ class PipelineTests(unittest.TestCase):
         path = Path(self.tmp.name) / "changed.json"; write_json(path, changed)
         with self.assertRaises(ValidationError): run(ITEMS, path, self.output)
         journal = self.output / "events.jsonl"
-        journal.write_text(journal.read_text().replace("three bullets", "BAD_CHANGE", 1))
+        journal.write_text(journal.read_text(encoding="utf-8").replace("three bullets", "BAD_CHANGE", 1), encoding="utf-8")
         with self.assertRaises(ValidationError): audit_run(self.output)
 
     def test_reference_not_accepted_as_input_metadata(self):
-        raw = json.loads(ITEMS.read_text().splitlines()[0]); raw["label"] = 2
+        raw = json.loads(ITEMS.read_text(encoding="utf-8").splitlines()[0]); raw["label"] = 2
         path = Path(self.tmp.name) / "leaky.jsonl"; path.write_text(json.dumps(raw) + "\n")
         with self.assertRaises(ValidationError): load_items(path)
 
