@@ -71,7 +71,7 @@ def convert(research, out):
 def write_labels(workbook, ids, out):
     import openpyxl
     wb = openpyxl.load_workbook(workbook, read_only=True, data_only=True)
-    counts = {}
+    counts, found = {}, {}
     for sheet, name in (("Annotator_A", "reference_A.csv"), ("Annotator_B", "reference_B.csv")):
         labels = {}
         for row in wb[sheet].iter_rows(min_row=5, values_only=True):
@@ -87,6 +87,27 @@ def write_labels(workbook, ids, out):
             for key in sorted(labels):
                 writer.writerow([key, *labels[key]])
         counts[sheet] = sum(v[1] != "" for v in labels.values())
+        found[sheet] = labels
+    # Final reference: the A/B label where they agree, otherwise Compare's adjudicated_label.
+    final = {}
+    for row in wb["Compare"].iter_rows(min_row=5, values_only=True):
+        if row and row[0] in ids:
+            (behavior, a), (_, b) = found["Annotator_A"][row[0]], found["Annotator_B"][row[0]]
+            value = row[5]
+            adjudicated = "" if value is None or str(value).strip() == "" else (
+                "N/A" if str(value).strip() == "N/A" else str(int(float(value))))
+            if a and a == b:
+                assert adjudicated in {"", a}, f"{row[0]}: adjudication contradicts A/B agreement"
+                final[row[0]] = (behavior, a, "agreed")
+            elif adjudicated:
+                final[row[0]] = (behavior, adjudicated, "adjudicated")
+    if final:
+        assert set(final) == ids, f"Compare: unresolved items {sorted(ids - set(final))}"
+        with (out / "reference_adjudicated.csv").open("w", encoding="utf-8", newline="") as f:
+            writer = csv.writer(f); writer.writerow(["item_id", "behavior", "label", "source"])
+            for key in sorted(final):
+                writer.writerow([key, *final[key]])
+        counts["adjudicated"] = sum(v[2] == "adjudicated" for v in final.values())
     return counts
 
 
