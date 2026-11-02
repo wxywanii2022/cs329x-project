@@ -64,7 +64,7 @@ python -m unittest discover -s tests -v
 
 代码、输入、规则或模型参数变化后，必须使用新 output 目录。不要覆盖先前的 pilot、A/B 草稿或裁决。
 
-**真实标注数据（Main 1，60 条）** 已转换到 `data/rq1/main60/`：输入、A/B 原始标签、A–B 裁决前一致性和使用限制见 [该目录 README](../data/rq1/main60/README.md)。这些标签只用于评估，不能用于训练或调 prompt。
+**真实标注数据（Main 1，60 条）** 已转换到 `data/rq1/main60/`：输入、A/B 原始标签、最终裁决标签（`reference_adjudicated.csv`）、一致性和使用限制见 [该目录 README](../data/rq1/main60/README.md)。这些标签只用于评估，不能用于训练或调 prompt。
 
 ## 4. 输入格式和证据边界
 
