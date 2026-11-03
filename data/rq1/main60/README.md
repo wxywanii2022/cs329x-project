@@ -51,6 +51,8 @@ The 13 A/B disagreements and the blank M1-053 were adjudicated under frozen v0.2
 
 Report the model against the final reference and against A and B separately.
 
+Runs made before the evidence-quote fix (exact substring only) can be re-checked offline: add `--revalidate-failures` to `evaluate`. Report both the plain and the revalidated numbers, with coverage (completed/60).
+
 ```bash
 tutor-assess run --items data/rq1/main60/items.jsonl --config configs/team.local.json \
   --output outputs/main60-<model>-v1

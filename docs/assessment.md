@@ -114,7 +114,7 @@ python -m unittest discover -s tests -v
 }
 ```
 
-校验范围：行为匹配、类型、标签/机会/N/A 原因一致、置信度枚举、引用 ID 在可见前缀内、quote 是原文子串。**这些是结构与证据存在性校验，不保证语义判断正确。** 语义仍需独立人工校准。
+校验范围：行为匹配、类型、标签/机会/N/A 原因一致、置信度枚举、引用 ID 在可见前缀内、quote 是原文子串（比较前双方都统一空白/换行、大小写、引号字符和 Unicode 兼容形式，因为模型序列化 JSON 时常改动这些；改动字词仍判为伪造）。**这些是结构与证据存在性校验，不保证语义判断正确。** 语义仍需独立人工校准。
 
 非法 JSON、模型 ID 不匹配、超限、伪造/越界引用等记录为 failed，不记成 N/A，不通过重新生成挑一个更方便的标签。可解析的适配器响应（包括不合格的 annotation）、usage 和失败原因保留在 journal。如果适配器连外层 JSON envelope 都未返回，程序只记录失败；不会盲目复制可能含密钥的 stdout/stderr，也无法凭空补出 usage。Reason 应简短、转述身份信息，不能包含个人名、账号或路径。
 
@@ -207,6 +207,8 @@ tutor-assess evaluate --run outputs/rq1-run \
 Reference CSV 最少两列 `item_id,label`。0/1/2/N/A 是有效标签；空白是未完成，不自动补 N/A。额外人工说明列不会进入模型。Reference 可是 run 的子集，报告会列出缺参考行、空白、失败和实际配对数量。
 
 指标：raw agreement、unweighted Cohen's kappa、四类混淆矩阵、按行为分组、disagreement 列表。False-missed rate 的分母明确为成功配对中 reference 为 1/2/N/A 的数量，分子为其中模型预测 0 的数量。失败单独报告，不从失败中“补出”好看的标签。
+
+`evaluate --revalidate-failures` 用当前校验器重新检查 journal 中失败调用已记录的原始响应（例如修正引用匹配之后），不调用模型、不改 journal。通过的条目列在 `revalidated_failures`，其余仍是失败。这是看到结果后才放宽的校验，报告时要同时给出不加该参数的结果。
 
 `--reference-provenance` 是调用者声明，代码无法证明独立性。我们现有 P2-A 和新增 60 条 A 有模型辅助，不能声称它们是独立 human-only reference。原 20 条是 development/cross-version 探索性材料，不能当 held-out test。后续人工审核也不会消除原来的模型辅助来源。
 

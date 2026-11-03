@@ -6,7 +6,7 @@ import json
 import csv
 from ..schema import Budget, ModelSpec, ValidationError, keys, require, string
 from ..storage import Journal, RunLock, digest, read_json, write_json, canonical
-from ..adapters.base import Gateway, BudgetExceeded, RecordedFailure
+from ..adapters.base import Gateway, BudgetExceeded, RecordedFailure, check_response
 from ..adapters.command import TransportError
 from .core import prepare_payload, rubric_prompt, validate_annotation
 
@@ -110,14 +110,16 @@ def run(items_path, config_path, output, split="development", development_path=N
         return export_run(output)
 
 
-def audit_run(output):
+def audit_run(output, revalidate=False):
+    """revalidate=True re-checks recorded responses of failed calls with the current validator
+    (e.g. after a validator fix); no model is called and the journal is not modified."""
     output = Path(output)
     frozen = read_json(output / "frozen_inputs.json")
     events = Journal.read(output / "events.jsonl")
     require(all(e["config_hash"] == digest(frozen) for e in events), "Configuration hash mismatch")
     by_call = {"rq1/" + digest(x["item_id"]): x for x in frozen["items"]}
     results = {}
-    call_results, failures = {}, set()
+    call_results, failures, requests = {}, {}, {}
     for event in events:
         if event["kind"] == "call_attempt":
             request = event["request"]
@@ -125,10 +127,11 @@ def audit_run(output):
             item = by_call[event["call_id"]]
             require(request["payload"] == item["payload"], "Inference evidence changed")
             require(request["system_prompt"] == frozen["system_prompt"], "Inference rubric changed")
+            requests[event["call_id"]] = request
         elif event["kind"] == "call_result":
             call_results[event["call_id"]] = event
         elif event["kind"] == "call_failure":
-            failures.add(event["call_id"])
+            failures[event["call_id"]] = event
         elif event["kind"] == "assessment_item":
             require(event["item_id"] not in results, "Duplicate item outcome")
             results[event["item_id"]] = event["result"]
@@ -143,6 +146,16 @@ def audit_run(output):
             require(call_id in call_results and result["annotation"] == call_results[call_id]["response"]["output"], "Result differs from provider output")
         else:
             require(result["status"] == "failed" and "annotation" not in result and call_id in failures, "Failure must not become N/A")
+            response = failures[call_id].get("response")
+            if revalidate and response is not None:
+                try:
+                    annotation, usage = check_response(response, requests[call_id],
+                                                       lambda x: validate_annotation(x, item["payload"]))
+                except (ValidationError, TypeError, KeyError):
+                    continue
+                results[item["item_id"]] = {**{k: v for k, v in result.items() if k != "error"},
+                                            "status": "complete", "annotation": annotation, "usage": usage,
+                                            "revalidated_from_error": result["error"]}
     ordered = [results[x["item_id"]] for x in frozen["items"] if x["item_id"] in results]
     return frozen, ordered
 

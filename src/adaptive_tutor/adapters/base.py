@@ -22,6 +22,25 @@ class RecordedFailure(RuntimeError):
     pass
 
 
+def check_response(response, request, validator, total_token_allowance=None):
+    """Every acceptance check applied to a provider response, also used to re-check recorded ones."""
+    keys(response, {"output", "usage", "provider_request_id", "model_id", "tool_calls"})
+    keys(response["usage"], {"input_tokens", "output_tokens", "estimated"})
+    for name in ("input_tokens", "output_tokens"):
+        integer(response["usage"][name], name)
+    require(type(response["usage"]["estimated"]) is bool, "estimated must be boolean")
+    string(response["provider_request_id"], "provider_request_id")
+    require(response["model_id"] == request["model"]["model_id"], "Adapter returned a different model ID")
+    require(response["tool_calls"] == [], "Protocol v1 disables model tools")
+    output = validator(response["output"])
+    usage = response["usage"]
+    require(usage["output_tokens"] <= request["limits"]["max_output_tokens"], "Output token cap exceeded")
+    if total_token_allowance is not None:
+        require(usage["input_tokens"] + usage["output_tokens"] <= total_token_allowance,
+                "Coaching token cap exceeded")
+    return output, usage
+
+
 class Gateway:
     def __init__(self, models: dict[str, ModelSpec], budget: Budget, journal: Journal, seed: int):
         self.models, self.budget, self.journal, self.seed = models, budget, journal, seed
@@ -76,20 +95,7 @@ class Gateway:
                 self._fail(call_id, request_hash, str(exc), context)
                 raise
             try:
-                keys(response, {"output", "usage", "provider_request_id", "model_id", "tool_calls"})
-                keys(response["usage"], {"input_tokens", "output_tokens", "estimated"})
-                for name in ("input_tokens", "output_tokens"):
-                    integer(response["usage"][name], name)
-                require(type(response["usage"]["estimated"]) is bool, "estimated must be boolean")
-                string(response["provider_request_id"], "provider_request_id")
-                require(response["model_id"] == model.model_id, "Adapter returned a different model ID")
-                require(response["tool_calls"] == [], "Protocol v1 disables model tools")
-                output = validator(response["output"])
-                usage = response["usage"]
-                require(usage["output_tokens"] <= request["limits"]["max_output_tokens"], "Output token cap exceeded")
-                if total_token_allowance is not None:
-                    require(usage["input_tokens"] + usage["output_tokens"] <= total_token_allowance,
-                            "Coaching token cap exceeded")
+                output, usage = check_response(response, request, validator, total_token_allowance)
             except (ValidationError, TypeError, KeyError) as exc:
                 self._fail(call_id, request_hash, str(exc), context, response=response,
                            latency_ms=round((time.monotonic() - started) * 1000), attempt=attempt)

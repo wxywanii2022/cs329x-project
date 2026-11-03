@@ -31,8 +31,8 @@ def metrics(left, right):
     return result
 
 
-def evaluate(output, reference, provenance="unspecified"):
-    frozen, results = audit_run(output)
+def evaluate(output, reference, provenance="unspecified", revalidate=False):
+    frozen, results = audit_run(output, revalidate)
     refs = read_reference(reference)
     source = {x["item_id"]: x for x in frozen["items"]}
     require(set(refs) <= source.keys(), "Reference contains IDs outside this run")
@@ -54,6 +54,7 @@ def evaluate(output, reference, provenance="unspecified"):
             "unlabeled_reference_rows": sum(v is None for v in refs.values()),
             "run_items_without_reference_row": len(set(source) - set(refs)),
             "failed_predictions": sum(r["status"] == "failed" for r in results),
+            "revalidated_failures": [r["item_id"] for r in results if "revalidated_from_error" in r],
             "pending_predictions": len(source) - len(results),
             "labeled_references_without_successful_prediction": sum(v is not None and (k not in candidates or candidates[k]["status"] != "complete") for k,v in refs.items()),
             "overall": score(paired),

@@ -24,6 +24,8 @@ def main():
     p.add_argument("--run", required=True, type=Path)
     p.add_argument("--reference", required=True, type=Path)
     p.add_argument("--reference-provenance", choices=("unspecified", "independent-human", "model-assisted", "adjudicated", "synthetic-fixture"), default="unspecified")
+    p.add_argument("--revalidate-failures", action="store_true",
+                   help="Re-check recorded responses of failed calls with the current validator; no model calls")
     p.add_argument("--save", required=True, type=Path)
     p = sub.add_parser("compare-human")
     p.add_argument("--left", required=True, type=Path); p.add_argument("--right", required=True, type=Path)
@@ -40,7 +42,7 @@ def main():
         elif args.command == "audit":
             result = export_run(args.run)
         elif args.command == "evaluate":
-            result = evaluate(args.run, args.reference, args.reference_provenance); write_json(args.save, result)
+            result = evaluate(args.run, args.reference, args.reference_provenance, args.revalidate_failures); write_json(args.save, result)
         else:
             result = compare_humans(args.left, args.right); write_json(args.save, result)
         print(json.dumps(result, ensure_ascii=False, indent=2))

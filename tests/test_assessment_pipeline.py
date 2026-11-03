@@ -75,6 +75,18 @@ class PrefixTests(unittest.TestCase):
         output = mock_annotation(payload); output["evidence"][0]["quote"] = "fabricated quote"
         with self.assertRaises(ValidationError): validate_annotation(output, payload)
 
+    def test_quote_match_tolerates_reserialization_only(self):
+        payload = prepare_payload(item()); output = mock_annotation(payload)
+        output["evidence"] = [{"turn_id": "u2", "quote": "verify  the\n35% GROWTH"}]
+        self.assertTrue(validate_annotation(output, payload))
+        x = item(); x["messages"][1]["content"] = 'Check the "35%" figure, it\u2019s off.'
+        payload = prepare_payload(x); output = mock_annotation(payload)
+        output["evidence"] = [{"turn_id": "u2", "quote": "check the \u201c35%\u201d figure, it's off"}]
+        self.assertTrue(validate_annotation(output, payload))
+        for quote in ("check the 36% figure", " \n "):
+            output["evidence"] = [{"turn_id": "u2", "quote": quote}]
+            with self.subTest(quote=quote), self.assertRaises(ValidationError): validate_annotation(output, payload)
+
     def test_valid_na_prediction_not_overridden_by_hidden_opportunity(self):
         payload = prepare_payload(item()); output = mock_annotation(payload)
         output.update(label=None, opportunity_status="insufficient_evidence", na_reason="insufficient_evidence")
@@ -154,6 +166,30 @@ class PipelineTests(unittest.TestCase):
         report = evaluate(self.output, ROOT / "examples/assessment_reference.synthetic.csv")
         self.assertEqual(report["overall"]["n"], 0)
         self.assertEqual(report["labeled_references_without_successful_prediction"], 4)
+
+    def test_revalidation_recovers_recorded_outputs_without_model_calls(self):
+        original = MockAdapter.generate
+        def reformatted(adapter, request, model):
+            response = original(adapter, request, model)
+            for e in response["output"]["evidence"]:
+                e["quote"] = e["quote"].upper()
+            if request["payload"]["behavior"] == "B1":
+                response["output"]["evidence"][0]["quote"] = "FABRICATED"
+            return response
+        strict = lambda quote, source: quote in source
+        with patch.object(MockAdapter, "generate", new=reformatted), \
+                patch("adaptive_tutor.rq1.core.quote_matches", new=strict):
+            self.assertEqual(run(ITEMS, CONFIG, self.output)["failed"], 4)
+        journal = (self.output / "events.jsonl").read_bytes()
+        reference = ROOT / "examples/assessment_reference.synthetic.csv"
+        with patch.object(MockAdapter, "generate", side_effect=AssertionError("Unexpected call")):
+            self.assertEqual(evaluate(self.output, reference)["overall"]["n"], 0)
+            report = evaluate(self.output, reference, revalidate=True)
+        self.assertEqual(journal, (self.output / "events.jsonl").read_bytes())
+        behaviors = {r["item_id"]: r["payload"]["behavior"] for r in load_items(ITEMS)}
+        self.assertEqual(sorted(report["revalidated_failures"]), sorted(k for k, v in behaviors.items() if v != "B1"))
+        self.assertEqual(report["overall"]["n"], len(report["revalidated_failures"]))
+        self.assertEqual(report["failed_predictions"], 4 - len(report["revalidated_failures"]))
 
     def test_spreadsheet_exports_escape_formulas_but_keep_raw_json(self):
         original = MockAdapter.generate

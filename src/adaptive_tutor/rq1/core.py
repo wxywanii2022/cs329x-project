@@ -1,6 +1,8 @@
 """Allowlisted, target-truncated input and strict single-behavior output contracts."""
 from pathlib import Path
 import hashlib
+import re
+import unicodedata
 from ..schema import BEHAVIORS, keys, require, string
 
 RUBRICS = Path(__file__).parent / "rubrics"
@@ -24,6 +26,18 @@ non-available status and na_reason. Cite only the supplied prefix. There is no t
 when target_turn_id is null and messages is empty: report insufficient_evidence.
 Do not output hidden reasoning. A short reason and observable evidence suffice.
 '''
+
+
+QUOTE_MARKS = str.maketrans({c: '"' for c in "'`\u2018\u2019\u201a\u201b\u201c\u201d\u201e\u201f\u00ab\u00bb\u2032\u2033"})
+
+
+def quote_form(text):
+    """Comparison form for evidence quotes: models re-serialize whitespace, case and quote marks."""
+    return re.sub(r"\s+", " ", unicodedata.normalize("NFKC", text).translate(QUOTE_MARKS)).strip().casefold()
+
+
+def quote_matches(quote, source):
+    return bool(quote_form(quote)) and quote_form(quote) in quote_form(source)
 
 
 def rubric_prompt(version):
@@ -111,7 +125,7 @@ def validate_annotation(value, payload):
     for e in evidence:
         keys(e, {"turn_id", "quote"})
         require(isinstance(e["turn_id"], str) and e["turn_id"] in visible, "Evidence ID outside visible prefix")
-        require(isinstance(e["quote"], str) and 0 < len(e["quote"]) <= 500 and e["quote"] in visible[e["turn_id"]], "Invalid exact evidence quote")
+        require(isinstance(e["quote"], str) and 0 < len(e["quote"]) <= 500 and quote_matches(e["quote"], visible[e["turn_id"]]), "Evidence quote not found in turn")
     return value
 
 
