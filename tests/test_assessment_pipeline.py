@@ -82,10 +82,29 @@ class PrefixTests(unittest.TestCase):
         output["na_reason"] = "no_opportunity"
         with self.assertRaises(ValidationError): validate_annotation(output, payload)
 
+    def test_v2_quotes_ignore_formatting_but_not_changed_words(self):
+        content = 'Revise the form so that:\n• It is "easy" to follow\n• It fits on **one page** for students.'
+        payload = prepare_payload({"behavior": "B1", "target_turn_id": "u1",
+                                   "messages": [{"turn_id": "u1", "role": "user", "content": content}]})
+        def check(quote, contract="decision-point-v2"):
+            output = mock_annotation(payload); output["evidence"] = [{"turn_id": "u1", "quote": quote}]
+            return validate_annotation(output, payload, contract)
+        for quote in ('so that: • It is "easy" to follow', "so that:• it is “EASY” to follow ",
+                      "Revise the form ... one page", "It fits on one page for students...",
+                      "Revise the form so that it fits on one page for students"):  # stitched runs >= 20 letters
+            with self.subTest(quote=quote): check(quote)
+        for quote in ("It fits on one page ... Revise the form", "Revise the form so it is simple to follow",
+                      "Revise the form so that it fits on two pages", "Revise it ... fits", "..."):
+            with self.subTest(quote=quote), self.assertRaises(ValidationError): check(quote)
+        with self.assertRaisesRegex(ValidationError, "exact"): check('so that: • It is "easy" to follow', "decision-point-v1")
+
     def test_frozen_and_simulation_rubrics_are_explicitly_distinct(self):
         self.assertIn("Specification and Verification Behaviors — v0.2", rubric_prompt("v0.2"))
         self.assertIn("candidate", rubric_prompt("sim-opportunities-v1"))
         with self.assertRaises(ValidationError): rubric_prompt("v0.3")
+        v2 = rubric_prompt("v0.2", "decision-point-v2")
+        self.assertTrue(v2.startswith(rubric_prompt("v0.2")) and "Copy every quote verbatim" in v2)
+        with self.assertRaises(ValidationError): rubric_prompt("v0.2", "decision-point-v3")
 
     def test_config_has_no_default_team_model(self):
         with self.assertRaisesRegex(ValidationError, "not configured"):
@@ -138,6 +157,31 @@ class PipelineTests(unittest.TestCase):
         frozen, predictions = audit_run(self.output)
         self.assertTrue(all(p["usage"]["estimated"] for p in predictions))
 
+    def test_v2_contract_is_frozen_with_the_run_and_used_by_audit(self):
+        configuration = read_json(CONFIG); configuration["contract_version"] = "decision-point-v2"
+        path = Path(self.tmp.name) / "v2.json"
+        write_json(path, configuration)
+        original = MockAdapter.generate
+        def reformatted(adapter, request, model):  # case changed: v1 rejects it, v2 accepts it
+            response = original(adapter, request, model)
+            for e in response["output"]["evidence"]:
+                e["quote"] = e["quote"].upper()
+            return response
+        with patch.object(MockAdapter, "generate", new=reformatted):
+            result = run(ITEMS, path, self.output)
+        self.assertEqual((result["completed"], result["failed"]), (4, 0))
+        frozen, rows = audit_run(self.output)
+        self.assertEqual(frozen["contract_version"], "decision-point-v2")
+        self.assertIn("Copy every quote verbatim", frozen["system_prompt"])
+        calls = [e for e in Journal.read(self.output / "events.jsonl") if e["kind"] == "call_attempt"]
+        self.assertTrue(all(e["request"]["prompt_version"] == "decision-point-v2/v0.2" for e in calls))
+        payloads = {x["item_id"]: x["payload"] for x in frozen["items"]}
+        quoted = [r for r in rows if r["annotation"]["evidence"]]
+        self.assertTrue(quoted)
+        for r in quoted:
+            with self.subTest(item=r["item_id"]), self.assertRaisesRegex(ValidationError, "exact"):
+                validate_annotation(r["annotation"], payloads[r["item_id"]], "decision-point-v1")
+
     def test_failure_not_na_and_no_retry_of_substantive_output(self):
         original = MockAdapter.generate
         def invalid(adapter, request, model):
@@ -167,6 +211,21 @@ class PipelineTests(unittest.TestCase):
             self.assertTrue(all(row["reason"] == "'=1+1" for row in csv.DictReader(f)))
         _, rows = audit_run(self.output)
         self.assertTrue(all(row["annotation"]["reason"] == "=1+1" for row in rows))
+
+    def test_unicode_line_separators_in_model_text_survive_journal(self):
+        # canonical() writes U+2028 etc. unescaped; str.splitlines() would split there.
+        original = MockAdapter.generate
+        def separators(adapter, request, model):
+            response = original(adapter, request, model)
+            response["output"]["reason"] = "first second third\x85end"
+            return response
+        with patch.object(MockAdapter, "generate", new=separators):
+            result = run(ITEMS, CONFIG, self.output)
+        self.assertEqual((result["completed"], result["failed"]), (4, 0))
+        with patch.object(MockAdapter, "generate", side_effect=AssertionError("Unexpected call")):
+            run(ITEMS, CONFIG, self.output)
+        _, rows = audit_run(self.output)
+        self.assertTrue(all(row["annotation"]["reason"] == "first second third\x85end" for row in rows))
 
     def test_changed_config_and_tampered_journal_rejected(self):
         run(ITEMS, CONFIG, self.output)

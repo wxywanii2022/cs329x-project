@@ -1,0 +1,21 @@
+{
+  "model": {
+    "adapter": "command",
+    "model_id": "Qwen/Qwen3.8-27B-FP8@017b9c7af6b5689d5dd426a76e0bc077eb5ca20a",
+    "family": "qwen3.8",
+    "command": [".venv/bin/python", "-m", "adaptive_tutor.adapters.local_vllm",
+                "--thinking", "on", "--top-p", "0.95", "--top-k", "20", "--min-p", "0",
+                "--presence-penalty", "0", "--repetition-penalty", "1.0", "--http-timeout", "3300"],
+    "temperature": 1.0,
+    "supports_seed": true,
+    "timeout_seconds": 3600
+  },
+  "rubric_version": "v0.2",
+  "contract_version": "decision-point-v2",
+  "seed": 329,
+  "budget": {
+    "max_output_tokens": 32768,
+    "max_context_bytes": 200000,
+    "transport_attempts": 3
+  }
+}

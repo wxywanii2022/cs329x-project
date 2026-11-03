@@ -10,7 +10,7 @@
 - 模型自行判断 opportunity；判断错了仍是一个应被评估的预测，不会被环境真值强制纠正。
 - 一次调用使用一个独立 session ID；adapter 必须无共享历史、无工具、无外部检索。
 - 真人参考文件仅在离线 evaluate/compare 阶段读取，不进入模型请求。
-- **组员模型尚未配置，也未进行真实模型验证。** `configs/assessment.team.example.json` 的 `model` 为 null；run 会明确报错，绝不自动选择其他模型。
+- `configs/assessment.team.example.json` 的 `model` 仍为 null；用它 run 会明确报错，绝不自动选择其他模型。本地开源模型（Qwen3.8-27B-FP8，Qwen3.5-9B 作为规模对照）的配置、预先固定的协议和 Main 1 结果见 [local-assessor.md](local-assessor.md)。
 - 离线 mock 仅是词汇规则 fixture，不能用于判断规则准确性、模型可靠性或学习效果。
 
 这是 assessment 接入，不是把整个 simulation 宣布为正式研究就绪。现有 outcome evaluator 仍一次读取完整任务记录，只约束引用不能越过 decision point；其输入隔离仍需另行改造。其 oracle opportunity 仅适合受控 outcome calibration，不等于 RQ1 机会识别。
@@ -114,7 +114,7 @@ python -m unittest discover -s tests -v
 }
 ```
 
-校验范围：行为匹配、类型、标签/机会/N/A 原因一致、置信度枚举、引用 ID 在可见前缀内、quote 是原文子串。**这些是结构与证据存在性校验，不保证语义判断正确。** 语义仍需独立人工校准。
+校验范围：行为匹配、类型、标签/机会/N/A 原因一致、置信度枚举、引用 ID 在可见前缀内、quote 是原文子串（默认合同 `decision-point-v1`；配置 `"contract_version": "decision-point-v2"` 时只比较字母和数字，忽略换行、标点、引号样式和大小写，并允许用 `...` 或至少 20 个字母的原文片段拼接表示省略，片段须按原文顺序出现，见 [local-assessor.md](local-assessor.md)）。**这些是结构与证据存在性校验，不保证语义判断正确。** 语义仍需独立人工校准。
 
 非法 JSON、模型 ID 不匹配、超限、伪造/越界引用等记录为 failed，不记成 N/A，不通过重新生成挑一个更方便的标签。可解析的适配器响应（包括不合格的 annotation）、usage 和失败原因保留在 journal。如果适配器连外层 JSON envelope 都未返回，程序只记录失败；不会盲目复制可能含密钥的 stdout/stderr，也无法凭空补出 usage。Reason 应简短、转述身份信息，不能包含个人名、账号或路径。
 
@@ -187,7 +187,7 @@ stdout 必须只返回以下 envelope；日志写 stderr（不要输出密钥）
 }
 ```
 
-这只是说明格式，仓库没有假装可用的团队模型模块。若服务支持现有 Chat Completions bridge，可使用 `python -m adaptive_tutor.adapters.http_bridge`，并在环境中设置 `TUTOR_ASSESSMENT_URL`、`TUTOR_ASSESSMENT_API_KEY`。模型不支持其参数或格式时，要改专用 adapter，不能盲目套用。密钥通过环境/Keychain 注入，禁止提交到 Git。
+这只是说明格式，仓库没有假装可用的团队模型模块。若服务支持现有 Chat Completions bridge，可使用 `python -m adaptive_tutor.adapters.http_bridge`，并在环境中设置 `TUTOR_ASSESSMENT_URL`、`TUTOR_ASSESSMENT_API_KEY`。模型不支持其参数或格式时，要改专用 adapter，不能盲目套用。密钥通过环境/Keychain 注入，禁止提交到 Git。本机 vLLM 服务（无密钥、仅 loopback）使用 `python -m adaptive_tutor.adapters.local_vllm`，采样参数写在配置的 command 中一并冻结，见 [local-assessor.md](local-assessor.md)。
 
 Simulation 中则在现有 `configs/live.example.json` 的 `models.assessment` 填同样的 ModelSpec；其它 role 仍需各自配置。原样例不代表四个 role 已经接入。
 

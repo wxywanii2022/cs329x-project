@@ -9,9 +9,11 @@ Python implementation of the four-condition simulation in **CS329X Problem Propo
 A standalone decision-point assessment pipeline is now available as `tutor-assess`.
 See [assessment setup and teammate handoff](docs/assessment.md) for the input/output
 contract, frozen v0.2, synthetic examples, independent-reference comparisons, and
-participant-disjoint checks. **The team's real model is deliberately unconfigured**
-(`configs/assessment.team.example.json`: `model: null`). No live model validation
-is implied.
+participant-disjoint checks. The team example config stays unconfigured
+(`configs/assessment.team.example.json`: `model: null`). A locally served
+open-weight assessor (Qwen3.8-27B-FP8, with Qwen3.5-9B as a size ablation) is set
+up in [docs/local-assessor.md](docs/local-assessor.md), with its pre-declared
+protocol and Main 1 results.
 
 The simulation assessor now makes four separate prefix-only calls, without an
 oracle opportunity label. It uses the explicitly separate candidate simulation

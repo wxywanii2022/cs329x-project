@@ -8,12 +8,12 @@ from ..schema import Budget, ModelSpec, ValidationError, keys, require, string
 from ..storage import Journal, RunLock, digest, read_json, write_json, canonical
 from ..adapters.base import Gateway, BudgetExceeded, RecordedFailure
 from ..adapters.command import TransportError
-from .core import prepare_payload, rubric_prompt, validate_annotation
+from .core import DEFAULT_CONTRACT, prepare_payload, rubric_prompt, validate_annotation
 
 
 def load_items(path, rubric="v0.2"):
     rows, identities, points = [], set(), set()
-    for line in Path(path).read_text(encoding="utf-8").splitlines():
+    for line in Path(path).read_text(encoding="utf-8").split("\n"):  # not splitlines(): U+2028 is valid inside JSON text
         if not line.strip():
             continue
         item = json.loads(line)
@@ -49,14 +49,15 @@ def split_check(items, split, development=None):
 
 def load_config(path):
     raw = read_json(Path(path))
-    keys(raw, {"model"}, {"seed", "budget", "rubric_version"})
+    keys(raw, {"model"}, {"seed", "budget", "rubric_version", "contract_version"})
     require(raw["model"] is not None, "Assessment model is not configured. Ask the model owner for the contract in docs/assessment.md; no default live model is selected.")
     model = ModelSpec.parse(raw["model"])
     seed = raw.get("seed", 329)
     require(type(seed) is int and seed >= 0, "Invalid seed")
     rubric = raw.get("rubric_version", "v0.2")
-    rubric_prompt(rubric)
-    return model, Budget.parse(raw.get("budget", {})), seed, rubric
+    contract = raw.get("contract_version", DEFAULT_CONTRACT)
+    rubric_prompt(rubric, contract)
+    return model, Budget.parse(raw.get("budget", {})), seed, rubric, contract
 
 
 def implementation_hashes():
@@ -66,14 +67,14 @@ def implementation_hashes():
 
 
 def run(items_path, config_path, output, split="development", development_path=None):
-    model, budget, seed, rubric = load_config(config_path)
+    model, budget, seed, rubric, contract = load_config(config_path)
     items = load_items(items_path, rubric)
     development = load_items(development_path, rubric) if development_path else None
     split_info = split_check(items, split, development)
     require(not (split == "test" and model.adapter == "mock"), "Mock cannot produce a held-out model evaluation")
     frozen = {"schema_version": "rq1-run-v1", "items": items, "model": asdict(model),
-              "budget": asdict(budget), "seed": seed, "rubric_version": rubric,
-              "system_prompt": rubric_prompt(rubric), "split": split_info,
+              "budget": asdict(budget), "seed": seed, "rubric_version": rubric, "contract_version": contract,
+              "system_prompt": rubric_prompt(rubric, contract), "split": split_info,
               "implementation_hashes": implementation_hashes()}
     # Normalize dataclass tuples to the exact JSON representation used on disk.
     frozen = json.loads(canonical(frozen))
@@ -101,7 +102,7 @@ def run(items_path, config_path, output, split="development", development_path=N
                       "rubric_version": rubric, "input_hash": digest(payload)}
             call_id = "rq1/" + digest(item["item_id"])
             try:
-                annotation, usage = assess_point(gateway, payload, call_id=call_id, session_id=call_id,
+                annotation, usage = assess_point(gateway, payload, contract, call_id=call_id, session_id=call_id,
                                                 block_id=None, branch_id=None, phase="assessment")
                 result.update(status="complete", annotation=annotation, usage=usage)
             except (ValidationError, BudgetExceeded, RecordedFailure, TransportError) as exc:
@@ -116,6 +117,7 @@ def audit_run(output):
     events = Journal.read(output / "events.jsonl")
     require(all(e["config_hash"] == digest(frozen) for e in events), "Configuration hash mismatch")
     by_call = {"rq1/" + digest(x["item_id"]): x for x in frozen["items"]}
+    contract = frozen.get("contract_version", DEFAULT_CONTRACT)  # runs before v2 predate the field
     results = {}
     call_results, failures = {}, set()
     for event in events:
@@ -139,7 +141,7 @@ def audit_run(output):
         call_id = "rq1/" + digest(item["item_id"])
         require(result["input_hash"] == digest(item["payload"]), "Result input mismatch")
         if result["status"] == "complete":
-            validate_annotation(result["annotation"], item["payload"])
+            validate_annotation(result["annotation"], item["payload"], contract)
             require(call_id in call_results and result["annotation"] == call_results[call_id]["response"]["output"], "Result differs from provider output")
         else:
             require(result["status"] == "failed" and "annotation" not in result and call_id in failures, "Failure must not become N/A")

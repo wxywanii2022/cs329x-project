@@ -1,6 +1,7 @@
 """Allowlisted, target-truncated input and strict single-behavior output contracts."""
 from pathlib import Path
 import hashlib
+import unicodedata
 from ..schema import BEHAVIORS, keys, require, string
 
 RUBRICS = Path(__file__).parent / "rubrics"
@@ -24,15 +25,72 @@ non-available status and na_reason. Cite only the supplied prefix. There is no t
 when target_turn_id is null and messages is empty: report insufficient_evidence.
 Do not output hidden reasoning. A short reason and observable evidence suffice.
 '''
+# v2 changes only how evidence is quoted and matched; labeling rules are untouched.
+CONTRACT_V2 = CONTRACT + '''Copy every quote verbatim from the cited turn's content: the same words, spelling
+and punctuation in the same order. Never paraphrase, summarize, describe or correct
+the text. Prefer one short excerpt, such as a phrase or a sentence within one line;
+cite separate parts of a turn as separate evidence entries. If you omit words inside
+an excerpt, mark each omission with ... and never fill a gap with your own words.
+Line breaks may be written as spaces.
+'''
+CONTRACTS = {"decision-point-v1": CONTRACT, "decision-point-v2": CONTRACT_V2}
+DEFAULT_CONTRACT = "decision-point-v1"
 
 
-def rubric_prompt(version):
+def rubric_prompt(version, contract=DEFAULT_CONTRACT):
     require(version in {"v0.2", "sim-opportunities-v1"}, "Unknown assessment rubric")
+    require(contract in CONTRACTS, "Unknown output contract")
     path = RUBRICS / ("specification_verification_v02.md" if version == "v0.2" else "simulation_candidate.md")
     data = path.read_bytes()
     if version == "v0.2":
         require(hashlib.sha256(data).hexdigest() == V02_SHA256, "Frozen v0.2 has changed; use explicit new versioning")
-    return data.decode("utf-8") + "\n" + CONTRACT
+    return data.decode("utf-8") + "\n" + CONTRACTS[contract]
+
+
+MIN_PIECE = 20  # letters, about four words, per piece of a quote stitched without "..."
+
+
+def _letters(text):
+    return "".join(ch for ch in unicodedata.normalize("NFKC", text).casefold() if ch.isalnum())
+
+
+def _match_part(part, source, position):
+    """End of `part` in `source` after `position`, or -1. A part is one verbatim run, or
+    several in-order runs of at least MIN_PIECE letters (sentences joined without ...)."""
+    at = source.find(part, position)
+    if at >= 0:
+        return at + len(part)
+    i = 0
+    while i < len(part):
+        # Longest prefix of part[i:] occurring at or after position; occurrence is monotone.
+        lo, hi = 0, len(part) - i
+        while lo < hi:
+            mid = (lo + hi + 1) // 2
+            lo, hi = (mid, hi) if source.find(part[i:i + mid], position) >= 0 else (lo, mid - 1)
+        if lo < MIN_PIECE:
+            return -1
+        position = source.find(part[i:i + lo], position) + lo
+        i += lo
+    return position
+
+
+def quote_found(quote, text, contract=DEFAULT_CONTRACT):
+    """v1: exact substring. v2 compares only letters and digits, so line breaks, spacing,
+    punctuation, quote-mark style, markdown and case do not matter; it accepts omissions,
+    marked ... or between runs of at least MIN_PIECE letters, when every piece still
+    appears in the turn, in order and without overlap. Formatting is what the model fails
+    to copy through JSON escapes; changed, invented or reordered words still fail."""
+    if quote in text:
+        return True
+    if contract == "decision-point-v1":
+        return False
+    source, position = _letters(text), 0
+    parts = [p for p in (_letters(x) for x in unicodedata.normalize("NFKC", quote).split("...")) if p]
+    for part in parts:
+        position = _match_part(part, source, position)
+        if position < 0:
+            return False
+    return bool(parts)
 
 
 def prepare_payload(item, rubric="v0.2"):
@@ -90,7 +148,7 @@ def validate_payload(payload):
         require(not payload["messages"] and not payload["visible_instructions"], "Missing-record contract violated")
 
 
-def validate_annotation(value, payload):
+def validate_annotation(value, payload, contract=DEFAULT_CONTRACT):
     keys(value, OUTPUT_KEYS)
     require(value["behavior"] == payload["behavior"], "Wrong behavior in response")
     label, status, na = value["label"], value["opportunity_status"], value["na_reason"]
@@ -111,15 +169,16 @@ def validate_annotation(value, payload):
     for e in evidence:
         keys(e, {"turn_id", "quote"})
         require(isinstance(e["turn_id"], str) and e["turn_id"] in visible, "Evidence ID outside visible prefix")
-        require(isinstance(e["quote"], str) and 0 < len(e["quote"]) <= 500 and e["quote"] in visible[e["turn_id"]], "Invalid exact evidence quote")
+        require(isinstance(e["quote"], str) and 0 < len(e["quote"]) <= 500 and quote_found(e["quote"], visible[e["turn_id"]], contract),
+                "Invalid exact evidence quote" if contract == "decision-point-v1" else "Evidence quote not in cited turn")
     return value
 
 
-def assess_point(gateway, payload, **context):
+def assess_point(gateway, payload, contract=DEFAULT_CONTRACT, **context):
     validate_payload(payload)
-    return gateway.call("assessment", payload, lambda x: validate_annotation(x, payload),
-                        prompt_text=rubric_prompt(payload["rubric_version"]),
-                        prompt_version="decision-point-v1/" + payload["rubric_version"], **context)
+    return gateway.call("assessment", payload, lambda x: validate_annotation(x, payload, contract),
+                        prompt_text=rubric_prompt(payload["rubric_version"], contract),
+                        prompt_version=contract + "/" + payload["rubric_version"], **context)
 
 
 def as_simulation_score(annotation):

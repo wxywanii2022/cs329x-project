@@ -58,7 +58,12 @@ class Journal:
         events, previous = [], None
         if not path.exists():
             return events
-        for index, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        # Split on "\n" only: str.splitlines() also breaks at U+2028 and other
+        # separators that canonical JSON (ensure_ascii=False) writes unescaped.
+        lines = path.read_text(encoding="utf-8").split("\n")
+        if lines[-1] == "":
+            lines.pop()
+        for index, line in enumerate(lines, 1):
             try:
                 event = json.loads(line)
             except json.JSONDecodeError as exc:
