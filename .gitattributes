@@ -2,3 +2,5 @@
 # core.autocrlf would otherwise break the frozen v0.2 SHA-256 check on Windows.
 src/adaptive_tutor/rq1/rubrics/*.md -text
 data/rq1/** -text
+outputs/rq1/** -text
+outputs/rq1-v2/** -text

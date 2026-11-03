@@ -6,7 +6,13 @@ __pycache__/
 *.egg-info/
 build/
 dist/
-outputs/
+outputs/*
+# RQ1 results are tracked; server logs, run locks and the v1 code snapshot
+# (used only to resume v1 runs) stay local.
+!outputs/rq1/
+!outputs/rq1-v2/
+outputs/rq1/code-snapshot/
+.run.lock
 .env
 .env.*
 !.env.example

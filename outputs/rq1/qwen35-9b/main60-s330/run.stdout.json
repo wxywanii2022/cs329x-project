@@ -1,0 +1,19 @@
+{
+  "items": 60,
+  "completed": 30,
+  "failed": 30,
+  "pending": 0,
+  "labels": {
+    "N/A": 25,
+    "2": 3,
+    "0": 2
+  },
+  "rubric_version": "v0.2",
+  "model_id": "Qwen/Qwen3.5-9B@c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+  "split": {
+    "participant_disjoint_checked": false,
+    "split": "development"
+  },
+  "mock_only": false,
+  "validated_assessor": false
+}

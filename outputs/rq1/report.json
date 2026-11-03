@@ -1,0 +1,2194 @@
+{
+  "primary_seed": 329,
+  "bootstrap_reps": 10000,
+  "humans": {
+    "A_vs_B": {
+      "n": 59,
+      "raw_agreement": 0.7796610169491526,
+      "cohen_kappa": 0.5902777777777778,
+      "confusion": [
+        [
+          2,
+          1,
+          0,
+          2
+        ],
+        [
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          11,
+          2
+        ],
+        [
+          1,
+          3,
+          1,
+          33
+        ]
+      ],
+      "false_missed_count": 3,
+      "non_missed_reference_count": 54,
+      "false_missed_rate": 0.05555555555555555,
+      "ci95": {
+        "raw_agreement": [
+          0.6779661016949152,
+          0.8813559322033898
+        ],
+        "cohen_kappa": [
+          0.4014492753623187,
+          0.7623705408515534
+        ],
+        "false_missed_rate": [
+          0.0,
+          0.125
+        ]
+      }
+    },
+    "A_vs_adjudicated": {
+      "n": 60,
+      "raw_agreement": 0.9333333333333333,
+      "cohen_kappa": 0.863481228668942,
+      "confusion": [
+        [
+          3,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          13,
+          0
+        ],
+        [
+          2,
+          0,
+          1,
+          39
+        ]
+      ],
+      "false_missed_count": 2,
+      "non_missed_reference_count": 56,
+      "false_missed_rate": 0.03571428571428571,
+      "ci95": {
+        "raw_agreement": [
+          0.8666666666666667,
+          0.9833333333333333
+        ],
+        "cohen_kappa": [
+          0.7225077081192188,
+          0.9681190223166842
+        ],
+        "false_missed_rate": [
+          0.0,
+          0.09090909090909091
+        ]
+      }
+    },
+    "B_vs_adjudicated": {
+      "n": 59,
+      "raw_agreement": 0.847457627118644,
+      "cohen_kappa": 0.702187324733595,
+      "confusion": [
+        [
+          3,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          11,
+          1
+        ],
+        [
+          1,
+          3,
+          1,
+          36
+        ]
+      ],
+      "false_missed_count": 2,
+      "non_missed_reference_count": 55,
+      "false_missed_rate": 0.03636363636363636,
+      "ci95": {
+        "raw_agreement": [
+          0.7457627118644068,
+          0.9322033898305084
+        ],
+        "cohen_kappa": [
+          0.5277777777777778,
+          0.8608490566037735
+        ],
+        "false_missed_rate": [
+          0.0,
+          0.09259259259259259
+        ]
+      }
+    }
+  },
+  "reference_distribution": {
+    "N/A": 42,
+    "2": 13,
+    "0": 4,
+    "1": 1
+  },
+  "models": {
+    "qwen35-9b": {
+      "model_id": "Qwen/Qwen3.5-9B@c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+      "model_spec": {
+        "adapter": "command",
+        "command": [
+          ".venv/bin/python",
+          "-m",
+          "adaptive_tutor.adapters.local_vllm",
+          "--thinking",
+          "on",
+          "--top-p",
+          "0.95",
+          "--top-k",
+          "20",
+          "--min-p",
+          "0",
+          "--presence-penalty",
+          "1.5",
+          "--repetition-penalty",
+          "1.0",
+          "--http-timeout",
+          "3300"
+        ],
+        "family": "qwen3.5",
+        "model_id": "Qwen/Qwen3.5-9B@c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+        "supports_seed": true,
+        "temperature": 1.0,
+        "timeout_seconds": 3600
+      },
+      "budget": {
+        "max_coaching_tokens": 4000,
+        "max_coaching_turns": 2,
+        "max_context_bytes": 200000,
+        "max_output_tokens": 32768,
+        "transport_attempts": 3
+      },
+      "seeds": {
+        "329": {
+          "completed": 34,
+          "failed": 26,
+          "pending": 0,
+          "failures": {
+            "M1-003": "ValidationError: Invalid exact evidence quote",
+            "M1-006": "ValidationError: Invalid exact evidence quote",
+            "M1-011": "ValidationError: Invalid exact evidence quote",
+            "M1-012": "ValidationError: Invalid exact evidence quote",
+            "M1-013": "ValidationError: Invalid exact evidence quote",
+            "M1-015": "ValidationError: Invalid exact evidence quote",
+            "M1-016": "ValidationError: Invalid exact evidence quote",
+            "M1-018": "ValidationError: Invalid exact evidence quote",
+            "M1-020": "ValidationError: Invalid exact evidence quote",
+            "M1-021": "ValidationError: Invalid exact evidence quote",
+            "M1-022": "ValidationError: Invalid exact evidence quote",
+            "M1-024": "ValidationError: Invalid exact evidence quote",
+            "M1-026": "ValidationError: Invalid exact evidence quote",
+            "M1-027": "ValidationError: Invalid exact evidence quote",
+            "M1-028": "ValidationError: Invalid exact evidence quote",
+            "M1-029": "ValidationError: Invalid exact evidence quote",
+            "M1-032": "ValidationError: Invalid exact evidence quote",
+            "M1-034": "ValidationError: Invalid exact evidence quote",
+            "M1-036": "ValidationError: Invalid exact evidence quote",
+            "M1-038": "ValidationError: Invalid exact evidence quote",
+            "M1-042": "ValidationError: Invalid exact evidence quote",
+            "M1-049": "ValidationError: Invalid exact evidence quote",
+            "M1-052": "ValidationError: Invalid exact evidence quote",
+            "M1-053": "ValidationError: Invalid exact evidence quote",
+            "M1-056": "ValidationError: Invalid exact evidence quote",
+            "M1-060": "ValidationError: Missing keys: {'evidence', 'opportunity_status', 'confidence', 'unclear_rule', 'behavior', 'label', 'reason', 'na_reason'}"
+          },
+          "label_distribution": {
+            "N/A": 25,
+            "2": 5,
+            "0": 3,
+            "1": 1
+          },
+          "output_tokens_median": 3734.5,
+          "output_tokens_max": 7607,
+          "latency_s_median": 96.596,
+          "quote_only_failures": 25,
+          "posthoc_vs_adjudicated_with_quote_failures": {
+            "n": 59,
+            "raw_agreement": 0.8135593220338984,
+            "cohen_kappa": 0.6030581039755353,
+            "confusion": [
+              [
+                2,
+                0,
+                0,
+                2
+              ],
+              [
+                1,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                10,
+                3
+              ],
+              [
+                2,
+                2,
+                1,
+                36
+              ]
+            ],
+            "false_missed_count": 3,
+            "non_missed_reference_count": 55,
+            "false_missed_rate": 0.05454545454545454,
+            "ci95": {
+              "raw_agreement": [
+                0.711864406779661,
+                0.9152542372881356
+              ],
+              "cohen_kappa": [
+                0.38835725677830946,
+                0.7903340440653873
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.12280701754385964
+              ]
+            }
+          },
+          "vs_adjudicated": {
+            "n": 34,
+            "raw_agreement": 0.8235294117647058,
+            "cohen_kappa": 0.5696202531645568,
+            "confusion": [
+              [
+                1,
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                4,
+                1
+              ],
+              [
+                1,
+                1,
+                1,
+                23
+              ]
+            ],
+            "false_missed_count": 2,
+            "non_missed_reference_count": 32,
+            "false_missed_rate": 0.0625,
+            "ci95": {
+              "raw_agreement": [
+                0.6764705882352942,
+                0.9411764705882353
+              ],
+              "cohen_kappa": [
+                0.23766816143497746,
+                0.8319604612850082
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.15625
+              ]
+            },
+            "by_behavior": {
+              "B1": {
+                "n": 9,
+                "raw_agreement": 0.7777777777777778,
+                "cohen_kappa": 0.6666666666666666,
+                "false_missed_count": 1
+              },
+              "B2": {
+                "n": 8,
+                "raw_agreement": 1.0,
+                "cohen_kappa": 1.0,
+                "false_missed_count": 0
+              },
+              "B3": {
+                "n": 7,
+                "raw_agreement": 0.7142857142857143,
+                "cohen_kappa": -0.16666666666666635,
+                "false_missed_count": 1
+              },
+              "B4": {
+                "n": 10,
+                "raw_agreement": 0.8,
+                "cohen_kappa": 0.37500000000000006,
+                "false_missed_count": 0
+              }
+            }
+          },
+          "vs_A": {
+            "n": 34,
+            "raw_agreement": 0.7941176470588235,
+            "cohen_kappa": 0.5423076923076923,
+            "confusion": [
+              [
+                1,
+                0,
+                0,
+                2
+              ],
+              [
+                2,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                4,
+                1
+              ],
+              [
+                0,
+                1,
+                1,
+                22
+              ]
+            ],
+            "false_missed_count": 2,
+            "non_missed_reference_count": 31,
+            "false_missed_rate": 0.06451612903225806,
+            "ci95": {
+              "raw_agreement": [
+                0.6470588235294118,
+                0.9117647058823529
+              ],
+              "cohen_kappa": [
+                0.25137614678899084,
+                0.7918367346938775
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.16129032258064516
+              ]
+            }
+          },
+          "vs_B": {
+            "n": 34,
+            "raw_agreement": 0.8235294117647058,
+            "cohen_kappa": 0.6106870229007633,
+            "confusion": [
+              [
+                2,
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                1,
+                1
+              ],
+              [
+                0,
+                0,
+                3,
+                1
+              ],
+              [
+                1,
+                0,
+                1,
+                22
+              ]
+            ],
+            "false_missed_count": 1,
+            "non_missed_reference_count": 31,
+            "false_missed_rate": 0.03225806451612903,
+            "ci95": {
+              "raw_agreement": [
+                0.6764705882352942,
+                0.9411764705882353
+              ],
+              "cohen_kappa": [
+                0.3040935672514618,
+                0.8600823045267489
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.10344827586206896
+              ]
+            }
+          }
+        },
+        "330": {
+          "completed": 30,
+          "failed": 30,
+          "pending": 0,
+          "failures": {
+            "M1-003": "ValidationError: Invalid exact evidence quote",
+            "M1-004": "ValidationError: Invalid exact evidence quote",
+            "M1-006": "ValidationError: Invalid exact evidence quote",
+            "M1-007": "ValidationError: Invalid exact evidence quote",
+            "M1-008": "ValidationError: Invalid exact evidence quote",
+            "M1-011": "ValidationError: Invalid exact evidence quote",
+            "M1-012": "ValidationError: Invalid exact evidence quote",
+            "M1-015": "ValidationError: Invalid exact evidence quote",
+            "M1-017": "ValidationError: Invalid exact evidence quote",
+            "M1-018": "ValidationError: Invalid exact evidence quote",
+            "M1-020": "ValidationError: Invalid exact evidence quote",
+            "M1-022": "ValidationError: Invalid exact evidence quote",
+            "M1-024": "ValidationError: Invalid exact evidence quote",
+            "M1-026": "ValidationError: Invalid exact evidence quote",
+            "M1-027": "ValidationError: Invalid exact evidence quote",
+            "M1-029": "ValidationError: Invalid exact evidence quote",
+            "M1-031": "ValidationError: Invalid exact evidence quote",
+            "M1-032": "ValidationError: Invalid exact evidence quote",
+            "M1-034": "ValidationError: Invalid exact evidence quote",
+            "M1-036": "ValidationError: Invalid exact evidence quote",
+            "M1-037": "ValidationError: Invalid exact evidence quote",
+            "M1-038": "ValidationError: Invalid exact evidence quote",
+            "M1-040": "ValidationError: Invalid exact evidence quote",
+            "M1-042": "ValidationError: Invalid exact evidence quote",
+            "M1-046": "ValidationError: Invalid exact evidence quote",
+            "M1-051": "ValidationError: Invalid exact evidence quote",
+            "M1-052": "ValidationError: Invalid exact evidence quote",
+            "M1-053": "ValidationError: Invalid exact evidence quote",
+            "M1-056": "ValidationError: Invalid exact evidence quote",
+            "M1-060": "ValidationError: Invalid exact evidence quote"
+          },
+          "label_distribution": {
+            "N/A": 25,
+            "2": 3,
+            "0": 2
+          },
+          "output_tokens_median": 2306.0,
+          "output_tokens_max": 7689,
+          "latency_s_median": 58.882999999999996,
+          "quote_only_failures": 30,
+          "posthoc_vs_adjudicated_with_quote_failures": {
+            "n": 60,
+            "raw_agreement": 0.8333333333333334,
+            "cohen_kappa": 0.6224040276903714,
+            "confusion": [
+              [
+                2,
+                0,
+                0,
+                2
+              ],
+              [
+                0,
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                0,
+                10,
+                3
+              ],
+              [
+                3,
+                0,
+                1,
+                38
+              ]
+            ],
+            "false_missed_count": 3,
+            "non_missed_reference_count": 56,
+            "false_missed_rate": 0.05357142857142857,
+            "ci95": {
+              "raw_agreement": [
+                0.7333333333333333,
+                0.9166666666666666
+              ],
+              "cohen_kappa": [
+                0.3962264150943395,
+                0.8121477770820287
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.1206896551724138
+              ]
+            }
+          },
+          "vs_adjudicated": {
+            "n": 30,
+            "raw_agreement": 0.9,
+            "cohen_kappa": 0.686411149825784,
+            "confusion": [
+              [
+                1,
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                0,
+                3,
+                0
+              ],
+              [
+                1,
+                0,
+                0,
+                23
+              ]
+            ],
+            "false_missed_count": 1,
+            "non_missed_reference_count": 28,
+            "false_missed_rate": 0.03571428571428571,
+            "ci95": {
+              "raw_agreement": [
+                0.7666666666666667,
+                1.0
+              ],
+              "cohen_kappa": [
+                0.23076923076923064,
+                1.0
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.11538461538461539
+              ]
+            },
+            "by_behavior": {
+              "B1": {
+                "n": 8,
+                "raw_agreement": 0.875,
+                "cohen_kappa": 0.7948717948717948,
+                "false_missed_count": 0
+              },
+              "B2": {
+                "n": 7,
+                "raw_agreement": 1.0,
+                "cohen_kappa": 1.0,
+                "false_missed_count": 0
+              },
+              "B3": {
+                "n": 6,
+                "raw_agreement": 0.6666666666666666,
+                "cohen_kappa": -0.20000000000000007,
+                "false_missed_count": 1
+              },
+              "B4": {
+                "n": 9,
+                "raw_agreement": 1.0,
+                "cohen_kappa": null,
+                "false_missed_count": 0
+              }
+            }
+          },
+          "vs_A": {
+            "n": 30,
+            "raw_agreement": 0.8333333333333334,
+            "cohen_kappa": 0.5798319327731093,
+            "confusion": [
+              [
+                1,
+                0,
+                0,
+                2
+              ],
+              [
+                1,
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                0,
+                3,
+                1
+              ],
+              [
+                0,
+                0,
+                0,
+                21
+              ]
+            ],
+            "false_missed_count": 1,
+            "non_missed_reference_count": 27,
+            "false_missed_rate": 0.037037037037037035,
+            "ci95": {
+              "raw_agreement": [
+                0.7,
+                0.9666666666666667
+              ],
+              "cohen_kappa": [
+                0.2241379310344829,
+                0.8557692307692308
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.11538461538461539
+              ]
+            }
+          },
+          "vs_B": {
+            "n": 30,
+            "raw_agreement": 0.8,
+            "cohen_kappa": 0.46428571428571436,
+            "confusion": [
+              [
+                1,
+                0,
+                0,
+                3
+              ],
+              [
+                0,
+                0,
+                1,
+                1
+              ],
+              [
+                0,
+                0,
+                2,
+                0
+              ],
+              [
+                1,
+                0,
+                0,
+                21
+              ]
+            ],
+            "false_missed_count": 1,
+            "non_missed_reference_count": 26,
+            "false_missed_rate": 0.038461538461538464,
+            "ci95": {
+              "raw_agreement": [
+                0.6333333333333333,
+                0.9333333333333333
+              ],
+              "cohen_kappa": [
+                0.06515580736543908,
+                0.7727272727272728
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.125
+              ]
+            }
+          }
+        },
+        "331": {
+          "completed": 32,
+          "failed": 28,
+          "pending": 0,
+          "failures": {
+            "M1-003": "ValidationError: Invalid exact evidence quote",
+            "M1-006": "ValidationError: Invalid exact evidence quote",
+            "M1-007": "ValidationError: Invalid exact evidence quote",
+            "M1-009": "ValidationError: Invalid exact evidence quote",
+            "M1-011": "ValidationError: Invalid exact evidence quote",
+            "M1-012": "ValidationError: Invalid exact evidence quote",
+            "M1-013": "ValidationError: Invalid exact evidence quote",
+            "M1-014": "ValidationError: Invalid exact evidence quote",
+            "M1-015": "ValidationError: Invalid exact evidence quote",
+            "M1-018": "ValidationError: Invalid exact evidence quote",
+            "M1-020": "ValidationError: Invalid exact evidence quote",
+            "M1-022": "ValidationError: Invalid exact evidence quote",
+            "M1-024": "ValidationError: Invalid exact evidence quote",
+            "M1-025": "ValidationError: Invalid exact evidence quote",
+            "M1-026": "ValidationError: Invalid exact evidence quote",
+            "M1-027": "ValidationError: Invalid exact evidence quote",
+            "M1-028": "ValidationError: Invalid exact evidence quote",
+            "M1-032": "ValidationError: Invalid exact evidence quote",
+            "M1-034": "ValidationError: Invalid exact evidence quote",
+            "M1-036": "ValidationError: Invalid exact evidence quote",
+            "M1-037": "ValidationError: Invalid exact evidence quote",
+            "M1-038": "ValidationError: Invalid exact evidence quote",
+            "M1-040": "ValidationError: Invalid exact evidence quote",
+            "M1-042": "ValidationError: Invalid exact evidence quote",
+            "M1-046": "ValidationError: Invalid exact evidence quote",
+            "M1-052": "ValidationError: Invalid exact evidence quote",
+            "M1-053": "ValidationError: Invalid exact evidence quote",
+            "M1-056": "ValidationError: Invalid exact evidence quote"
+          },
+          "label_distribution": {
+            "N/A": 25,
+            "2": 3,
+            "0": 3,
+            "1": 1
+          },
+          "output_tokens_median": 3256.0,
+          "output_tokens_max": 9627,
+          "latency_s_median": 84.449,
+          "quote_only_failures": 28,
+          "posthoc_vs_adjudicated_with_quote_failures": {
+            "n": 60,
+            "raw_agreement": 0.85,
+            "cohen_kappa": 0.6817913965822038,
+            "confusion": [
+              [
+                2,
+                1,
+                0,
+                1
+              ],
+              [
+                1,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                11,
+                2
+              ],
+              [
+                3,
+                0,
+                1,
+                38
+              ]
+            ],
+            "false_missed_count": 4,
+            "non_missed_reference_count": 56,
+            "false_missed_rate": 0.07142857142857142,
+            "ci95": {
+              "raw_agreement": [
+                0.75,
+                0.9333333333333333
+              ],
+              "cohen_kappa": [
+                0.4861660079051383,
+                0.8503740648379052
+              ],
+              "false_missed_rate": [
+                0.017241379310344827,
+                0.14285714285714285
+              ]
+            }
+          },
+          "vs_adjudicated": {
+            "n": 32,
+            "raw_agreement": 0.8125,
+            "cohen_kappa": 0.49473684210526314,
+            "confusion": [
+              [
+                0,
+                1,
+                0,
+                1
+              ],
+              [
+                1,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                3,
+                1
+              ],
+              [
+                2,
+                0,
+                0,
+                23
+              ]
+            ],
+            "false_missed_count": 3,
+            "non_missed_reference_count": 30,
+            "false_missed_rate": 0.1,
+            "ci95": {
+              "raw_agreement": [
+                0.65625,
+                0.9375
+              ],
+              "cohen_kappa": [
+                0.15789473684210525,
+                0.7866666666666666
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.21875
+              ]
+            },
+            "by_behavior": {
+              "B1": {
+                "n": 9,
+                "raw_agreement": 0.7777777777777778,
+                "cohen_kappa": 0.64,
+                "false_missed_count": 1
+              },
+              "B2": {
+                "n": 9,
+                "raw_agreement": 0.7777777777777778,
+                "cohen_kappa": 0.4375,
+                "false_missed_count": 2
+              },
+              "B3": {
+                "n": 7,
+                "raw_agreement": 0.8571428571428571,
+                "cohen_kappa": 0.0,
+                "false_missed_count": 0
+              },
+              "B4": {
+                "n": 7,
+                "raw_agreement": 0.8571428571428571,
+                "cohen_kappa": 0.0,
+                "false_missed_count": 0
+              }
+            }
+          },
+          "vs_A": {
+            "n": 32,
+            "raw_agreement": 0.75,
+            "cohen_kappa": 0.42857142857142855,
+            "confusion": [
+              [
+                0,
+                0,
+                0,
+                3
+              ],
+              [
+                1,
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                3,
+                2
+              ],
+              [
+                2,
+                0,
+                0,
+                20
+              ]
+            ],
+            "false_missed_count": 3,
+            "non_missed_reference_count": 29,
+            "false_missed_rate": 0.10344827586206896,
+            "ci95": {
+              "raw_agreement": [
+                0.59375,
+                0.875
+              ],
+              "cohen_kappa": [
+                0.09219858156028368,
+                0.7155555555555555
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.22580645161290322
+              ]
+            }
+          },
+          "vs_B": {
+            "n": 32,
+            "raw_agreement": 0.75,
+            "cohen_kappa": 0.39906103286384975,
+            "confusion": [
+              [
+                1,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                0,
+                1,
+                1
+              ],
+              [
+                0,
+                0,
+                2,
+                1
+              ],
+              [
+                2,
+                0,
+                0,
+                21
+              ]
+            ],
+            "false_missed_count": 2,
+            "non_missed_reference_count": 28,
+            "false_missed_rate": 0.07142857142857142,
+            "ci95": {
+              "raw_agreement": [
+                0.59375,
+                0.90625
+              ],
+              "cohen_kappa": [
+                0.08133971291866028,
+                0.6913183279742765
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.17857142857142858
+              ]
+            }
+          }
+        }
+      },
+      "primary": {
+        "vs_adjudicated_on_AB_agreed": {
+          "n": 25,
+          "raw_agreement": 0.92,
+          "cohen_kappa": 0.7093023255813955,
+          "confusion": [
+            [
+              0,
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              3,
+              0
+            ],
+            [
+              0,
+              0,
+              1,
+              20
+            ]
+          ],
+          "false_missed_count": 0,
+          "non_missed_reference_count": 24,
+          "false_missed_rate": 0.0
+        },
+        "vs_adjudicated_on_AB_disagreed": {
+          "n": 9,
+          "raw_agreement": 0.5555555555555556,
+          "cohen_kappa": 0.3454545454545455,
+          "confusion": [
+            [
+              1,
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              1,
+              1
+            ],
+            [
+              1,
+              1,
+              0,
+              3
+            ]
+          ],
+          "false_missed_count": 2,
+          "non_missed_reference_count": 8,
+          "false_missed_rate": 0.25
+        },
+        "disagreements": [
+          {
+            "item_id": "M1-005",
+            "behavior": "B3",
+            "adjudicated": "N/A",
+            "A": "0",
+            "B": "N/A",
+            "model": "0",
+            "confidence": "high",
+            "reason": "User asks only for file delivery, not requesting verification of any specific numerical claim from the agent's output.",
+            "unclear_rule": "",
+            "output_tokens": 597
+          },
+          {
+            "item_id": "M1-014",
+            "behavior": "B4",
+            "adjudicated": "N/A",
+            "A": "N/A",
+            "B": "N/A",
+            "model": "2",
+            "confidence": "medium",
+            "reason": "User identifies the specific output required after the agent reports tool failure.",
+            "unclear_rule": "",
+            "output_tokens": 5136
+          },
+          {
+            "item_id": "M1-030",
+            "behavior": "B1",
+            "adjudicated": "N/A",
+            "A": "N/A",
+            "B": "1",
+            "model": "1",
+            "confidence": "high",
+            "reason": "Specifies destination folder but lacks additional output properties such as format or structure.",
+            "unclear_rule": "",
+            "output_tokens": 7190
+          },
+          {
+            "item_id": "M1-031",
+            "behavior": "B4",
+            "adjudicated": "2",
+            "A": "2",
+            "B": "N/A",
+            "model": "N/A",
+            "confidence": "high",
+            "reason": "User confirms the assistant's proposed design choice without identifying an error in a prior output.",
+            "unclear_rule": "",
+            "output_tokens": 4064
+          },
+          {
+            "item_id": "M1-041",
+            "behavior": "B3",
+            "adjudicated": "0",
+            "A": "0",
+            "B": "0",
+            "model": "N/A",
+            "confidence": "high",
+            "reason": "No B3 opportunity - user requests format conversion rather than selecting a substantive claim to verify.",
+            "unclear_rule": "",
+            "output_tokens": 775
+          },
+          {
+            "item_id": "M1-048",
+            "behavior": "B1",
+            "adjudicated": "1",
+            "A": "1",
+            "B": "0",
+            "model": "0",
+            "confidence": "high",
+            "reason": "User requests testing guidance but provides no concrete output specifications such as format, depth, or required content.",
+            "unclear_rule": "",
+            "output_tokens": 663
+          }
+        ]
+      },
+      "stability": {
+        "seeds": [
+          329,
+          330,
+          331
+        ],
+        "items_completed_in_all": 22,
+        "unanimous": 16,
+        "unstable_items": [
+          "M1-005",
+          "M1-030",
+          "M1-035",
+          "M1-044",
+          "M1-048",
+          "M1-055"
+        ],
+        "mean_pairwise_kappa": 0.5868696930572962,
+        "majority_vs_adjudicated": {
+          "n": 22,
+          "raw_agreement": 0.9090909090909091,
+          "cohen_kappa": 0.778894472361809,
+          "confusion": [
+            [
+              1,
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              3,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              16
+            ]
+          ],
+          "false_missed_count": 1,
+          "non_missed_reference_count": 20,
+          "false_missed_rate": 0.05,
+          "ci95": {
+            "raw_agreement": [
+              0.7727272727272727,
+              1.0
+            ],
+            "cohen_kappa": [
+              0.44067796610169485,
+              1.0
+            ],
+            "false_missed_rate": [
+              0.0,
+              0.15789473684210525
+            ]
+          }
+        }
+      }
+    },
+    "qwen38-27b-fp8": {
+      "model_id": "Qwen/Qwen3.8-27B-FP8@017b9c7af6b5689d5dd426a76e0bc077eb5ca20a",
+      "model_spec": {
+        "adapter": "command",
+        "command": [
+          ".venv/bin/python",
+          "-m",
+          "adaptive_tutor.adapters.local_vllm",
+          "--thinking",
+          "on",
+          "--top-p",
+          "0.95",
+          "--top-k",
+          "20",
+          "--min-p",
+          "0",
+          "--presence-penalty",
+          "0",
+          "--repetition-penalty",
+          "1.0",
+          "--http-timeout",
+          "3300"
+        ],
+        "family": "qwen3.8",
+        "model_id": "Qwen/Qwen3.8-27B-FP8@017b9c7af6b5689d5dd426a76e0bc077eb5ca20a",
+        "supports_seed": true,
+        "temperature": 1.0,
+        "timeout_seconds": 3600
+      },
+      "budget": {
+        "max_coaching_tokens": 4000,
+        "max_coaching_turns": 2,
+        "max_context_bytes": 200000,
+        "max_output_tokens": 32768,
+        "transport_attempts": 3
+      },
+      "seeds": {
+        "329": {
+          "completed": 44,
+          "failed": 16,
+          "pending": 0,
+          "failures": {
+            "M1-003": "ValidationError: Invalid exact evidence quote",
+            "M1-006": "ValidationError: Invalid exact evidence quote",
+            "M1-007": "ValidationError: Invalid exact evidence quote",
+            "M1-012": "ValidationError: Invalid exact evidence quote",
+            "M1-013": "ValidationError: Invalid exact evidence quote",
+            "M1-015": "ValidationError: Invalid exact evidence quote",
+            "M1-018": "ValidationError: Invalid exact evidence quote",
+            "M1-022": "ValidationError: Invalid exact evidence quote",
+            "M1-032": "ValidationError: Invalid exact evidence quote",
+            "M1-034": "ValidationError: Invalid exact evidence quote",
+            "M1-036": "ValidationError: Invalid exact evidence quote",
+            "M1-038": "ValidationError: Invalid exact evidence quote",
+            "M1-040": "ValidationError: Invalid exact evidence quote",
+            "M1-042": "ValidationError: Invalid exact evidence quote",
+            "M1-052": "ValidationError: Invalid exact evidence quote",
+            "M1-060": "ValidationError: Invalid exact evidence quote"
+          },
+          "label_distribution": {
+            "N/A": 28,
+            "2": 7,
+            "0": 6,
+            "1": 3
+          },
+          "output_tokens_median": 1230.5,
+          "output_tokens_max": 7128,
+          "latency_s_median": 54.801500000000004,
+          "quote_only_failures": 16,
+          "posthoc_vs_adjudicated_with_quote_failures": {
+            "n": 60,
+            "raw_agreement": 0.8666666666666667,
+            "cohen_kappa": 0.7490852064819655,
+            "confusion": [
+              [
+                3,
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                13,
+                0
+              ],
+              [
+                5,
+                1,
+                1,
+                35
+              ]
+            ],
+            "false_missed_count": 5,
+            "non_missed_reference_count": 56,
+            "false_missed_rate": 0.08928571428571429,
+            "ci95": {
+              "raw_agreement": [
+                0.7833333333333333,
+                0.95
+              ],
+              "cohen_kappa": [
+                0.5792880258899676,
+                0.8959537572254335
+              ],
+              "false_missed_rate": [
+                0.01818181818181818,
+                0.1724137931034483
+              ]
+            }
+          },
+          "vs_adjudicated": {
+            "n": 44,
+            "raw_agreement": 0.8636363636363636,
+            "cohen_kappa": 0.7200424178154825,
+            "confusion": [
+              [
+                3,
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                6,
+                0
+              ],
+              [
+                3,
+                1,
+                1,
+                28
+              ]
+            ],
+            "false_missed_count": 3,
+            "non_missed_reference_count": 40,
+            "false_missed_rate": 0.075,
+            "ci95": {
+              "raw_agreement": [
+                0.75,
+                0.9545454545454546
+              ],
+              "cohen_kappa": [
+                0.4974619289340101,
+                0.9035087719298246
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.16666666666666666
+              ]
+            },
+            "by_behavior": {
+              "B1": {
+                "n": 11,
+                "raw_agreement": 0.9090909090909091,
+                "cohen_kappa": 0.8658536585365855,
+                "false_missed_count": 0
+              },
+              "B2": {
+                "n": 10,
+                "raw_agreement": 0.9,
+                "cohen_kappa": 0.6153846153846155,
+                "false_missed_count": 0
+              },
+              "B3": {
+                "n": 12,
+                "raw_agreement": 0.6666666666666666,
+                "cohen_kappa": 0.35999999999999993,
+                "false_missed_count": 3
+              },
+              "B4": {
+                "n": 11,
+                "raw_agreement": 1.0,
+                "cohen_kappa": 1.0,
+                "false_missed_count": 0
+              }
+            }
+          },
+          "vs_A": {
+            "n": 44,
+            "raw_agreement": 0.9090909090909091,
+            "cohen_kappa": 0.8259149357072205,
+            "confusion": [
+              [
+                4,
+                1,
+                0,
+                0
+              ],
+              [
+                1,
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                7,
+                0
+              ],
+              [
+                1,
+                1,
+                0,
+                28
+              ]
+            ],
+            "false_missed_count": 2,
+            "non_missed_reference_count": 39,
+            "false_missed_rate": 0.05128205128205128,
+            "ci95": {
+              "raw_agreement": [
+                0.8181818181818182,
+                0.9772727272727273
+              ],
+              "cohen_kappa": [
+                0.6549019607843137,
+                0.9588785046728973
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.1282051282051282
+              ]
+            }
+          },
+          "vs_B": {
+            "n": 43,
+            "raw_agreement": 0.7906976744186046,
+            "cohen_kappa": 0.5989637305699481,
+            "confusion": [
+              [
+                3,
+                1,
+                0,
+                1
+              ],
+              [
+                0,
+                2,
+                1,
+                0
+              ],
+              [
+                0,
+                0,
+                4,
+                1
+              ],
+              [
+                3,
+                0,
+                2,
+                25
+              ]
+            ],
+            "false_missed_count": 3,
+            "non_missed_reference_count": 38,
+            "false_missed_rate": 0.07894736842105263,
+            "ci95": {
+              "raw_agreement": [
+                0.6744186046511628,
+                0.9069767441860465
+              ],
+              "cohen_kappa": [
+                0.35580524344569286,
+                0.8076062639821028
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.175
+              ]
+            }
+          }
+        },
+        "330": {
+          "completed": 46,
+          "failed": 14,
+          "pending": 0,
+          "failures": {
+            "M1-003": "ValidationError: Invalid exact evidence quote",
+            "M1-007": "ValidationError: Invalid exact evidence quote",
+            "M1-015": "ValidationError: Invalid exact evidence quote",
+            "M1-018": "ValidationError: Invalid exact evidence quote",
+            "M1-021": "ValidationError: Invalid exact evidence quote",
+            "M1-022": "ValidationError: Invalid exact evidence quote",
+            "M1-032": "ValidationError: Invalid exact evidence quote",
+            "M1-034": "ValidationError: Invalid exact evidence quote",
+            "M1-036": "ValidationError: Invalid exact evidence quote",
+            "M1-038": "ValidationError: Invalid exact evidence quote",
+            "M1-040": "ValidationError: Invalid exact evidence quote",
+            "M1-041": "ValidationError: Invalid exact evidence quote",
+            "M1-042": "ValidationError: Invalid exact evidence quote",
+            "M1-051": "ValidationError: Missing keys: {'opportunity_status', 'evidence', 'label', 'reason', 'confidence', 'behavior', 'unclear_rule', 'na_reason'}"
+          },
+          "label_distribution": {
+            "N/A": 30,
+            "2": 9,
+            "0": 4,
+            "1": 3
+          },
+          "output_tokens_median": 1235.0,
+          "output_tokens_max": 9900,
+          "latency_s_median": 54.8775,
+          "quote_only_failures": 13,
+          "posthoc_vs_adjudicated_with_quote_failures": {
+            "n": 59,
+            "raw_agreement": 0.9152542372881356,
+            "cohen_kappa": 0.8322910744741331,
+            "confusion": [
+              [
+                3,
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                13,
+                0
+              ],
+              [
+                2,
+                1,
+                1,
+                37
+              ]
+            ],
+            "false_missed_count": 2,
+            "non_missed_reference_count": 55,
+            "false_missed_rate": 0.03636363636363636,
+            "ci95": {
+              "raw_agreement": [
+                0.8305084745762712,
+                0.9830508474576272
+              ],
+              "cohen_kappa": [
+                0.679869777536625,
+                0.9625871908687382
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.09259259259259259
+              ]
+            }
+          },
+          "vs_adjudicated": {
+            "n": 46,
+            "raw_agreement": 0.8913043478260869,
+            "cohen_kappa": 0.77205153617443,
+            "confusion": [
+              [
+                2,
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                8,
+                0
+              ],
+              [
+                2,
+                1,
+                1,
+                30
+              ]
+            ],
+            "false_missed_count": 2,
+            "non_missed_reference_count": 43,
+            "false_missed_rate": 0.046511627906976744,
+            "ci95": {
+              "raw_agreement": [
+                0.782608695652174,
+                0.9782608695652174
+              ],
+              "cohen_kappa": [
+                0.5639810426540285,
+                0.9441747572815534
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.11627906976744186
+              ]
+            },
+            "by_behavior": {
+              "B1": {
+                "n": 12,
+                "raw_agreement": 0.8333333333333334,
+                "cohen_kappa": 0.7499999999999999,
+                "false_missed_count": 0
+              },
+              "B2": {
+                "n": 11,
+                "raw_agreement": 0.8181818181818182,
+                "cohen_kappa": 0.5769230769230771,
+                "false_missed_count": 1
+              },
+              "B3": {
+                "n": 12,
+                "raw_agreement": 0.9166666666666666,
+                "cohen_kappa": 0.7499999999999999,
+                "false_missed_count": 1
+              },
+              "B4": {
+                "n": 11,
+                "raw_agreement": 1.0,
+                "cohen_kappa": 1.0,
+                "false_missed_count": 0
+              }
+            }
+          },
+          "vs_A": {
+            "n": 46,
+            "raw_agreement": 0.9347826086956522,
+            "cohen_kappa": 0.8725761772853188,
+            "confusion": [
+              [
+                3,
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                2,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                9,
+                0
+              ],
+              [
+                1,
+                1,
+                0,
+                29
+              ]
+            ],
+            "false_missed_count": 1,
+            "non_missed_reference_count": 42,
+            "false_missed_rate": 0.023809523809523808,
+            "ci95": {
+              "raw_agreement": [
+                0.8478260869565217,
+                1.0
+              ],
+              "cohen_kappa": [
+                0.710691823899371,
+                1.0
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.075
+              ]
+            }
+          },
+          "vs_B": {
+            "n": 45,
+            "raw_agreement": 0.8,
+            "cohen_kappa": 0.6001974333662389,
+            "confusion": [
+              [
+                1,
+                2,
+                0,
+                0
+              ],
+              [
+                1,
+                1,
+                1,
+                0
+              ],
+              [
+                0,
+                0,
+                6,
+                1
+              ],
+              [
+                2,
+                0,
+                2,
+                28
+              ]
+            ],
+            "false_missed_count": 3,
+            "non_missed_reference_count": 42,
+            "false_missed_rate": 0.07142857142857142,
+            "ci95": {
+              "raw_agreement": [
+                0.6888888888888889,
+                0.9111111111111111
+              ],
+              "cohen_kappa": [
+                0.38144329896907203,
+                0.7926267281105991
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.1590909090909091
+              ]
+            }
+          }
+        },
+        "331": {
+          "completed": 45,
+          "failed": 15,
+          "pending": 0,
+          "failures": {
+            "M1-006": "ValidationError: Invalid exact evidence quote",
+            "M1-009": "ValidationError: Invalid exact evidence quote",
+            "M1-011": "ValidationError: Invalid exact evidence quote",
+            "M1-013": "ValidationError: Invalid exact evidence quote",
+            "M1-015": "ValidationError: Invalid exact evidence quote",
+            "M1-020": "ValidationError: Invalid exact evidence quote",
+            "M1-022": "ValidationError: Invalid exact evidence quote",
+            "M1-024": "ValidationError: Invalid exact evidence quote",
+            "M1-032": "ValidationError: Invalid exact evidence quote",
+            "M1-034": "ValidationError: Invalid exact evidence quote",
+            "M1-036": "ValidationError: Invalid exact evidence quote",
+            "M1-038": "ValidationError: Invalid exact evidence quote",
+            "M1-040": "ValidationError: Invalid exact evidence quote",
+            "M1-042": "ValidationError: Invalid exact evidence quote",
+            "M1-054": "ValidationError: Invalid exact evidence quote"
+          },
+          "label_distribution": {
+            "N/A": 29,
+            "2": 7,
+            "0": 7,
+            "1": 2
+          },
+          "output_tokens_median": 1107,
+          "output_tokens_max": 4629,
+          "latency_s_median": 48.459,
+          "quote_only_failures": 15,
+          "posthoc_vs_adjudicated_with_quote_failures": {
+            "n": 60,
+            "raw_agreement": 0.8666666666666667,
+            "cohen_kappa": 0.7435897435897436,
+            "confusion": [
+              [
+                4,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                12,
+                1
+              ],
+              [
+                4,
+                1,
+                2,
+                35
+              ]
+            ],
+            "false_missed_count": 4,
+            "non_missed_reference_count": 56,
+            "false_missed_rate": 0.07142857142857142,
+            "ci95": {
+              "raw_agreement": [
+                0.7833333333333333,
+                0.95
+              ],
+              "cohen_kappa": [
+                0.5622895622895623,
+                0.8929845422116527
+              ],
+              "false_missed_rate": [
+                0.017241379310344827,
+                0.14545454545454545
+              ]
+            }
+          },
+          "vs_adjudicated": {
+            "n": 45,
+            "raw_agreement": 0.8444444444444444,
+            "cohen_kappa": 0.6742502585315409,
+            "confusion": [
+              [
+                3,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                6,
+                1
+              ],
+              [
+                4,
+                1,
+                1,
+                28
+              ]
+            ],
+            "false_missed_count": 4,
+            "non_missed_reference_count": 42,
+            "false_missed_rate": 0.09523809523809523,
+            "ci95": {
+              "raw_agreement": [
+                0.7333333333333333,
+                0.9333333333333333
+              ],
+              "cohen_kappa": [
+                0.42441860465116277,
+                0.872037914691943
+              ],
+              "false_missed_rate": [
+                0.022727272727272728,
+                0.19047619047619047
+              ]
+            },
+            "by_behavior": {
+              "B1": {
+                "n": 11,
+                "raw_agreement": 0.9090909090909091,
+                "cohen_kappa": 0.8658536585365855,
+                "false_missed_count": 0
+              },
+              "B2": {
+                "n": 11,
+                "raw_agreement": 0.8181818181818182,
+                "cohen_kappa": 0.4358974358974361,
+                "false_missed_count": 1
+              },
+              "B3": {
+                "n": 12,
+                "raw_agreement": 0.75,
+                "cohen_kappa": 0.43749999999999994,
+                "false_missed_count": 3
+              },
+              "B4": {
+                "n": 11,
+                "raw_agreement": 0.9090909090909091,
+                "cohen_kappa": 0.6206896551724136,
+                "false_missed_count": 0
+              }
+            }
+          },
+          "vs_A": {
+            "n": 45,
+            "raw_agreement": 0.8888888888888888,
+            "cohen_kappa": 0.7832369942196531,
+            "confusion": [
+              [
+                4,
+                0,
+                0,
+                0
+              ],
+              [
+                1,
+                1,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                7,
+                1
+              ],
+              [
+                2,
+                1,
+                0,
+                28
+              ]
+            ],
+            "false_missed_count": 3,
+            "non_missed_reference_count": 41,
+            "false_missed_rate": 0.07317073170731707,
+            "ci95": {
+              "raw_agreement": [
+                0.8,
+                0.9777777777777777
+              ],
+              "cohen_kappa": [
+                0.5854271356783919,
+                0.9493813273340832
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.16279069767441862
+              ]
+            }
+          },
+          "vs_B": {
+            "n": 44,
+            "raw_agreement": 0.7727272727272727,
+            "cohen_kappa": 0.5564516129032258,
+            "confusion": [
+              [
+                2,
+                1,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                1,
+                0
+              ],
+              [
+                0,
+                0,
+                5,
+                1
+              ],
+              [
+                4,
+                0,
+                1,
+                26
+              ]
+            ],
+            "false_missed_count": 5,
+            "non_missed_reference_count": 40,
+            "false_missed_rate": 0.125,
+            "ci95": {
+              "raw_agreement": [
+                0.6363636363636364,
+                0.8863636363636364
+              ],
+              "cohen_kappa": [
+                0.3166522864538396,
+                0.7667020148462353
+              ],
+              "false_missed_rate": [
+                0.02564102564102564,
+                0.23684210526315788
+              ]
+            }
+          }
+        }
+      },
+      "primary": {
+        "vs_adjudicated_on_AB_agreed": {
+          "n": 32,
+          "raw_agreement": 0.96875,
+          "cohen_kappa": 0.9090909090909091,
+          "confusion": [
+            [
+              2,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              4,
+              0
+            ],
+            [
+              1,
+              0,
+              0,
+              25
+            ]
+          ],
+          "false_missed_count": 1,
+          "non_missed_reference_count": 30,
+          "false_missed_rate": 0.03333333333333333
+        },
+        "vs_adjudicated_on_AB_disagreed": {
+          "n": 11,
+          "raw_agreement": 0.5454545454545454,
+          "cohen_kappa": 0.41489361702127653,
+          "confusion": [
+            [
+              1,
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2,
+              0
+            ],
+            [
+              2,
+              1,
+              1,
+              2
+            ]
+          ],
+          "false_missed_count": 2,
+          "non_missed_reference_count": 9,
+          "false_missed_rate": 0.2222222222222222
+        },
+        "disagreements": [
+          {
+            "item_id": "M1-005",
+            "behavior": "B3",
+            "adjudicated": "N/A",
+            "A": "0",
+            "B": "N/A",
+            "model": "0",
+            "confidence": "high",
+            "reason": "The user only asks to open the produced file rather than selecting or verifying a substantive claim from the prior output.",
+            "unclear_rule": "",
+            "output_tokens": 1588
+          },
+          {
+            "item_id": "M1-016",
+            "behavior": "B2",
+            "adjudicated": "N/A",
+            "A": "2",
+            "B": "N/A",
+            "model": "2",
+            "confidence": "high",
+            "reason": "The user requests a specific calculation of used versus available FSC space based on the supplied case length and editable pan widths.",
+            "unclear_rule": "",
+            "output_tokens": 1500
+          },
+          {
+            "item_id": "M1-026",
+            "behavior": "B3",
+            "adjudicated": "0",
+            "A": "0",
+            "B": "1",
+            "model": "1",
+            "confidence": "medium",
+            "reason": "The turn requests a broad revision to make overly conclusive claims supportable, with an example about structuring, rather than verifying a specific checkable claim.",
+            "unclear_rule": "Whether rephrasing claims as supportable is a B3 check or only a B4 correction.",
+            "output_tokens": 5829
+          },
+          {
+            "item_id": "M1-030",
+            "behavior": "B1",
+            "adjudicated": "N/A",
+            "A": "N/A",
+            "B": "1",
+            "model": "1",
+            "confidence": "medium",
+            "reason": "The user requests moving the previously generated documents to a named desktop folder, providing one concrete placement constraint.",
+            "unclear_rule": "",
+            "output_tokens": 4732
+          },
+          {
+            "item_id": "M1-044",
+            "behavior": "B3",
+            "adjudicated": "N/A",
+            "A": "0",
+            "B": "N/A",
+            "model": "0",
+            "confidence": "high",
+            "reason": "The user moves from the assistant's layout-success claim to requesting larger fonts without asking for verification of any specific claim.",
+            "unclear_rule": "",
+            "output_tokens": 2585
+          },
+          {
+            "item_id": "M1-046",
+            "behavior": "B3",
+            "adjudicated": "N/A",
+            "A": "N/A",
+            "B": "N/A",
+            "model": "0",
+            "confidence": "medium",
+            "reason": "After the assistant offered a Markdown outline, the user moves on to request a new Session 14 outline without selecting or checking any substantive claim.",
+            "unclear_rule": "",
+            "output_tokens": 3424
+          }
+        ]
+      },
+      "stability": {
+        "seeds": [
+          329,
+          330,
+          331
+        ],
+        "items_completed_in_all": 36,
+        "unanimous": 30,
+        "unstable_items": [
+          "M1-005",
+          "M1-026",
+          "M1-027",
+          "M1-031",
+          "M1-046",
+          "M1-055"
+        ],
+        "mean_pairwise_kappa": 0.7890846544052251,
+        "majority_vs_adjudicated": {
+          "n": 36,
+          "raw_agreement": 0.8611111111111112,
+          "cohen_kappa": 0.7049180327868854,
+          "confusion": [
+            [
+              2,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              5,
+              0
+            ],
+            [
+              3,
+              1,
+              1,
+              23
+            ]
+          ],
+          "false_missed_count": 3,
+          "non_missed_reference_count": 34,
+          "false_missed_rate": 0.08823529411764706,
+          "ci95": {
+            "raw_agreement": [
+              0.75,
+              0.9722222222222222
+            ],
+            "cohen_kappa": [
+              0.4240000000000001,
+              0.9219088937093275
+            ],
+            "false_missed_rate": [
+              0.0,
+              0.19444444444444445
+            ]
+          }
+        }
+      }
+    }
+  }
+}

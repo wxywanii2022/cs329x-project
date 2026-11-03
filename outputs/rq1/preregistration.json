@@ -1,0 +1,24 @@
+{
+  "purpose": "Pre-declared RQ1 Main 1 protocol, recorded before any Main 1 model call",
+  "recorded_at_utc": "2026-11-02T09:42:01.680960+00:00",
+  "git_head": "11967a3b393776c6a8c264f9c1aeafeccb9c5284",
+  "primary": "qwen38-27b-fp8 seed 329",
+  "ablation": "qwen35-9b (reported regardless)",
+  "seeds": [
+    329,
+    330,
+    331
+  ],
+  "vllm": "0.32.0",
+  "sha256": {
+    "docs/local-assessor.md": "d578a28184541a5478514ea4ee3d4850c836df18de9326b25a52251ad76bf18d",
+    "configs/assessment.qwen38-27b-fp8.json": "14450cf0afb470dc24848f416560a45238d3890dfbbc181fffb8e5f86c0ec8fc",
+    "configs/assessment.qwen35-9b.json": "eef748d4b6febb9c207b6f3370a12e4cd8862c5ae7ab72740f0cedb61255f064",
+    "scripts/rq1_vllm.sbatch": "a968e12dee96202471e64ad5091c3329a0d1910e1b13e5e30d66888eb26a0b53",
+    "scripts/rq1_report.py": "8f82d70ef56fd7861799f267b1ac4782d8ed87a3dd5da729e5e75b55b10b1ea8",
+    "src/adaptive_tutor/adapters/local_vllm.py": "9d95e014e0f56daa52ce8631c240ac83052fac6107aa880d94e70f1e4e8298e9",
+    "src/adaptive_tutor/rq1/core.py": "52b0ed2ad6e703b9b680df1bdd6499d853c1a05bfd0cca19db2ed3a939f0ea9d",
+    "src/adaptive_tutor/rq1/rubrics/specification_verification_v02.md": "046ceb7bc8fb5035ebd347c56e3a16b4b8240deb4d3279904bf4a77bfb845e1d",
+    "data/rq1/main60/items.jsonl": "d550b6dc830361d76598c01fa4133822f17be04a8099abb0efeccf5ffde84fc9"
+  }
+}

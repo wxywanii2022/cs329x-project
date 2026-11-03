@@ -1,0 +1,2 @@
+v2 jobs: 1925647 1925648 1925649 1925650 (27B s329 s330 s331, 9B all seeds; RUNS=outputs/rq1-v2)
+v2 27B resume jobs: 1926354 1926355 1926356 (s329 s330 s331; first jobs hit the 1h10 limit)

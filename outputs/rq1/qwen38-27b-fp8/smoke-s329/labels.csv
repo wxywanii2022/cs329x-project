@@ -1,0 +1,6 @@
+item_id,session_id,target_turn_id,behavior,status,label,reason,confidence,unclear_rule,na_reason,rubric_version,input_hash
+demo-b1,synthetic-session-1,u1,B1,complete,2,"The request specifies length, format, and audience.",high,,,v0.2,d5ba7a3671dcf929868a2f1e69cf5cc17d15b55713060fdcb92b9a5942183ca0
+demo-b2,synthetic-session-2,u1,B2,complete,2,"The user requests a source column for each figure, a specific and usable evidence requirement.",high,,,v0.2,616a2d3c4b67b06673960ff5526f69fea69cff6a4b8acb7ce93e1d3a233f8bb4
+demo-b3,synthetic-session-3,u2,B3,complete,2,The user selects the specific 35% growth figure from the assistant's output and asks for its derivation by recalculation.,high,,,v0.2,6271695f37ca8ce769a8d9631d0b7a95d19d2c06b78625a5e7b8a3265f3b651e
+demo-b4-na,synthetic-session-4,u2,B4,complete,N/A,The user only states a preference and no problem in an agent output is visible.,high,,no_opportunity,v0.2,8065c10785e6166cebd099feccfc931cf769226f9f7eeb2c8b6526127079e5c6
+synthetic-long-b3,synthetic-session-long,u4,B3,complete,0,The user accepts the agent's test and coverage claims and moves on without checking any substantive claim.,high,,,v0.2,0d29cc637a16cbda679be54be13f542731dea6d3d7338b71ee9e27d7c3be4231
