@@ -54,7 +54,10 @@ class MockAdapter:
     def generate(self, request: dict, model) -> dict:
         role, payload = request["role"], request["payload"]
         rng = random.Random(request["sample_seed"])
-        if role in {"assessment", "evaluator"}:
+        if role == "assessment" and "behavior" in payload:
+            from ..rq1.mock import mock_annotation
+            output = mock_annotation(payload)
+        elif role in {"assessment", "evaluator"}:
             output = mock_scores(payload)
         elif role == "coach":
             scores = payload.get("assessment", {}).get("items", [])

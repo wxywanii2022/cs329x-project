@@ -22,6 +22,25 @@ class RecordedFailure(RuntimeError):
     pass
 
 
+def check_response(response, request, validator, total_token_allowance=None):
+    """Every acceptance check applied to a provider response, also used to re-check recorded ones."""
+    keys(response, {"output", "usage", "provider_request_id", "model_id", "tool_calls"})
+    keys(response["usage"], {"input_tokens", "output_tokens", "estimated"})
+    for name in ("input_tokens", "output_tokens"):
+        integer(response["usage"][name], name)
+    require(type(response["usage"]["estimated"]) is bool, "estimated must be boolean")
+    string(response["provider_request_id"], "provider_request_id")
+    require(response["model_id"] == request["model"]["model_id"], "Adapter returned a different model ID")
+    require(response["tool_calls"] == [], "Protocol v1 disables model tools")
+    output = validator(response["output"])
+    usage = response["usage"]
+    require(usage["output_tokens"] <= request["limits"]["max_output_tokens"], "Output token cap exceeded")
+    if total_token_allowance is not None:
+        require(usage["input_tokens"] + usage["output_tokens"] <= total_token_allowance,
+                "Coaching token cap exceeded")
+    return output, usage
+
+
 class Gateway:
     def __init__(self, models: dict[str, ModelSpec], budget: Budget, journal: Journal, seed: int):
         self.models, self.budget, self.journal, self.seed = models, budget, journal, seed
@@ -30,11 +49,13 @@ class Gateway:
 
     def call(self, role: str, payload: dict, validator, *, call_id: str, session_id: str,
              block_id: str, branch_id: str | None, phase: str,
-             max_output_tokens: int | None = None, total_token_allowance: int | None = None) -> tuple[dict, dict]:
+             max_output_tokens: int | None = None, total_token_allowance: int | None = None,
+             prompt_text: str | None = None, prompt_version: str | None = None) -> tuple[dict, dict]:
         model = self.models[role]
-        prompt_version = role + "_v1"
+        require((prompt_text is None) == (prompt_version is None), "Custom prompt needs text and version")
+        prompt_version = prompt_version or role + "_v1"
         request = {"protocol_version": "1", "role": role, "session_id": session_id,
-                   "system_prompt": (PROMPTS / (prompt_version + ".txt")).read_text(encoding="utf-8"),
+                   "system_prompt": prompt_text if prompt_text is not None else (PROMPTS / (prompt_version + ".txt")).read_text(encoding="utf-8"),
                    "prompt_version": prompt_version, "payload": payload,
                    "sample_seed": int(digest([self.seed, call_id])[:8], 16),
                    "model": {"model_id": model.model_id, "temperature": model.temperature,
@@ -74,20 +95,7 @@ class Gateway:
                 self._fail(call_id, request_hash, str(exc), context)
                 raise
             try:
-                keys(response, {"output", "usage", "provider_request_id", "model_id", "tool_calls"})
-                keys(response["usage"], {"input_tokens", "output_tokens", "estimated"})
-                for name in ("input_tokens", "output_tokens"):
-                    integer(response["usage"][name], name)
-                require(type(response["usage"]["estimated"]) is bool, "estimated must be boolean")
-                string(response["provider_request_id"], "provider_request_id")
-                require(response["model_id"] == model.model_id, "Adapter returned a different model ID")
-                require(response["tool_calls"] == [], "Protocol v1 disables model tools")
-                output = validator(response["output"])
-                usage = response["usage"]
-                require(usage["output_tokens"] <= request["limits"]["max_output_tokens"], "Output token cap exceeded")
-                if total_token_allowance is not None:
-                    require(usage["input_tokens"] + usage["output_tokens"] <= total_token_allowance,
-                            "Coaching token cap exceeded")
+                output, usage = check_response(response, request, validator, total_token_allowance)
             except (ValidationError, TypeError, KeyError) as exc:
                 self._fail(call_id, request_hash, str(exc), context, response=response,
                            latency_ms=round((time.monotonic() - started) * 1000), attempt=attempt)

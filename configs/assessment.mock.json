@@ -1,0 +1,16 @@
+{
+  "model": {
+    "adapter": "mock",
+    "model_id": "offline-assessment-v1",
+    "family": "mock",
+    "supports_seed": true,
+    "temperature": 0
+  },
+  "rubric_version": "v0.2",
+  "seed": 329,
+  "budget": {
+    "max_output_tokens": 1000,
+    "max_context_bytes": 200000,
+    "transport_attempts": 1
+  }
+}

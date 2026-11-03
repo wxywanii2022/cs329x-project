@@ -4,6 +4,29 @@ Python implementation of the four-condition simulation in **CS329X Problem Propo
 
 **Status:** the complete offline workflow is implemented. The bundled mocks test experiment plumbing; their scores are not evidence of coaching efficacy or human learning. Live roles use replaceable process adapters, including an optional HTTP bridge. The team's validated RQ1 assessor, human calibration, accepted task rubric, and held-out task bank are still research inputs.
 
+## RQ1 assessment integration (local implementation)
+
+A standalone decision-point assessment pipeline is now available as `tutor-assess`.
+See [assessment setup and teammate handoff](docs/assessment.md) for the input/output
+contract, frozen v0.2, synthetic examples, independent-reference comparisons, and
+participant-disjoint checks. **The team's real model is deliberately unconfigured**
+(`configs/assessment.team.example.json`: `model: null`). No live model validation
+is implied.
+
+The simulation assessor now makes four separate prefix-only calls, without an
+oracle opportunity label. It uses the explicitly separate candidate simulation
+rubric. The independent outcome evaluator has **not** yet been migrated to
+prefix-only packets; its existing full-record exposure remains a research gate.
+Use new run directories after these code changes; historical outputs are not
+rewritten and should be audited with their original implementation version.
+
+```bash
+uv pip install --python .venv/bin/python -e .
+.venv/bin/tutor-assess run --items examples/assessment_items.synthetic.jsonl \
+  --config configs/assessment.mock.json --output outputs/assessment-final
+.venv/bin/tutor-assess audit --run outputs/assessment-final
+```
+
 ## 1. Quick start
 
 Requires **Python 3.11+**. There are **no runtime or test dependencies** beyond the Python standard library. Run commands from this directory.
@@ -177,7 +200,7 @@ See the full [adapter contract](docs/adapters.md). Each role can use a different
 
 The bridge uses JSON mode, `max_completion_tokens`, and provider usage counts according to the [official Chat Completions API reference](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create). Compatibility with other providers must be checked in their adapters; different model families do not necessarily expose the same API. Select exact accessible model IDs after pilot testing. Aliases that resolve to a different returned ID fail the pinning check. Models must support the configured parameters, including temperature and JSON mode; unsupported settings are recorded as failures.
 
-The bundled assessor/evaluator prompts and exercises are candidate implementations. Replace and version them after team validation. No API credentials or paid calls were used to validate this repository.
+The standalone real-log assessor uses the preserved frozen v0.2 protocol. The simulation assessor/evaluator rubric and exercises remain candidate implementations. Replace and version them after team validation. No API credentials or paid calls were used to validate this repository.
 
 ## 7. Scoring and analysis
 
@@ -214,7 +237,7 @@ $env:PYTHONPATH = 'src'
 python -m unittest discover -s tests -v
 ```
 
-Tests cover shared snapshots and mutation isolation, exact condition masks, answer-key exclusion, counterbalancing, standardized disclosure, missing opportunities, score evidence, N/A arithmetic, paired exports, independent sessions, fixed retries, process adapters, failure preservation, interruption/resume and offline replay.
+Tests cover shared snapshots and mutation isolation, exact condition masks, answer-key exclusion, counterbalancing, standardized disclosure, missing opportunities, score evidence, N/A arithmetic, paired exports, independent sessions, fixed retries, process adapters, failure preservation, interruption/resume and offline replay. New RQ1 regressions additionally verify prefix-only input (not just quote validation), oracle-status exclusion, separate behavior calls, failure-versus-N/A handling, blank model configuration and participant-disjoint guards.
 
 Local verification on **2026-10-27**, using Python 3.12: **29 tests passed**. The final [demo manifest](outputs/final-demo/manifest.json) contains one block and five task records; the [pilot manifest](outputs/final-pilot/manifest.json) contains 96 blocks and 480 records. Both completed with zero failed branches and zero failed scores. These generated, ignored output directories are available in this workspace; a fresh checkout recreates them with the commands above.
 

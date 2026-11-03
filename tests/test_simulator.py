@@ -143,7 +143,11 @@ class RunTest(unittest.TestCase):
             self.assertEqual("assessment" in payload, condition != "without_assessment")
             for key in ("private_answer_key", "answer_key", "reporting_group", "model_config", "condition"):
                 self.assertNotIn('"' + key + '"', canonical(payload))
-        self.assertNotIn("background", assessment_payload(pre))
+        for behavior in BEHAVIORS:
+            packet = assessment_payload(pre, behavior)
+            self.assertNotIn("background", packet)
+            self.assertNotIn("opportunities", packet)
+            self.assertEqual(packet["messages"][-1]["turn_id"], packet["target_turn_id"])
         learner = learner_payload(state, pre["task"], "review")
         self.assertIn("initial_background", learner)
         self.assertNotIn("snapshot_hash", canonical(learner))
