@@ -6,32 +6,36 @@ The proposal's opening section describes four branches with retained learner his
 
 The simulator implements immediate transfer with retained conversational context. It makes no claim about lasting human learning or updated model weights.
 
-## The simulator rubric adaptation
+## One rubric for RQ1 and RQ2
 
-The appendix's existing rubric sometimes makes B1 N/A when requirements are fully supplied and B2 N/A when sources are supplied. The guide instead deliberately supplies requirements and a source table, then measures whether the learner communicates them to the task agent. Applying the appendix literally would remove key opportunities from every primary task.
+RQ2 applies the frozen RQ1 codebook **v0.2** without changes, and the assessor and evaluator use the evaluated output contract **`decision-point-v2`** (quote checking) through the same payload builder and validator as RQ1. The codebook defines labels; the contract defines the output format and evidence checks. They are versioned separately.
 
-The implementation therefore names its candidate rubric **`sim-opportunities-v1`**. Assignment constraints are learner-side instructions; the scripted task agent responds to the learner's visible request and source table, not the assignment instructions. B1 measures communicating at least two concrete properties. B2 measures a specific request for traceable source support, even though a table exists. B3 is measured before the fixed evidence disclosure. B4 is measured after disclosure so everyone has a visible correction opportunity.
+An earlier candidate rubric, `sim-opportunities-v1`, kept the guide's tasks (requirements and a source table supplied to the learner) and changed the rules so B1/B2 still counted. Under v0.2 those tasks have no B1/B2 opportunity: supplied requirements make B1 N/A and supplied sources make B2 N/A. We changed the tasks instead of the rules. The learner now receives a goal ("tell a colleague how completed requests changed") and a description of the data the assistant holds, with no prescribed format and no values. The numeric table stays with the scripted task agent. Whether a given simulated dialogue contains an opportunity is still judged from the visible prefix, as in RQ1.
 
-This is an explicit operational choice to be accepted and calibrated by the team, not a claim of equivalence to the frozen RQ1 codebook. The assessment and outcome prompts both state it. A future validated mapping must change the prompt/data/implementation version and use a new output directory.
+| Behavior | Decision point | What the task leaves open |
+| --- | --- | --- |
+| B1 | Initial learner request | Format, length, audience and content are not prescribed |
+| B2 | Initial learner request | The learner has no sources; it can ask for the calculation or a citation |
+| B3 | Learner response to the draft, before any disclosure | The draft's growth claim is wrong (35% for 28%) |
+| B4 | Learner response to the fixed disclosure, or the review turn if the learner already named the error and asked for a fix | The error is visible and open to correction |
 
-| Behavior | Primary decision point | 2 | 1 | 0 |
-| --- | --- | --- | --- | --- |
-| B1 | Initial learner request | At least two concrete deliverable properties | One property or vague qualities | No deliverable requirements |
-| B2 | Initial learner request | Specific source/calc support request | Generic accuracy request | No evidence requirement |
-| B3 | Learner response to draft | Specific claim selected for checking | General recheck | Accepts or moves on |
-| B4 | Learner response to fixed disclosure | Specific problem plus concrete correction | Generic dissatisfaction | Leaves the disclosed issue unaddressed |
+Shared code does not imply shared accuracy. Before research runs, run the assessor on the constructed cases in `data/rq2/v02_fixtures` and compare it with human labels on a sample of simulator records, with particular attention to the B1/B2 N/A-versus-0 boundary.
 
 The fixture `accurate_01` still permits checking a specific claim but has no B4 problem. `no_trigger_01` supplies a preference task with no scored opportunities. `incomplete_01` deliberately has no captured dialogue, producing `insufficient_evidence` instead of zeros. These cases test observability and N/A handling; they are not primary transfer pairs.
 
 ## Controlled assistance and simulated adaptation
 
-The task agent fixes the initial growth claim, calculates follow-up evidence deterministically, and preserves an incorrect draft unless a recognizable correction request occurs. All branches receive the same fixed disclosure even if the learner already discovered the discrepancy. Its request parsing is deliberately limited to visible lexical patterns, documented in `tasks.py`; it is not a general natural-language tutor.
+The task agent fixes the initial growth claim, calculates follow-up evidence deterministically, and preserves an incorrect draft unless a recognizable correction request occurs. If the learner names the error and asks for a fix at review, the agent applies it then; the fixed disclosure that follows reports that the revised draft agrees with the table, and B4 is scored at the review turn (`b4_decision_stage`). All branches still receive the same disclosure. Its request parsing is deliberately limited to visible lexical patterns, documented in `tasks.py`; it is not a general natural-language tutor.
 
-The `discovery` field distinguishes spontaneous checking from prompted disclosure. `spontaneous_check_then_correction` reports that observable sequence, but the correction still occurs after standardized disclosure. It must not be described as an unprompted naturalistic correction rate. The primary B4 outcome is correction **after disclosure**. A separate naturalistic protocol would be needed to remove that disclosure.
+The `discovery` field distinguishes spontaneous checking from prompted disclosure. `spontaneous_check_then_correction` reports that observable sequence. Correction before disclosure is possible but requires the learner to name the error without the table, so most B4 decisions still follow the standardized disclosure. B4 must not be described as an unprompted naturalistic correction rate. A separate naturalistic protocol would be needed to remove that disclosure.
 
 Six candidate knowledge profiles cover three reporting groups with two variants each. Domain knowledge, response-length preference and time availability are matched. The initial date is fixed in the profile data. There is no skill counter, automatic gain, hidden memory update or instruction to achieve a target score. Real learner calls always use the same policy and their own observed history.
 
-The mock learner samples canned responses without reference to reporting group or treatment. The mock scorer uses lexical rules to exercise labels, not a calibrated evaluator. Consequently offline profile comparisons and coaching effects are meaningless as scientific estimates, including when an apparent gain happens by chance.
+The mock learner samples canned responses without reference to reporting group or treatment. The mock assessor and evaluator use lexical rules to exercise labels, not a calibrated judgment.
+
+## Outcome scoring
+
+The evaluator is a separate role and model that applies the same v0.2 codebook and v2 contract one behavior at a time. Each call sees only the dialogue up to that behavior's decision turn: no later turns, condition, profile, coaching, answer key, final artifact or prescribed opportunity status. Behavior scores therefore cannot be influenced by hindsight or by whether the final answer was right. Final-artifact correctness (arithmetic, source references) is checked mechanically and reported separately. Consequently offline profile comparisons and coaching effects are meaningless as scientific estimates, including when an apparent gain happens by chance.
 
 ## Analysis and human review
 

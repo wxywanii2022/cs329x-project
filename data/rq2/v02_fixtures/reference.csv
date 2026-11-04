@@ -1,0 +1,12 @@
+item_id,behavior,label,reason
+F01,B1,0,"Judgeable request, no output properties, none supplied by the task"
+F02,B1,2,Two concrete properties: format (one-page email) and structure (three bullets)
+F03,B1,N/A,The task prompt already fully specifies the deliverable
+F04,B2,0,Evidence-dependent request with no evidence requirement; the task gives the learner no sources
+F05,B2,2,Specific requirement: show the calculation and cite the source table and columns
+F06,B3,N/A,The agent output is a clarifying question with no checkable claim
+F07,B3,1,General re-check without targeting a specific claim
+F08,B3,2,Targets the specific 35% claim and asks for it to be recalculated
+F09,B4,N/A,No problem is visible: the draft agrees with its shown calculation
+F10,B4,0,A problem is visible after disclosure and the user leaves it alone
+F11,B4,2,Names the specific problem (35%) and the concrete fix (28%)

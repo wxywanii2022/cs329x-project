@@ -13,7 +13,7 @@ from .coaching import choose_exercise, load_exercises
 from .evaluation import blind_record, mechanical_checks, score_record
 from .learner import learner_turn
 from .profiles import load_profiles
-from .schema import BEHAVIORS, CONDITIONS, ExperimentConfig, require
+from .schema import ASSESSMENT_CONTRACT, BEHAVIORS, CONDITIONS, ExperimentConfig, require
 from .storage import Journal, RunLock, canonical, digest, fork_snapshot, freeze_snapshot, read_json, write_json
 from .tasks import ScriptedTaskAgent, load_tasks, public_task
 
@@ -72,7 +72,8 @@ class ExperimentRunner:
             for blind_id in packets:
                 self.evaluate(blind_id)
             manifest = {"config_hash": self.config_hash, "mode": self.config.mode,
-                        "rubric_version": self.config.rubric_version, "blocks": blocks,
+                        "rubric_version": self.config.rubric_version,
+                        "assessment_contract": ASSESSMENT_CONTRACT, "blocks": blocks,
                         "task_records": len(packets),
                         "failed_branches": sum(b["status"] != "complete" for block in blocks for b in block["branches"].values()),
                         "failed_scores": sum(read_json(self.output / "scores" / f"{p}.json")["status"] != "complete" for p in packets)}
@@ -122,15 +123,23 @@ class ExperimentRunner:
                                         call_id=f"{block_id}/{branch_id}/{phase}/review", **context)
             decision_ids["B3"] = add("learner", response["content"])
             add("task_agent", agent.follow_up(response["content"]))
+            # A learner who names the error and asks for a fix at review has
+            # performed B4 there (v0.2: the user points out the problem). Score
+            # that turn, not a later turn where nothing is left to correct.
+            early_correction = agent.corrected
+            if early_correction:
+                decision_ids["B4"] = decision_ids["B3"]
             disclosure_id = add("environment", agent.disclosure())
             response, _ = learner_turn(self.gateway, state, public_task(task), "correction",
                                         call_id=f"{block_id}/{branch_id}/{phase}/correction", **context)
-            decision_ids["B4"] = add("learner", response["content"])
+            correction_id = add("learner", response["content"])
+            if not early_correction:
+                decision_ids["B4"] = correction_id
             add("task_agent", agent.finish(response["content"]))
         else:
-            disclosure_id = None
+            disclosure_id, early_correction = None, False
         actual = {b: {"status": task["opportunities"][b], "decision_message_id": decision_ids.get(b),
-                       "disclosure_message_id": disclosure_id if b == "B4" else None}
+                       "disclosure_message_id": disclosure_id if b == "B4" and not early_correction else None}
                   for b in BEHAVIORS}
         record = {"task": public_task(task), "messages": messages,
                   "opportunities": {"prescribed": copy.deepcopy(task["opportunities"]), "actual": actual},
@@ -139,7 +148,8 @@ class ExperimentRunner:
                   "task_hash": digest(task), "task_agent_session_id": task_session,
                   "task_agent_help_count": agent.help_count,
                   "discovery": "spontaneous" if agent.discovered else "prompted" if task["error_schedule"]["kind"] == "incorrect_growth" else "not_applicable",
-                  "natural_chain_completed": agent.discovered and agent.corrected}
+                  "natural_chain_completed": agent.discovered and agent.corrected,
+                  "b4_decision_stage": "review" if early_correction else "correction" if disclosure_id else None}
         record["mechanical_checks"] = mechanical_checks(record)
         state["environment_state"] = {"task_hash": digest(task), "task": copy.deepcopy(task), "completed": True}
         state["artifacts"] = {"final_artifact": agent.last_artifact}

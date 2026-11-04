@@ -25,11 +25,11 @@
 
 运行时检查这个哈希。用户粘贴的 proposal/Protocol 包含较早或简写措辞，没有静默替换已冻结规则。输出 schema 的说明附在完整规则后面，不改变评分标准。新的 assessment 调用不再使用旧的 `prompts/assessment_v1.txt`；修改提示词时应查看 `rq1/core.py` 和对应 rubric，而不是修改未使用的旧文件。
 
-### 模拟任务：sim-opportunities-v1
+### 模拟任务：同样使用 v0.2
 
-保留仓库的 candidate adaptation（learner 向 task assistant 传达要求和证据标准）。它与 v0.2 的 B1/B2 N/A 例外有差别，**仍需团队批准和独立校准**。不能把在 v0.2 上的表现直接视为该模拟版本已经验证。
+RQ2 的 assessor 和 evaluator 都使用冻结的 v0.2 codebook 和 `decision-point-v2` contract，通过同一个 payload builder 和 quote validator。之前的 `sim-opportunities-v1` 不再使用：我们改了模拟任务，而不是改规则（learner 只拿到目标和 assistant 持有的数据说明，没有预设格式和数值），见 [methodology](methodology.md)。
 
-`assessment.py` 在 simulation 内调用同一个核心函数，但明确选择模拟 rubric。每个 pre-task 的 assessment 从一次合并调用改为 B1–B4 四次独立调用，模型调用预算应据此重算。
+共用代码不等于共用准确率。正式运行 RQ2 前，先在 `data/rq2/v02_fixtures` 和一批人工标注的模拟记录上检查 assessor。每个 task record 的 assessment 和 evaluation 各是 B1–B4 四次独立调用，模型调用预算应据此重算。
 
 ## 3. 最短本地运行
 

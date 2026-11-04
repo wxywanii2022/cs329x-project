@@ -14,18 +14,21 @@ from unittest.mock import patch
 from adaptive_tutor.adapters.base import Gateway, RecordedFailure
 from adaptive_tutor.adapters.command import CommandAdapter, TransportError
 from adaptive_tutor.adapters.http_bridge import build_body
-from adaptive_tutor.adapters.mock import MockAdapter, mock_scores
+from adaptive_tutor.adapters.mock import MockAdapter
 from adaptive_tutor.analysis import agreement
 from adaptive_tutor.assessment import assessment_payload
 from adaptive_tutor.audit import audit_run, replay
 from adaptive_tutor.coaching import coach_payload, load_exercises
-from adaptive_tutor.evaluation import blind_record, percentage, validate_record_scores
+from adaptive_tutor.evaluation import blind_record, evaluator_payload, percentage
 from adaptive_tutor.learner import learner_payload
 from adaptive_tutor.profiles import load_profiles
 from adaptive_tutor.runner import ExperimentRunner, build_bundle
-from adaptive_tutor.schema import BEHAVIORS, CONDITIONS, Budget, ExperimentConfig, ModelSpec, ValidationError, parse_decision, parse_scores, parse_utterance
+from adaptive_tutor.rq1.core import rubric_prompt, validate_annotation
+from adaptive_tutor.rq1.mock import mock_annotation
+from adaptive_tutor.rq1.pipeline import load_items
+from adaptive_tutor.schema import ASSESSMENT_CONTRACT, BEHAVIORS, CONDITIONS, RUBRIC_VERSION, Budget, ExperimentConfig, ModelSpec, ValidationError, parse_decision, parse_scores, parse_utterance
 from adaptive_tutor.storage import Journal, canonical, digest, fork_snapshot, freeze_snapshot, read_json, write_json
-from adaptive_tutor.tasks import ScriptedTaskAgent, load_tasks
+from adaptive_tutor.tasks import ScriptedTaskAgent, load_tasks, public_task
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -84,8 +87,45 @@ class ContractsTest(unittest.TestCase):
         response = agent.follow_up("Verify the 35% growth calculation")
         self.assertIn("28%", response)
         self.assertTrue(agent.discovered)
+        self.assertFalse(agent.corrected)
+        self.assertIn("conflicts with the table", agent.disclosure())
         self.assertIn("35%", agent.finish("Thanks"))
         self.assertIn("28%", agent.finish("Correct the growth claim to 28%"))
+
+    def test_task_agent_applies_a_fix_requested_before_disclosure(self):
+        agent = ScriptedTaskAgent(load_tasks()["briefs_01", "A"])
+        agent.opening("Summarize this")
+        response = agent.follow_up("The 35% growth looks wrong; please recalculate it and fix the draft.")
+        self.assertTrue(agent.corrected)
+        self.assertIn("28%", response)
+        self.assertIn("revised draft agrees", agent.disclosure())
+        self.assertNotIn("35%", agent.finish("Thanks"))
+
+    def test_learner_task_supplies_no_requirements_or_values(self):
+        # v0.2: supplied requirements remove B1, supplied sources remove B2.
+        for task in load_tasks().values():
+            visible = public_task(task)
+            self.assertEqual(set(visible), {"instructions", "assistant_data"})
+            self.assertEqual(task["rubric_version"], RUBRIC_VERSION)
+            for source in task["sources"]:
+                for value in (source["baseline"], source["current"], task["private_answer_key"]["growth_percent"]):
+                    self.assertNotIn(str(value), canonical(visible))
+            self.assertNotRegex(task["instructions"].lower(), r"bullet|one-page|one page|source column|cite")
+
+    def test_rq2_uses_the_frozen_rq1_codebook_and_contract(self):
+        self.assertEqual((RUBRIC_VERSION, ASSESSMENT_CONTRACT), ("v0.2", "decision-point-v2"))
+        self.assertEqual(config().rubric_version, "v0.2")
+
+    def test_v02_regression_fixtures_load_through_the_rq1_pipeline(self):
+        folder = ROOT / "data" / "rq2" / "v02_fixtures"
+        items = load_items(folder / "items.jsonl")
+        with (folder / "reference.csv").open(newline="", encoding="utf-8") as handle:
+            reference = {r["item_id"]: r for r in csv.DictReader(handle)}
+        self.assertEqual(len(items), 11)
+        self.assertEqual({i["item_id"] for i in items}, set(reference))
+        for item in items:
+            self.assertEqual(reference[item["item_id"]]["behavior"], item["payload"]["behavior"])
+            self.assertIn(reference[item["item_id"]]["label"], {"0", "1", "2", "N/A"})
 
     def test_decisions_allow_none_and_only_bank_exercises(self):
         bank = load_exercises()
@@ -152,17 +192,38 @@ class RunTest(unittest.TestCase):
         self.assertIn("initial_background", learner)
         self.assertNotIn("snapshot_hash", canonical(learner))
 
-    def test_blind_packets_hide_treatment_and_keep_local_message_ids(self):
+    def test_blind_packets_hide_treatment_answer_key_and_oracle_status(self):
         packet = blind_record(self.pre["record"], "opaque")
-        self.assertEqual(set(packet), {"task", "messages", "opportunities", "answer_key", "final_artifact", "rubric_version", "blind_record_id"})
+        self.assertEqual(set(packet), {"blind_record_id", "rubric_version", "messages", "decision_message_ids"})
         self.assertEqual(packet["messages"][0]["message_id"], "m001")
-        self.assertEqual(packet["messages"][0]["actor"], "evidence")
-        self.assertEqual(packet["messages"][1]["actor"], "user")
+        for key in ("answer_key", "final_artifact", "opportunities", "available", "growth_percent"):
+            self.assertNotIn('"' + key + '"', canonical(packet))
 
-    def test_post_history_retains_observed_assignment_and_source_table(self):
+    def test_evaluator_sees_only_each_behaviors_decision_prefix(self):
+        packet = blind_record(self.pre["record"], "opaque")
+        disclosure = next(m["message_id"] for m in packet["messages"] if m["content"].startswith("Standard evidence disclosure"))
+        for behavior in BEHAVIORS:
+            payload = evaluator_payload(packet, behavior)
+            ids = [m["turn_id"] for m in payload["messages"]]
+            self.assertEqual(ids[-1], packet["decision_message_ids"][behavior])
+            self.assertEqual(payload, assessment_payload(self.pre["record"], behavior))
+            if behavior == "B3":
+                self.assertNotIn(disclosure, ids)
+
+    def test_assessor_and_evaluator_use_the_rq1_prompt(self):
+        expected = rubric_prompt("v0.2", "decision-point-v2")
+        roles = set()
+        for event in Journal.read(self.output / "events.jsonl"):
+            if event["kind"] == "call_attempt" and event["request"]["role"] in {"assessment", "evaluator"}:
+                self.assertEqual(event["request"]["system_prompt"], expected)
+                roles.add(event["request"]["role"])
+        self.assertEqual(roles, {"assessment", "evaluator"})
+
+    def test_post_history_retains_observed_assignment_without_table_values(self):
         state = self.pre["snapshot"]
         self.assertIn("Task assignment:", state["messages"][0]["content"])
         self.assertIn("service_table_v1", state["messages"][0]["content"])
+        self.assertNotIn("128", state["messages"][0]["content"])
         self.assertEqual(state["environment_state"]["task"], load_tasks()["briefs_01", "A"])
         for condition in CONDITIONS:
             branch = read_json(self.folder / "branches" / condition / "result.json")
@@ -172,30 +233,39 @@ class RunTest(unittest.TestCase):
 
     def test_scoring_rejects_invented_evidence_and_future_turns(self):
         record = self.pre["record"]
-        value = mock_scores(record)
-        value["items"][0]["supporting_spans"] = ["This span does not exist."]
+        payload = evaluator_payload(blind_record(record, "opaque"), "B3")
+        value = mock_annotation(payload)
+        value["evidence"] = [{"turn_id": payload["target_turn_id"], "quote": "This span does not exist."}]
         with self.assertRaises(ValidationError):
-            validate_record_scores(value, record)
-        value = mock_scores(record)
-        value["items"][2]["evidence_message_ids"] = [record["messages"][-1]["message_id"]]
-        value["items"][2]["supporting_spans"] = [record["messages"][-1]["content"][:100]]
+            validate_annotation(value, payload, ASSESSMENT_CONTRACT)
+        value = mock_annotation(payload)
+        later = record["messages"][-1]
+        value["evidence"] = [{"turn_id": later["message_id"], "quote": later["content"][:100]}]
         with self.assertRaises(ValidationError):
-            validate_record_scores(value, record)
+            validate_annotation(value, payload, ASSESSMENT_CONTRACT)
 
     def test_scoring_rejects_boolean_labels_and_wrong_na(self):
-        for label in (True, 3, "2", None):
-            value = mock_scores(self.pre["record"])
-            value["items"][0]["label"] = label
+        payload = evaluator_payload(blind_record(self.pre["record"], "opaque"), "B1")
+        for label, status in ((True, "available"), (3, "available"), ("2", "available"), (None, "available")):
+            value = mock_annotation(payload)
+            value.update(label=label, opportunity_status=status, na_reason=None)
             with self.subTest(label=label), self.assertRaises(ValidationError):
-                parse_scores(value, self.pre["record"]["messages"])
+                validate_annotation(value, payload, ASSESSMENT_CONTRACT)
 
-    def test_standard_disclosure_precedes_correction_for_every_branch(self):
+    def test_b4_is_scored_after_disclosure_or_at_an_earlier_correction(self):
+        records = [self.pre["record"]] + [read_json(self.folder / "branches" / c / "result.json")["record"]
+                                          for c in CONDITIONS]
+        for record in records:
+            actual = record["opportunities"]["actual"]
+            self.assertEqual(actual["B4"]["status"], "available")
+            if record["b4_decision_stage"] == "review":
+                self.assertEqual(actual["B4"]["decision_message_id"], actual["B3"]["decision_message_id"])
+                self.assertIsNone(actual["B4"]["disclosure_message_id"])
+            else:
+                self.assertEqual(record["b4_decision_stage"], "correction")
+                self.assertLess(actual["B4"]["disclosure_message_id"], actual["B4"]["decision_message_id"])
         for condition in CONDITIONS:
-            branch = read_json(self.folder / "branches" / condition / "result.json")
-            record = branch["record"]
-            opportunity = record["opportunities"]["actual"]["B4"]
-            self.assertLess(opportunity["disclosure_message_id"], opportunity["decision_message_id"])
-            self.assertEqual(opportunity["status"], "available")
+            record = read_json(self.folder / "branches" / condition / "result.json")["record"]
             self.assertEqual(record["task_hash"], digest(load_tasks()["briefs_01", "B"]))
 
     def test_control_never_receives_coach_and_post_task_has_no_coach_turns(self):
