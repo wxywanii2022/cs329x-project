@@ -121,7 +121,7 @@ class ContractsTest(unittest.TestCase):
         items = load_items(folder / "items.jsonl")
         with (folder / "reference.csv").open(newline="", encoding="utf-8") as handle:
             reference = {r["item_id"]: r for r in csv.DictReader(handle)}
-        self.assertEqual(len(items), 11)
+        self.assertEqual(len(items), 13)
         self.assertEqual({i["item_id"] for i in items}, set(reference))
         for item in items:
             self.assertEqual(reference[item["item_id"]]["behavior"], item["payload"]["behavior"])

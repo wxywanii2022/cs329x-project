@@ -4,6 +4,8 @@ F02,B1,2,Two concrete properties: format (one-page email) and structure (three b
 F03,B1,N/A,The task prompt already fully specifies the deliverable
 F04,B2,0,Evidence-dependent request with no evidence requirement; the task gives the learner no sources
 F05,B2,2,Specific requirement: show the calculation and cite the source table and columns
+F12,B2,N/A,"The task already states the evidence requirement (source table, calculation, columns)"
+F13,B2,N/A,The task supplies the source values to the user
 F06,B3,N/A,The agent output is a clarifying question with no checkable claim
 F07,B3,1,General re-check without targeting a specific claim
 F08,B3,2,Targets the specific 35% claim and asks for it to be recalculated

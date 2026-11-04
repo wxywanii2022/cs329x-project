@@ -19,7 +19,7 @@ An earlier candidate rubric, `sim-opportunities-v1`, kept the guide's tasks (req
 | B3 | Learner response to the draft, before any disclosure | The draft's growth claim is wrong (35% for 28%) |
 | B4 | Learner response to the fixed disclosure, or the review turn if the learner already named the error and asked for a fix | The error is visible and open to correction |
 
-Shared code does not imply shared accuracy. Before research runs, run the assessor on the constructed cases in `data/rq2/v02_fixtures` and compare it with human labels on a sample of simulator records, with particular attention to the B1/B2 N/A-versus-0 boundary.
+Shared code does not imply shared accuracy. Before research runs, run the assessor on the constructed cases in `data/rq2/v02_fixtures` (including the B2 boundary between naming the assistant's table, F04, and supplying the evidence rule or source values, F12/F13) and compare it with human labels on a sample of simulator records, with particular attention to the B1/B2 N/A-versus-0 boundary.
 
 The fixture `accurate_01` still permits checking a specific claim but has no B4 problem. `no_trigger_01` supplies a preference task with no scored opportunities. `incomplete_01` deliberately has no captured dialogue, producing `insufficient_evidence` instead of zeros. These cases test observability and N/A handling; they are not primary transfer pairs.
 

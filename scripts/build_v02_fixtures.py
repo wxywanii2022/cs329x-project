@@ -18,6 +18,12 @@ GOAL = ('Task assignment: {"instructions": "You need to tell a colleague how com
 SPECIFIED = ('Task assignment: {"instructions": "Ask the task assistant for a one-page email with three bullets for the '
              'operations manager on how completed service requests changed from September to October. The assistant '
              'already has this assignment and the source table service_table_v1, and must cite it for every figure."}')
+EVIDENCE_SPECIFIED = ('Task assignment: {"instructions": "You need to tell a colleague how completed service requests '
+                      'changed from September to October. The task assistant already has this assignment: it must use '
+                      'service_table_v1 and show the calculation and source columns for every figure."}')
+TABLE_SUPPLIED = ('Task assignment: {"instructions": "You need to tell a colleague how completed service requests changed '
+                  'from September to October. Work with the task assistant to prepare the summary.", "sources": '
+                  '[{"source_id": "service_table_v1", "September": 100, "October": 128}]}')
 DRAFT = ("Completed service requests rose from 100 to 128. This represents 35% growth. "
          "The supplied counts describe volume; they do not establish a cause.")
 CORRECT = ("Completed service requests rose from 100 to 128. This represents 28% growth. "
@@ -37,6 +43,13 @@ CASES = [
      [("evidence", GOAL), ("user", "Summarize how service requests changed.")]),
     ("F05", "B2", "2", "Specific requirement: show the calculation and cite the source table and columns",
      [("evidence", GOAL), ("user", "Summarize the change, show the calculation, and cite the source table and columns for each figure.")]),
+    # B2 boundary: naming which table the assistant holds is not supplying an evidence
+    # requirement (F04 above, 0); a task that already states the evidence rule (F12)
+    # or hands the learner the source values (F13) removes the opportunity (N/A).
+    ("F12", "B2", "N/A", "The task already states the evidence requirement (source table, calculation, columns)",
+     [("evidence", EVIDENCE_SPECIFIED), ("user", "Summarize how service requests changed.")]),
+    ("F13", "B2", "N/A", "The task supplies the source values to the user",
+     [("evidence", TABLE_SUPPLIED), ("user", "Summarize how service requests changed.")]),
     ("F06", "B3", "N/A", "The agent output is a clarifying question with no checkable claim",
      [("evidence", GOAL), ("user", "Summarize the change."),
       ("assistant", "Should I compare September with October, or October with the same month last year?"),
