@@ -103,13 +103,13 @@ The learner always retains its own initial background and observed history. The 
 
 Each numeric task uses three learner decision stages:
 
-1. **Request:** communicate deliverable requirements (B1) and evidence requirements (B2).
-2. **Review:** respond to a controlled task-agent draft; spontaneous specific claim checking is B3.
-3. **Correction:** everyone receives the same arithmetic evidence disclosure before responding; B4 measures correction after that disclosure.
+1. **Request:** the learner receives a goal and is told which data the assistant holds, but no prescribed format and no table values. Whether it states deliverable requirements (B1) and evidence requirements (B2) is up to the learner.
+2. **Review:** respond to a controlled task-agent draft; checking the incorrect claim before any disclosure is B3. A learner who names the error and asks for a fix here has performed B4 at this turn, and the agent applies the fix.
+3. **Correction:** everyone receives the same arithmetic evidence disclosure before responding; otherwise B4 is measured after that disclosure.
 
 The primary forms use service requests, **100 → 128** with a **35%** draft claim, and library reservations, **200 → 250** with a **20%** draft claim. Correct growth is **28%** and **25%** respectively. AB/BA orientation is configurable and shared by every branch of a block.
 
-**Rubric decision to review with the team:** `sim-opportunities-v1` follows the simulator guide's communication opportunities for B1/B2. The proposal appendix's existing-source and fully-specified-task N/A exceptions do not transfer verbatim. Here the learner receives assignment constraints that the task assistant does not receive, and the evidence requirement is to connect figures to source columns. This adaptation is explicit and has not been validated as the frozen RQ1 rubric. See [methodology](docs/methodology.md).
+**Shared rubric:** RQ2 uses the frozen RQ1 codebook **v0.2** and the evaluated output contract **`decision-point-v2`** for both the assessor and the evaluator, through the same payload builder and quote validator. The tasks were redesigned so that v0.2 opportunities exist: under v0.2, supplied requirements remove B1 and supplied sources remove B2, so the learner's assignment supplies neither and the numeric table stays with the task agent. Shared code does not transfer RQ1 accuracy to simulator dialogues; check the assessor on `data/rq2/v02_fixtures` and on human-labeled simulator records first. See [methodology](docs/methodology.md).
 
 ## 3. Code organization
 

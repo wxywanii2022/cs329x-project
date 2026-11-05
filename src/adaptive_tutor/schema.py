@@ -8,7 +8,10 @@ from typing import Any
 BEHAVIORS = ("B1", "B2", "B3", "B4")
 CONDITIONS = ("full", "without_assessment", "without_background", "no_coaching")
 ROLES = ("learner", "assessment", "coach", "evaluator")
-RUBRIC_VERSION = "sim-opportunities-v1"
+# RQ2 reuses the frozen RQ1 behavioral codebook and the evaluated output contract.
+# They are separate versions: one defines labels, the other output and quote checks.
+RUBRIC_VERSION = "v0.2"
+ASSESSMENT_CONTRACT = "decision-point-v2"
 
 
 class ValidationError(ValueError):
