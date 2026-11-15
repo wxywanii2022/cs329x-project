@@ -132,11 +132,30 @@ Full tables: `outputs/rq1-v2/report.md`. Same reference, metrics and intervals a
 
 Reading: under v2 the 27B labels every Main 1 item with checked evidence. Its agreement with the adjudicated reference (κ 0.69) is close to a single annotator's (B: 0.70) and above A–B agreement (0.59). Its false-missed rate is higher than the annotators', mostly 0-for-N/A calls on items the humans disputed. It is still **not a validated assessor**: v2 was fixed after seeing Main 1, so the pilot development set must confirm it before it labels RQ2 data.
 
+## Protocol v3: opportunity gate (2026-11-14, not yet run)
+
+Goal: cut false "missed" labels without changing the v0.2 rules. All six v2 false-missed errors are 0 where the reference is N/A, and in each the model's reason describes only what the user did not do, never whether the opportunity existed. v3 targets that step. **v3 was designed after reading these six errors**, so v3 on Main 1 is a development result, reported next to v2 and never instead of it; only a new, independently labeled batch can test it.
+
+1. **Frozen rules unchanged.** The v0.2 rubric file and its hash check are untouched; v3 is a new output contract (`decision-point-v3` in `rq1/core.py`) that appends to v2. The quote rule is v2's.
+2. **Prompt: opportunity gate.** Before any 0 the model must walk the v0.2 N/A conditions for the assigned behavior (restated from sections 5, 8–20 with section references) and return N/A if any holds or it cannot tell. The B2 list makes explicit that troubleshooting, file handling, formatting and design requests are not evidence-dependent outputs; the B3 list that a preceding file location, progress update or plan is not a checkable claim; the B4 list that a new preference is B1.
+3. **Validator: a 0 must cite its opportunity.** Under v3, a B3 0 needs an evidence quote from an earlier assistant or tool turn (the claim the user did not check), and a B4 0 needs a quote from any turn before the target (the problem). Otherwise the output is a **failure**, not N/A, consistent with the existing failure policy, so coverage is reported alongside FMR. B1/B2 zeros cite the request itself and are not gated, because their opportunity lives in the target turn and the task instructions.
+4. **Configs:** `configs/v3/` (same models, decoding, seeds and budgets as v2). Run with `RUNS=outputs/rq1-v3`, e.g. `sbatch --export=ALL,RUNS=outputs/rq1-v3,SEEDS=329 scripts/rq1_vllm.sbatch configs/v3/assessment.qwen38-27b-fp8.json main60`, then `scripts/rq1_report.py --runs outputs/rq1-v3 --save outputs/rq1-v3/report`.
+5. **RQ2 stays on v2 for now** (`ASSESSMENT_CONTRACT` in `schema.py`). Switch it only after the held-out result below decides which contract is primary, and then for both assessor and evaluator.
+
+### Held-out test for v3 (to fix before any held-out call)
+
+- **Development material only:** `data/rq2/v02_fixtures` (13 constructed items, add N/A-boundary cases in `scripts/build_v02_fixtures.py`) and the pilot items once rebuilt as raw prefixes. Do not tune on Main 1 (see `data/rq1/main60/README.md`).
+- **Primary decision rule, chosen in advance** in `outputs/rq1-v3/preregistration.json`: one of (a) v3 primary seed, (b) v3 majority of three seeds, (c) v3 with a 0 kept only at high confidence (else N/A). Report the others as secondary.
+- **New batch (Main 2):** from sessions used in neither pilot nor Main 1, preferring participants not seen before. Enrich opportunities with a rule written down before sampling and blind to labels, e.g. B3/B4 targets are not a session's first user turn and follow an assistant turn with figures or conclusions; B2 targets request an output. Draw randomly among eligible turns with fixed seeds. About 60–80 items, labeled independently by A and B under v0.2 and adjudicated as in Main 1.
+- **Report** κ, FMR with numerator/denominator, and coverage for v2 and v3 on Main 2. Because Main 2 is enriched, do not pool its FMR with Main 1's.
+- **If FMR does not drop**, keep the preregistered contract for RQ2 and report false "missed" labels, and the unneeded coaching they trigger, as a finding.
+
 ## Next steps
 
-1. **Confirm v2 on the development set** once the pilot items exist as raw prefixes.
-2. **Pilot development set:** rebuild the 20 pilot items as raw prefixes from the source records (as `scripts/import_main60.py` does for Main 1); the existing pilot files are paraphrases with v0.1 labels.
-3. **Participant linkage** for a true participant-disjoint test.
+1. **Run v3 on the fixtures and Main 1** (development) and freeze the primary decision rule.
+2. **Sample and label Main 2**, then run the frozen v3 and v2 on it.
+3. **Pilot development set:** rebuild the 20 pilot items as raw prefixes from the source records (as `scripts/import_main60.py` does for Main 1); the existing pilot files are paraphrases with v0.1 labels.
+4. **Participant linkage** for a true participant-disjoint test.
 
 ## Limitations
 

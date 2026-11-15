@@ -114,7 +114,7 @@ python -m unittest discover -s tests -v
 }
 ```
 
-校验范围：行为匹配、类型、标签/机会/N/A 原因一致、置信度枚举、引用 ID 在可见前缀内、quote 是原文子串（默认合同 `decision-point-v1`；配置 `"contract_version": "decision-point-v2"` 时只比较字母和数字，忽略换行、标点、引号样式和大小写，并允许用 `...` 或至少 20 个字母的原文片段拼接表示省略，片段须按原文顺序出现，见 [local-assessor.md](local-assessor.md)）。**这些是结构与证据存在性校验，不保证语义判断正确。** 语义仍需独立人工校准。
+校验范围：行为匹配、类型、标签/机会/N/A 原因一致、置信度枚举、引用 ID 在可见前缀内、quote 是原文子串（默认合同 `decision-point-v1`；配置 `"contract_version": "decision-point-v2"` 时只比较字母和数字，忽略换行、标点、引号样式和大小写，并允许用 `...` 或至少 20 个字母的原文片段拼接表示省略，片段须按原文顺序出现，见 [local-assessor.md](local-assessor.md)）。`decision-point-v3` 沿用 v2 的引用规则，另外要求：B3 判 0 时必须引用之前 assistant/tool 回合里那条可核对的结论，B4 判 0 时必须引用目标回合之前的问题，否则记为 failed（不是 N/A）。**这些是结构与证据存在性校验，不保证语义判断正确。** 语义仍需独立人工校准。
 
 非法 JSON、模型 ID 不匹配、超限、伪造/越界引用等记录为 failed，不记成 N/A，不通过重新生成挑一个更方便的标签。可解析的适配器响应（包括不合格的 annotation）、usage 和失败原因保留在 journal。如果适配器连外层 JSON envelope 都未返回，程序只记录失败；不会盲目复制可能含密钥的 stdout/stderr，也无法凭空补出 usage。Reason 应简短、转述身份信息，不能包含个人名、账号或路径。
 

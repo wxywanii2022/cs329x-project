@@ -33,7 +33,43 @@ cite separate parts of a turn as separate evidence entries. If you omit words in
 an excerpt, mark each omission with ... and never fill a gap with your own words.
 Line breaks may be written as spaces.
 '''
-CONTRACTS = {"decision-point-v1": CONTRACT, "decision-point-v2": CONTRACT_V2}
+# v3 keeps v2 and adds an explicit opportunity gate before any 0. It restates the frozen
+# v0.2 N/A conditions (sections 5, 9, 12-13, 15-16, 18-20) as a checklist and a
+# label-0 evidence requirement; it does not add, remove or reword any labeling rule.
+# Designed after reading the v2 false-missed errors on Main 1, so Main 1 results under
+# v3 are development results; held-out claims need a new, independently labeled batch.
+CONTRACT_V3 = CONTRACT_V2 + '''
+Opportunity gate. Section 5 of the codebook decides the order: first decide whether the
+target turn performs the behavior (1 or 2). If it does not, you must choose between 0
+and N/A, and 0 is the exception, not the default. Before giving 0, check every N/A
+condition for payload.behavior below, in the codebook's own terms. If any condition
+holds, or you cannot tell from the visible prefix, return N/A with the matching
+na_reason (no_opportunity or insufficient_evidence), not 0.
+B1 (sections 8-10): no deliverable request is established; the essential requirements
+are only in unseen material; or the user makes no new specification and the visible
+task already supplies the requirements.
+B2 (sections 11-13): the turn does not request an output whose factual claims, figures
+or analysis need support (for example troubleshooting, file handling, formatting,
+navigation or design changes); the sources or data are already supplied and no extra
+evidence behavior is requested; or missing instructions prevent telling an omission
+from supplied evidence. Listing metrics or a period is not itself an opportunity.
+B3 (sections 14-16): no visible agent output before the target turn contains a
+concrete, checkable substantive claim; the preceding agent output is only a file
+location, delivery or access detail, progress update or plan; essential target
+context is missing; or there is no user response to the claim.
+B4 (sections 17-20): no specific problem in a produced agent output is established at
+or before the target turn; the apparent issue is only missing input, access setup or
+an output not yet produced; or the user is adding a new preference (that is B1, and it
+does not show an earlier missed correction).
+A 0 must cite the opportunity, not only the user's omission. For B3, at least one
+evidence entry must quote the checkable claim from an earlier assistant or tool turn.
+For B4, at least one evidence entry must quote the problem from a turn before the
+target turn (agent output, agent admission, failed tool check, or an earlier user
+report). For B1 and B2, quote the judgeable request; if the decision depends on what
+the task instructions do or do not supply, say so in the reason.
+'''
+CONTRACTS = {"decision-point-v1": CONTRACT, "decision-point-v2": CONTRACT_V2, "decision-point-v3": CONTRACT_V3}
+OPPORTUNITY_ROLES = {"B3": {"assistant", "tool"}, "B4": {"assistant", "tool", "system", "evidence", "user"}}
 DEFAULT_CONTRACT = "decision-point-v1"
 
 
@@ -171,6 +207,12 @@ def validate_annotation(value, payload, contract=DEFAULT_CONTRACT):
         require(isinstance(e["turn_id"], str) and e["turn_id"] in visible, "Evidence ID outside visible prefix")
         require(isinstance(e["quote"], str) and 0 < len(e["quote"]) <= 500 and quote_found(e["quote"], visible[e["turn_id"]], contract),
                 "Invalid exact evidence quote" if contract == "decision-point-v1" else "Evidence quote not in cited turn")
+    if contract == "decision-point-v3" and label == 0 and payload["behavior"] in OPPORTUNITY_ROLES:
+        # A missed label must point at the opportunity in an earlier turn, not just the omission.
+        roles = {m["turn_id"]: m["role"] for m in payload["messages"]}
+        allowed = OPPORTUNITY_ROLES[payload["behavior"]]
+        require(any(e["turn_id"] != payload["target_turn_id"] and roles[e["turn_id"]] in allowed for e in evidence),
+                "A 0 needs evidence quoting the opportunity from an earlier turn")
     return value
 
 

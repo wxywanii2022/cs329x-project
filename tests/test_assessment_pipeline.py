@@ -104,7 +104,33 @@ class PrefixTests(unittest.TestCase):
         with self.assertRaises(ValidationError): rubric_prompt("v0.3")
         v2 = rubric_prompt("v0.2", "decision-point-v2")
         self.assertTrue(v2.startswith(rubric_prompt("v0.2")) and "Copy every quote verbatim" in v2)
-        with self.assertRaises(ValidationError): rubric_prompt("v0.2", "decision-point-v3")
+        v3 = rubric_prompt("v0.2", "decision-point-v3")
+        self.assertTrue(v3.startswith(v2) and "Opportunity gate" in v3)
+        with self.assertRaises(ValidationError): rubric_prompt("v0.2", "decision-point-v4")
+
+    def test_v3_missed_label_must_cite_the_opportunity(self):
+        def annotation(behavior, evidence, label=0):
+            return {"behavior": behavior, "label": label, "opportunity_status": "available", "na_reason": None,
+                    "reason": "Opportunity visible and not taken.", "confidence": "high", "unclear_rule": "",
+                    "evidence": evidence}
+        messages = [{"turn_id": "u1", "role": "user", "content": "Summarize regional growth."},
+                    {"turn_id": "a2", "role": "assistant", "content": "Growth was 35% in the west region."},
+                    {"turn_id": "u3", "role": "user", "content": "Great, now make it a slide."}]
+        claim, reply, earlier = ({"turn_id": "a2", "quote": "Growth was 35%"}, {"turn_id": "u3", "quote": "now make it a slide"},
+                                 {"turn_id": "u1", "quote": "Summarize regional growth"})
+        b3 = prepare_payload({"behavior": "B3", "target_turn_id": "u3", "messages": messages})
+        b4 = prepare_payload({"behavior": "B4", "target_turn_id": "u3", "messages": messages})
+        b2 = prepare_payload({"behavior": "B2", "target_turn_id": "u3", "messages": messages})
+        validate_annotation(annotation("B3", [reply, claim]), b3, "decision-point-v3")
+        validate_annotation(annotation("B3", [reply]), b3, "decision-point-v2")  # v2 unchanged
+        for evidence in ([reply], [reply, earlier]):  # B3 opportunity must come from agent output
+            with self.subTest(evidence=evidence), self.assertRaisesRegex(ValidationError, "opportunity"):
+                validate_annotation(annotation("B3", evidence), b3, "decision-point-v3")
+        validate_annotation(annotation("B4", [reply, earlier]), b4, "decision-point-v3")
+        with self.assertRaisesRegex(ValidationError, "opportunity"):
+            validate_annotation(annotation("B4", [reply]), b4, "decision-point-v3")
+        validate_annotation(annotation("B3", [reply], label=2), b3, "decision-point-v3")  # only 0 is gated
+        validate_annotation(annotation("B2", [reply]), b2, "decision-point-v3")  # B1/B2 cite the request itself
 
     def test_config_has_no_default_team_model(self):
         with self.assertRaisesRegex(ValidationError, "not configured"):
