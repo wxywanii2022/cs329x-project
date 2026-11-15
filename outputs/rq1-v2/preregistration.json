@@ -1,0 +1,37 @@
+{
+  "purpose": "RQ1 Main 1 protocol v2 (quote rule + quoting instruction), recorded before any v2 model call",
+  "recorded_at_utc": "2026-11-02T23:30:15.610625+00:00",
+  "git_head": "11967a3b393776c6a8c264f9c1aeafeccb9c5284",
+  "uncommitted_changes": true,
+  "disclosure": "v2 was designed after seeing v1 Main 1 failures; it is reported next to v1, never instead of it",
+  "decided_by": "cren8 (assessor owner), 2026-11-02",
+  "unchanged_from_v1": [
+    "rubric v0.2",
+    "models and revisions",
+    "decoding",
+    "seeds",
+    "budget",
+    "analysis"
+  ],
+  "primary": "qwen38-27b-fp8 seed 329",
+  "ablation": "qwen35-9b (reported regardless)",
+  "seeds": [
+    329,
+    330,
+    331
+  ],
+  "contract_version": "decision-point-v2",
+  "contract_v2_sha256": "4af2d8a6c20ad86e0a3e4ab32da8cde7e2b2eb9f76db1b53d2bb15b623476cff",
+  "sha256": {
+    "docs/local-assessor.md": "2e8dc501c9e97864fc53aae1dbb605b27c376eb46cb22421c01a69236474648c",
+    "configs/v2/assessment.qwen38-27b-fp8.json": "5b142cd37e1ff8952cf25cab6aff83bb6b04464eef60b1b78cf33a5335a814e4",
+    "configs/v2/assessment.qwen35-9b.json": "518280eaf418da3640c5ee78e19f80e26205627306ad0cf908694298b1440796",
+    "scripts/rq1_vllm.sbatch": "cf8d55d21023e07ab785b1a2b6b989f930bceda62e2f321f7ec5d49aee222326",
+    "scripts/rq1_report.py": "ed6d89e94393b5a9dc38f4edc6a023e0c33e41e40f8e39c1810281732a8f93c2",
+    "src/adaptive_tutor/adapters/local_vllm.py": "8f286605ec239bea33b4b4d2e2fd15c148d441a197392fafee675e69421cd902",
+    "src/adaptive_tutor/rq1/core.py": "bac4a0ff2415e77c9a042dd0e7971003cf1a2c68700fb7ca579e8e69ab43aade",
+    "src/adaptive_tutor/rq1/pipeline.py": "f8df1918cc104ab55eee115d3072e495934357d0d5b8827f658a4026d0e05c58",
+    "src/adaptive_tutor/rq1/rubrics/specification_verification_v02.md": "046ceb7bc8fb5035ebd347c56e3a16b4b8240deb4d3279904bf4a77bfb845e1d",
+    "data/rq1/main60/items.jsonl": "d550b6dc830361d76598c01fa4133822f17be04a8099abb0efeccf5ffde84fc9"
+  }
+}

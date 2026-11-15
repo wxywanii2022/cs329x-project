@@ -61,13 +61,13 @@ Exit **75** only for temporary transport/rate-limit failures that are appropriat
 | Role | Payload fields | Output |
 | --- | --- | --- |
 | Learner | `initial_background`, `observed_history`, `task`, `stage` | `{"content": "visible learner message"}` |
-| Assessment | `task`, `messages`, `opportunities`, `rubric_version` | `{"items": [B1, B2, B3, B4]}` |
+| Assessment | `behavior`, `target_turn_id`, prefix-only `messages`, `visible_instructions`, `rubric_version` | One annotation with label, inferred opportunity, reason, confidence and evidence; see [assessment.md](assessment.md) |
 | Coach | `task`, `messages`, `exercise_bank`, optional permitted `assessment` and `background` | One decision below |
 | Evaluator | `blind_record_id`, `task`, `messages`, `opportunities`, `answer_key`, `final_artifact`, `rubric_version` | `{"items": [B1, B2, B3, B4]}` |
 
 The learner receives dated starting knowledge without profile IDs or novice/intermediate/expert labels. `stage` is `request`, `review`, `correction`, or `practice`. Practice is observable coaching, not a hidden experimental label. History is only what that learner has observed; it contains no answer-key object, evaluator feedback, or assessment labels.
 
-Assessment is background-blind and must respect the recorded decision point. It can compute from publicly available source tables but never receives the private answer key. Replace its prompt and adapter with the team's validated RQ1 module; do not rename the candidate prompt and claim it is validated.
+Assessment is background-blind and structurally truncated at one decision point per call. It receives neither the private answer key nor the prescribed opportunity status. Four independent calls are combined into the existing coach-facing `items` array; richer annotations remain available in `assessment.json` and the journal. Standalone RQ1 uses frozen v0.2; simulation uses its explicitly separate candidate rubric. A model is not validated merely by connecting its adapter.
 
 Coach output:
 
@@ -82,7 +82,7 @@ Coach output:
 
 For `action: none`, both ID and target must be null. IDs must exist in the supplied bank and targets must match them. The runner, not the selector, delivers the selected exercise's fixed messages. There is no second selection call or switch to another exercise. This MVP uses one fixed sequence per exercise; adaptive feedback can be added only as a shared, versioned execution policy.
 
-Score item:
+Outcome-evaluator / coach-facing score item (not the new single-call assessor output):
 
 ```json
 {
@@ -96,7 +96,7 @@ Score item:
 }
 ```
 
-There must be exactly one item per B1–B4. Non-null labels need evidence. Spans must be exact nonempty substrings, at most 500 characters each, aligned one-to-one with message IDs. Evidence cannot use a message after that behavior's designated decision point. Null uses a matching `opportunity_status` and `na_reason` of `no_opportunity` or `insufficient_evidence`; empty evidence lists are allowed for N/A. A scorer cannot silently change the runner's recorded opportunity status.
+There must be exactly one item per B1–B4. Non-null labels need evidence. Spans must be exact nonempty substrings, at most 500 characters each, aligned one-to-one with message IDs. Evidence cannot use a message after that behavior's designated decision point. Null uses a matching `opportunity_status` and `na_reason` of `no_opportunity` or `insufficient_evidence`; empty evidence lists are allowed for N/A. The current outcome evaluator is required to preserve the runner's recorded opportunity status. This oracle constraint does not apply to the assessor: its predicted opportunity is retained even when it differs from the environment annotation. The evaluator still receives a full record; future-turn quote rejection is not equivalent to input isolation, and this remains a research gate.
 
 The four primary task scores aggregate four predesignated decision points. They are not an arbitrary conversation-wide maximum and are not general annotations of every turn.
 

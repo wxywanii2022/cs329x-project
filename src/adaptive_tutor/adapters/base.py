@@ -30,11 +30,13 @@ class Gateway:
 
     def call(self, role: str, payload: dict, validator, *, call_id: str, session_id: str,
              block_id: str, branch_id: str | None, phase: str,
-             max_output_tokens: int | None = None, total_token_allowance: int | None = None) -> tuple[dict, dict]:
+             max_output_tokens: int | None = None, total_token_allowance: int | None = None,
+             prompt_text: str | None = None, prompt_version: str | None = None) -> tuple[dict, dict]:
         model = self.models[role]
-        prompt_version = role + "_v1"
+        require((prompt_text is None) == (prompt_version is None), "Custom prompt needs text and version")
+        prompt_version = prompt_version or role + "_v1"
         request = {"protocol_version": "1", "role": role, "session_id": session_id,
-                   "system_prompt": (PROMPTS / (prompt_version + ".txt")).read_text(encoding="utf-8"),
+                   "system_prompt": prompt_text if prompt_text is not None else (PROMPTS / (prompt_version + ".txt")).read_text(encoding="utf-8"),
                    "prompt_version": prompt_version, "payload": payload,
                    "sample_seed": int(digest([self.seed, call_id])[:8], 16),
                    "model": {"model_id": model.model_id, "temperature": model.temperature,

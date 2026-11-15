@@ -4,6 +4,31 @@ Python implementation of the four-condition simulation in **CS329X Problem Propo
 
 **Status:** the complete offline workflow is implemented. The bundled mocks test experiment plumbing; their scores are not evidence of coaching efficacy or human learning. Live roles use replaceable process adapters, including an optional HTTP bridge. The team's validated RQ1 assessor, human calibration, accepted task rubric, and held-out task bank are still research inputs.
 
+## RQ1 assessment integration (local implementation)
+
+A standalone decision-point assessment pipeline is now available as `tutor-assess`.
+See [assessment setup and teammate handoff](docs/assessment.md) for the input/output
+contract, frozen v0.2, synthetic examples, independent-reference comparisons, and
+participant-disjoint checks. The team example config stays unconfigured
+(`configs/assessment.team.example.json`: `model: null`). A locally served
+open-weight assessor (Qwen3.8-27B-FP8, with Qwen3.5-9B as a size ablation) is set
+up in [docs/local-assessor.md](docs/local-assessor.md), with its pre-declared
+protocol and Main 1 results.
+
+The simulation assessor now makes four separate prefix-only calls, without an
+oracle opportunity label. It uses the explicitly separate candidate simulation
+rubric. The independent outcome evaluator has **not** yet been migrated to
+prefix-only packets; its existing full-record exposure remains a research gate.
+Use new run directories after these code changes; historical outputs are not
+rewritten and should be audited with their original implementation version.
+
+```bash
+uv pip install --python .venv/bin/python -e .
+.venv/bin/tutor-assess run --items examples/assessment_items.synthetic.jsonl \
+  --config configs/assessment.mock.json --output outputs/assessment-final
+.venv/bin/tutor-assess audit --run outputs/assessment-final
+```
+
 ## 1. Quick start
 
 Requires **Python 3.11+**. There are **no runtime or test dependencies** beyond the Python standard library. Run commands from this directory.
@@ -78,13 +103,13 @@ The learner always retains its own initial background and observed history. The 
 
 Each numeric task uses three learner decision stages:
 
-1. **Request:** communicate deliverable requirements (B1) and evidence requirements (B2).
-2. **Review:** respond to a controlled task-agent draft; spontaneous specific claim checking is B3.
-3. **Correction:** everyone receives the same arithmetic evidence disclosure before responding; B4 measures correction after that disclosure.
+1. **Request:** the learner receives a goal and is told which data the assistant holds, but no prescribed format and no table values. Whether it states deliverable requirements (B1) and evidence requirements (B2) is up to the learner.
+2. **Review:** respond to a controlled task-agent draft; checking the incorrect claim before any disclosure is B3. A learner who names the error and asks for a fix here has performed B4 at this turn, and the agent applies the fix.
+3. **Correction:** everyone receives the same arithmetic evidence disclosure before responding; otherwise B4 is measured after that disclosure.
 
 The primary forms use service requests, **100 → 128** with a **35%** draft claim, and library reservations, **200 → 250** with a **20%** draft claim. Correct growth is **28%** and **25%** respectively. AB/BA orientation is configurable and shared by every branch of a block.
 
-**Rubric decision to review with the team:** `sim-opportunities-v1` follows the simulator guide's communication opportunities for B1/B2. The proposal appendix's existing-source and fully-specified-task N/A exceptions do not transfer verbatim. Here the learner receives assignment constraints that the task assistant does not receive, and the evidence requirement is to connect figures to source columns. This adaptation is explicit and has not been validated as the frozen RQ1 rubric. See [methodology](docs/methodology.md).
+**Shared rubric:** RQ2 uses the frozen RQ1 codebook **v0.2** and the evaluated output contract **`decision-point-v2`** for both the assessor and the evaluator, through the same payload builder and quote validator. The tasks were redesigned so that v0.2 opportunities exist: under v0.2, supplied requirements remove B1 and supplied sources remove B2, so the learner's assignment supplies neither and the numeric table stays with the task agent. Shared code does not transfer RQ1 accuracy to simulator dialogues; check the assessor on `data/rq2/v02_fixtures` and on human-labeled simulator records first. See [methodology](docs/methodology.md).
 
 ## 3. Code organization
 
@@ -177,7 +202,7 @@ See the full [adapter contract](docs/adapters.md). Each role can use a different
 
 The bridge uses JSON mode, `max_completion_tokens`, and provider usage counts according to the [official Chat Completions API reference](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create). Compatibility with other providers must be checked in their adapters; different model families do not necessarily expose the same API. Select exact accessible model IDs after pilot testing. Aliases that resolve to a different returned ID fail the pinning check. Models must support the configured parameters, including temperature and JSON mode; unsupported settings are recorded as failures.
 
-The bundled assessor/evaluator prompts and exercises are candidate implementations. Replace and version them after team validation. No API credentials or paid calls were used to validate this repository.
+The standalone real-log assessor uses the preserved frozen v0.2 protocol. The simulation assessor/evaluator rubric and exercises remain candidate implementations. Replace and version them after team validation. No API credentials or paid calls were used to validate this repository.
 
 ## 7. Scoring and analysis
 
@@ -214,7 +239,7 @@ $env:PYTHONPATH = 'src'
 python -m unittest discover -s tests -v
 ```
 
-Tests cover shared snapshots and mutation isolation, exact condition masks, answer-key exclusion, counterbalancing, standardized disclosure, missing opportunities, score evidence, N/A arithmetic, paired exports, independent sessions, fixed retries, process adapters, failure preservation, interruption/resume and offline replay.
+Tests cover shared snapshots and mutation isolation, exact condition masks, answer-key exclusion, counterbalancing, standardized disclosure, missing opportunities, score evidence, N/A arithmetic, paired exports, independent sessions, fixed retries, process adapters, failure preservation, interruption/resume and offline replay. New RQ1 regressions additionally verify prefix-only input (not just quote validation), oracle-status exclusion, separate behavior calls, failure-versus-N/A handling, blank model configuration and participant-disjoint guards.
 
 Local verification on **2026-10-27**, using Python 3.12: **29 tests passed**. The final [demo manifest](outputs/final-demo/manifest.json) contains one block and five task records; the [pilot manifest](outputs/final-pilot/manifest.json) contains 96 blocks and 480 records. Both completed with zero failed branches and zero failed scores. These generated, ignored output directories are available in this workspace; a fresh checkout recreates them with the commands above.
 

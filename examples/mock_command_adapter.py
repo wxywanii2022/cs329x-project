@@ -9,6 +9,6 @@ import sys
 from adaptive_tutor.adapters.mock import MockAdapter
 from adaptive_tutor.schema import ModelSpec
 
-request = json.load(sys.stdin)
+request = json.load(sys.stdin.buffer)
 model = ModelSpec(adapter="mock", model_id=request["model"]["model_id"], family="mock")
 json.dump(MockAdapter().generate(request, model), sys.stdout)

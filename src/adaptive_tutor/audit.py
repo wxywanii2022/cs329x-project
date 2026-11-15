@@ -2,8 +2,8 @@
 
 from pathlib import Path
 
-from .evaluation import validate_record_scores
-from .schema import CONDITIONS, require
+from .evaluation import evaluator_payload
+from .schema import BEHAVIORS, CONDITIONS, require
 from .storage import Journal, digest, fork_snapshot, read_json
 
 
@@ -30,7 +30,13 @@ def audit_run(output: Path) -> dict:
         if role == "learner":
             require(set(payload) == {"initial_background", "observed_history", "task", "stage"}, "Learner payload leak")
         elif role == "assessment":
-            require(set(payload) == {"task", "messages", "opportunities", "rubric_version"}, "Assessment payload leak")
+            from .rq1.core import validate_payload
+            from .assessment import assessment_payload
+            validate_payload(payload)
+            # Compare with a fresh prefix of the original task, not merely the
+            # model's quoted IDs. Oracle status and future text must be absent.
+            pre = read_json(output / "blocks" / event["block_id"] / "pre.json")["record"]
+            require(payload == assessment_payload(pre, payload["behavior"]), "Assessment prefix mismatch")
         elif role == "coach":
             condition = event["branch_id"]
             allowed = {"task", "messages", "exercise_bank"}
@@ -40,9 +46,15 @@ def audit_run(output: Path) -> dict:
                 allowed.add("background")
             require(condition != "no_coaching" and set(payload) == allowed, "Coach masking violation")
         else:
-            require(set(payload) == {"blind_record_id", "task", "messages", "opportunities", "answer_key", "final_artifact", "rubric_version"},
-                    "Evaluator payload leak")
-        require(set(payload["task"]) == {"instructions", "sources", "requirements"}, "Private task metadata leaked")
+            from .rq1.core import validate_payload
+            validate_payload(payload)
+            # Same check as the assessor: a fresh decision-turn prefix of the
+            # blinded packet, so no later turn, answer key or oracle status.
+            _, blind_id, behavior = event["call_id"].split("/")
+            packet = read_json(output / "blinded" / f"{blind_id}.json")
+            require(payload == evaluator_payload(packet, behavior), "Evaluator prefix mismatch")
+        if role in {"learner", "coach"}:
+            require(set(payload["task"]) == {"instructions", "assistant_data"}, "Private task data leaked")
     count = 0
     for block in manifest["blocks"]:
         if not block.get("snapshot_hash"):
@@ -71,7 +83,10 @@ def audit_run(output: Path) -> dict:
             require(packet["blind_record_id"] == blind_id, "Packet identity mismatch")
             scores = read_json(output / "scores" / f"{blind_id}.json")
             if scores["status"] == "complete":
-                validate_record_scores({"items": scores["items"]}, packet)
+                require([x["behavior_id"] for x in scores["items"]] == list(BEHAVIORS), "Missing behavior score")
+                for item in scores["items"]:
+                    visible = {m["turn_id"] for m in evaluator_payload(packet, item["behavior_id"])["messages"]}
+                    require(set(item["evidence_message_ids"]) <= visible, "Score evidence after the decision turn")
             count += 1
     return {"status": "passed", "blocks": len(manifest["blocks"]), "task_records": count,
             "events": len(events), "failed_branches": manifest["failed_branches"], "failed_scores": manifest["failed_scores"]}

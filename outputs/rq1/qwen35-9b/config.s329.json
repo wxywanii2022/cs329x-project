@@ -1,0 +1,36 @@
+{
+  "model": {
+    "adapter": "command",
+    "model_id": "Qwen/Qwen3.5-9B@c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+    "family": "qwen3.5",
+    "command": [
+      ".venv/bin/python",
+      "-m",
+      "adaptive_tutor.adapters.local_vllm",
+      "--thinking",
+      "on",
+      "--top-p",
+      "0.95",
+      "--top-k",
+      "20",
+      "--min-p",
+      "0",
+      "--presence-penalty",
+      "1.5",
+      "--repetition-penalty",
+      "1.0",
+      "--http-timeout",
+      "3300"
+    ],
+    "temperature": 1.0,
+    "supports_seed": true,
+    "timeout_seconds": 3600
+  },
+  "rubric_version": "v0.2",
+  "seed": 329,
+  "budget": {
+    "max_output_tokens": 32768,
+    "max_context_bytes": 200000,
+    "transport_attempts": 3
+  }
+}
