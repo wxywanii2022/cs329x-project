@@ -47,6 +47,73 @@ On FarmShare, GPUs are often free while CPUs on those nodes are not, and memory 
 
 Smoke-test timing on one L40S: Qwen3.8-27B 12–41 s per item (about 300–600 output tokens including thinking; 41 s for the 53k-token item); Qwen3.5-9B 42–88 s (thinks 4–6× longer). The job script sets `VLLM_USE_FLASHINFER_SAMPLER=0` because FlashInfer's fused sampler needs `nvcc`, which the GPU nodes lack; vLLM does not use that sampler for seeded requests, so the sampling path is unchanged.
 
+## SC execution for v3 (preparation, no v3 model calls yet)
+
+The v1/v2 FarmShare script is preserved. `scripts/rq1_vllm_sc.sbatch` uses SC account
+`nlp`, partition `jag-standard`, one `rtx6000ada`, 8 CPUs and 48 GB host memory.
+All v3 runs will use RTX 6000 Ada; the historical v1/v2 runs used L40S. Keep the
+pinned models, vLLM arguments, decoding and seeds unchanged. A proposed same-hardware
+control reruns v2's primary 27B seed on SC in `outputs/rq1-v2-sc`, never in the
+historical result directories; include it in the preregistration before running it.
+
+- Code and `.venv`: `/nlp/scr/yuantian/cs329x-project`; HF cache:
+  `/nlp/scr/yuantian/hf`. The observed user filesystem capacity is **200 GB**, not
+  the capacity of the underlying storage pool. The script explicitly puts HF,
+  application caches and temporary files on scratch; no `.bashrc` change is needed.
+- Follow the [SC wiki](https://cluster.cs.stanford.edu/sc/): transfer code, wheels
+  and pinned model snapshots on `scdt`; build/install the runtime and test CUDA
+  inside a Slurm allocation. No heavy tasks on `sc`. Download binary wheels with
+  `pip download --only-binary=:all:` on `scdt`, then install offline on the worker.
+  Save the resolved package versions and GPU/driver information with setup logs.
+- **Before any v3 inference, including smoke**, choose the primary rule and commit
+  and push `outputs/rq1-v3/preregistration.json`. The script checks its presence;
+  the operator must additionally verify its contents and that it was pushed. This
+  takes precedence over a workflow that places smoke before preregistration.
+- Create `outputs/logs` before `sbatch` (Slurm opens its output before the script).
+  The SC script defaults to `RUNS=outputs/rq1-v3` and refuses the historical v1/v2
+  output trees. Existing seed configs and synthetic smoke inputs must match exactly;
+  each execution/resume keeps a distinct stdout/server log. Failed annotations are
+  never repaired or resampled. The pipeline continues to enforce frozen-input hashes.
+- `fixtures` evaluates 13 constructed cases with `synthetic-fixture` provenance;
+  this is an operational/rule-application check, not an accuracy estimate.
+- `jag-standard` can preempt/requeue jobs. Match `sacct` state and job restart count
+  against journal timestamps; document interruptions rather than rewriting failures.
+  Remove a stale lock only after confirming the owning job is finished. Automatic
+  requeue does not authorize deleting a lock or retrying a recorded failure.
+
+After the preregistration is pushed and setup/weights are verified:
+
+```bash
+mkdir -p outputs/logs
+sbatch -t 00:45:00 scripts/rq1_vllm_sc.sbatch configs/v3/assessment.qwen38-27b-fp8.json smoke
+sbatch -t 01:00:00 scripts/rq1_vllm_sc.sbatch configs/v3/assessment.qwen38-27b-fp8.json fixtures
+sbatch -t 01:00:00 scripts/rq1_vllm_sc.sbatch configs/v3/assessment.qwen35-9b.json fixtures
+sbatch -t 03:00:00 scripts/rq1_vllm_sc.sbatch configs/v3/assessment.qwen38-27b-fp8.json main60
+sbatch -t 04:00:00 scripts/rq1_vllm_sc.sbatch configs/v3/assessment.qwen35-9b.json main60
+# Proposed control: only after it is included in the approved preregistration.
+sbatch -t 02:00:00 --export=ALL,RUNS=outputs/rq1-v2-sc,SEEDS=329 scripts/rq1_vllm_sc.sbatch configs/v2/assessment.qwen38-27b-fp8.json main60
+```
+
+The default is seeds 329/330/331 for fixtures and Main 1; smoke uses only 329.
+Run the smoke command with the 9B v3 config as well before its fixture/Main 1 runs.
+
+**Primary decision (Yuan Tian): option (a), Qwen3.8-27B-FP8 seed 329.** Seeds 330/331,
+three-seed majority voting (only items valid in all three; ties use 329), and the
+high-confidence-zero rule on valid seed-329 outputs are secondary, never replacements
+for the primary result. The latter is a derived analysis, not a change to raw labels;
+failed outputs stay failed. The 9B results are reported regardless of performance.
+
+`rq1_report.py` reports explicit FMR counts and coverage, follows the six v2 false-missed
+items, and excludes all v3 failures from every scoring analysis. The historical
+quote-failure sensitivity remains available only for v1/v2: v3's opportunity check
+follows quote validation, so a quote failure cannot be assumed otherwise valid.
+For v3, all three seeds must finish (including recorded failures) before generating
+the report. Existing report files are never overwritten; choose a new `--save` prefix.
+
+The SC script's mock orchestration tests cover smoke/resume, immutable seed configs,
+all fixture seeds, three-reference evaluation and protection of historical outputs.
+These offline tests are not evidence of real-model readiness or v3 accuracy.
+
 ## Results (Main 1, run 2026-11-02)
 
 Full tables, confusion matrices, per-seed failures and the disagreement list with model reasons: `outputs/rq1/report.md` (regenerate with `scripts/rq1_report.py`). Agreement is over successfully labeled items; 95% bootstrap intervals over items.

@@ -32,10 +32,12 @@ def load_run(path):
     frozen, results = audit_run(path)
     events = Journal.read(path / "events.jsonl")
     latency = {e["call_id"]: e["latency_ms"] for e in events if e["kind"] == "call_result"}
-    # Post-hoc, not pre-declared: the quote check is the validator's last check, so an
-    # output failing only on it carries an otherwise valid label.
+    contract = frozen.get("contract_version", "decision-point-v1")
+    # Historical v1/v2 sensitivity only. Under v3 the opportunity check comes AFTER
+    # quote validation, so a quote failure cannot be assumed otherwise valid.
     quote_only = {e["call_id"]: e["response"]["output"]["label"] for e in events
-                  if e["kind"] == "call_failure" and e["error"] in QUOTE_ERRORS}
+                  if contract in {"decision-point-v1", "decision-point-v2"}
+                  and e["kind"] == "call_failure" and e["error"] in QUOTE_ERRORS}
     call_ids = {x["item_id"]: "rq1/" + digest(x["item_id"]) for x in frozen["items"]}
     labels, details, failures = {}, {}, {}
     for r in results:
@@ -56,7 +58,9 @@ def load_run(path):
 
 def score(pairs):
     if not pairs:
-        return {"n": 0, "raw_agreement": None, "cohen_kappa": None, "false_missed_rate": None}
+        return {"n": 0, "raw_agreement": None, "cohen_kappa": None, "false_missed_rate": None,
+                "false_missed_count": 0, "non_missed_reference_count": 0,
+                "confusion": [[0] * len(LABELS) for _ in LABELS]}
     m = agreement([r for r, _ in pairs], [c for _, c in pairs])
     m["false_missed_rate"] = m["false_missed_count"] / m["non_missed_reference_count"] if m["non_missed_reference_count"] else None
     return m
@@ -96,6 +100,18 @@ def fmt(x, ci=None):
     return f"{x:.3f}" + (f" [{ci[0]:.2f}, {ci[1]:.2f}]" if ci else "")
 
 
+def fmt_fmr(metrics):
+    ci = metrics.get("ci95")
+    return (fmt(metrics["false_missed_rate"], ci and ci["false_missed_rate"])
+            + f" ({metrics['false_missed_count']}/{metrics['non_missed_reference_count']})")
+
+
+def high_confidence_zero_labels(run):
+    """Secondary rule (c), derived from valid outputs only; never mutate journals."""
+    return {k: "N/A" if label == "0" and run["details"][k]["confidence"] != "high" else label
+            for k, label in run["labels"].items()}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--runs", type=Path, required=True)
@@ -104,6 +120,8 @@ def main():
     parser.add_argument("--primary-seed", type=int, default=329)
     parser.add_argument("--bootstrap", type=int, default=10000)
     args = parser.parse_args()
+    if any(args.save.with_suffix(ext).exists() for ext in (".json", ".md")):
+        parser.error("Report already exists; use a new --save prefix")
 
     refs = {name: read_reference(args.data / f"reference_{name}.csv") for name in ("adjudicated", "A", "B")}
     behaviors = {json.loads(line)["item_id"]: json.loads(line)["behavior"]
@@ -121,19 +139,25 @@ def main():
                 if (p / "frozen_inputs.json").exists()}
         if args.primary_seed not in runs:
             continue
+        if runs[args.primary_seed]["contract"] == "decision-point-v3":
+            if set(runs) != {329, 330, 331} or any(r["pending"] for r in runs.values()):
+                parser.error("v3 report requires all three completed seed runs (failed outcomes are retained)")
         model = {"model_id": runs[args.primary_seed]["model_id"], "model_spec": runs[args.primary_seed]["model"],
                  "budget": runs[args.primary_seed]["budget"], "contract": runs[args.primary_seed]["contract"], "seeds": {}}
         for seed, run in sorted(runs.items()):
             tokens = [d["output_tokens"] for d in run["details"].values()]
             model["seeds"][seed] = {
                 "completed": len(run["labels"]), "failed": len(run["failures"]), "pending": run["pending"],
+                "coverage": {"valid": len(run["labels"]), "total": run["items"],
+                             "fraction": len(run["labels"]) / run["items"]},
                 "failures": run["failures"], "label_distribution": dict(Counter(run["labels"].values())),
                 "output_tokens_median": statistics.median(tokens) if tokens else None,
                 "output_tokens_max": max(tokens) if tokens else None,
                 "latency_s_median": statistics.median(run["latency_s"]) if run["latency_s"] else None,
                 "quote_only_failures": len(run["quote_failed_labels"]),
                 "posthoc_vs_adjudicated_with_quote_failures": summary(
-                    refs["adjudicated"], {**run["labels"], **run["quote_failed_labels"]}, args.bootstrap, seed),
+                    refs["adjudicated"], {**run["labels"], **run["quote_failed_labels"]}, args.bootstrap, seed)
+                    if run["contract"] in {"decision-point-v1", "decision-point-v2"} else None,
                 **{f"vs_{name}": summary(ref, run["labels"], args.bootstrap, seed, behaviors if name == "adjudicated" else None)
                    for name, ref in refs.items()}}
         primary = runs[args.primary_seed]
@@ -143,6 +167,17 @@ def main():
             "disagreements": [{"item_id": k, "behavior": behaviors[k], "adjudicated": refs["adjudicated"][k], "A": refs["A"][k],
                                "B": refs["B"][k], "model": primary["labels"][k], **primary["details"][k]}
                               for k in sorted(primary["labels"]) if refs["adjudicated"].get(k) and primary["labels"][k] != refs["adjudicated"][k]]}
+        if primary["contract"] == "decision-point-v3":
+            model["primary"]["secondary_high_confidence_zero"] = {
+                "coverage": {"valid": len(primary["labels"]), "total": primary["items"]},
+                **{f"vs_{name}": summary(ref, high_confidence_zero_labels(primary), args.bootstrap, args.primary_seed)
+                   for name, ref in refs.items()}}
+            model["primary"]["v2_false_missed_followup"] = [
+                {"item_id": k, "adjudicated": refs["adjudicated"].get(k),
+                 "status": "complete" if k in primary["labels"] else "failed",
+                 "label": primary["labels"].get(k), "error": primary["failures"].get(k)}
+                for k in ("M1-005", "M1-027", "M1-034", "M1-035", "M1-040", "M1-044")
+                if k in primary["labels"] or k in primary["failures"]]
         common = sorted(set.intersection(*(set(r["labels"]) for r in runs.values())))
         if len(runs) > 1 and common:
             seeds = sorted(runs)
@@ -155,6 +190,7 @@ def main():
                                   "unanimous": sum(len({runs[s]["labels"][k] for s in seeds}) == 1 for k in common),
                                   "unstable_items": [k for k in common if len({runs[s]["labels"][k] for s in seeds}) > 1],
                                   "mean_pairwise_kappa": statistics.mean(p for p in pairwise if p is not None) if any(p is not None for p in pairwise) else None,
+                                  "majority_coverage": {"valid": len(common), "total": primary["items"]},
                                   "majority_vs_adjudicated": summary(refs["adjudicated"], {k: majority(k) for k in common}, args.bootstrap, 7)}
         report["models"][model_dir.name] = model
 
@@ -175,20 +211,20 @@ def markdown(report):
     for name, m in (("Human A vs B (pre-adjudication)", h["A_vs_B"]), ("Human A vs adjudicated", h["A_vs_adjudicated"]),
                     ("Human B vs adjudicated", h["B_vs_adjudicated"])):
         add(f"| {name} | {m['n']} | {fmt(m['raw_agreement'], m['ci95']['raw_agreement'])} | "
-            f"{fmt(m['cohen_kappa'], m['ci95']['cohen_kappa'])} | {fmt(m['false_missed_rate'], m['ci95']['false_missed_rate'])} |")
+            f"{fmt(m['cohen_kappa'], m['ci95']['cohen_kappa'])} | {fmt_fmr(m)} |")
     for key, model in report["models"].items():
         for seed, s in model["seeds"].items():
             tag = "primary" if seed == report["primary_seed"] else "seed"
             for ref in ("adjudicated", "A", "B"):
                 m = s[f"vs_{ref}"]
                 add(f"| {key} s{seed} ({tag}) vs {ref} | {m['n']} | {fmt(m['raw_agreement'], m['ci95'] and m['ci95']['raw_agreement'])} | "
-                    f"{fmt(m['cohen_kappa'], m['ci95'] and m['ci95']['cohen_kappa'])} | {fmt(m['false_missed_rate'], m['ci95'] and m['ci95']['false_missed_rate'])} |")
+                    f"{fmt(m['cohen_kappa'], m['ci95'] and m['ci95']['cohen_kappa'])} | {fmt_fmr(m)} |")
     for key, model in report["models"].items():
         p = model["seeds"][report["primary_seed"]]
         add(f"\n## {key}\n\n`{model['model_id']}`; temperature {model['model_spec']['temperature']}; "
-            f"command flags `{' '.join(model['model_spec']['command'][3:])}`; max output tokens {model['budget']['max_output_tokens']}; output contract {model['contract']}.\n")
+            f"command flags `{' '.join(model['model_spec'].get('command', [])[3:])}`; max output tokens {model['budget']['max_output_tokens']}; output contract {model['contract']}.\n")
         for seed, s in model["seeds"].items():
-            add(f"- seed {seed}: completed {s['completed']}/{s['completed'] + s['failed'] + s['pending']}, failed {s['failed']}, "
+            add(f"- seed {seed}: coverage {s['completed']}/{s['completed'] + s['failed'] + s['pending']}, failed {s['failed']}, pending {s['pending']}, "
                 f"labels {s['label_distribution']}, median output tokens {s['output_tokens_median']}, median latency {fmt(s['latency_s_median'])} s")
             if s["quote_only_failures"]:
                 m = s["posthoc_vs_adjudicated_with_quote_failures"]
@@ -213,7 +249,16 @@ def markdown(report):
             add(f"\nSeed stability ({st['seeds']}): {st['unanimous']}/{st['items_completed_in_all']} items unanimous; "
                 f"mean pairwise κ {fmt(st['mean_pairwise_kappa'])}; unstable: {', '.join(st['unstable_items']) or 'none'}. "
                 f"Majority-of-seeds vs adjudicated (secondary): raw {fmt(st['majority_vs_adjudicated']['raw_agreement'])}, "
-                f"κ {fmt(st['majority_vs_adjudicated']['cohen_kappa'])}, false-missed {fmt(st['majority_vs_adjudicated']['false_missed_rate'])}.")
+                f"κ {fmt(st['majority_vs_adjudicated']['cohen_kappa'])}, false-missed {fmt_fmr(st['majority_vs_adjudicated'])}; "
+                f"coverage {st['majority_coverage']['valid']}/{st['majority_coverage']['total']} (all seeds valid; ties use primary seed).")
+        if "secondary_high_confidence_zero" in model["primary"]:
+            secondary = model["primary"]["secondary_high_confidence_zero"]
+            m = secondary["vs_adjudicated"]
+            add(f"\nHigh-confidence-zero rule (secondary, valid outputs only): κ {fmt(m['cohen_kappa'])}, "
+                f"false-missed {fmt_fmr(m)}; coverage {secondary['coverage']['valid']}/{secondary['coverage']['total']}.")
+            add("\n| v2 false-missed item | Adjudicated | v3 primary outcome |"); add("|---|---|---|")
+            for item in model["primary"]["v2_false_missed_followup"]:
+                add(f"| {item['item_id']} | {item['adjudicated']} | {item['label'] if item['status'] == 'complete' else 'failed'} |")
         add("\n| Item | Behavior | Adjudicated | A | B | Model | Confidence | Model reason |"); add("|---" * 8 + "|")
         for d in model["primary"]["disagreements"]:
             add(f"| {d['item_id']} | {d['behavior']} | {d['adjudicated']} | {d['A'] or 'blank'} | {d['B'] or 'blank'} | "

@@ -1,0 +1,249 @@
+{
+  "purpose": "RQ1 protocol v3 opportunity-gate development evaluation; recorded before every real v3 call, including smoke and fixtures",
+  "recorded_at_utc": "2026-11-18T05:46:12.295482+00:00",
+  "git_head": "cf616db51dbfb22cca85aca7f2e95fab5c4b1281",
+  "git_head_meaning": "Base HEAD at record creation, not the later commit containing this record; exact proposed file contents are frozen below",
+  "uncommitted_changes": true,
+  "disclosure": "v3 was designed after inspecting the six v2 false-missed errors on Main 1. All v3 Main 1 results are development results, reported alongside v2 and never replacing it. No held-out efficacy claim is permitted before a new independently human-labeled Main 2 evaluation.",
+  "decided_by": "Yuan Tian, explicit selection of option (a) in the handoff session before any v3 real-model call",
+  "unchanged_from_v2": [
+    "rubric v0.2",
+    "models and pinned revisions",
+    "decoding",
+    "seeds",
+    "budgets",
+    "primary agreement/FMR definitions and item-bootstrap method"
+  ],
+  "primary": "qwen38-27b-fp8 seed 329",
+  "primary_decision_rule": {
+    "option": "a",
+    "seed": 329,
+    "rule": "Use the valid raw v3 annotation. Keep all valid numeric labels and N/A as emitted; no confidence filtering or voting in the primary result. Invalid outputs remain failed."
+  },
+  "ablation": "qwen35-9b (all three seeds reported regardless of performance; seed 329 designated primary within this model)",
+  "seeds": [
+    329,
+    330,
+    331
+  ],
+  "contract_version": "decision-point-v3",
+  "contract_v3_sha256": "e7874abe8ecf57f4d215f82641b88b9b2807a5d0992152f444435061d4043549",
+  "model_configs": {
+    "qwen38-27b-fp8": {
+      "model": {
+        "adapter": "command",
+        "model_id": "Qwen/Qwen3.8-27B-FP8@017b9c7af6b5689d5dd426a76e0bc077eb5ca20a",
+        "family": "qwen3.8",
+        "command": [
+          ".venv/bin/python",
+          "-m",
+          "adaptive_tutor.adapters.local_vllm",
+          "--thinking",
+          "on",
+          "--top-p",
+          "0.95",
+          "--top-k",
+          "20",
+          "--min-p",
+          "0",
+          "--presence-penalty",
+          "0",
+          "--repetition-penalty",
+          "1.0",
+          "--http-timeout",
+          "3300"
+        ],
+        "temperature": 1.0,
+        "supports_seed": true,
+        "timeout_seconds": 3600
+      },
+      "rubric_version": "v0.2",
+      "contract_version": "decision-point-v3",
+      "seed": 329,
+      "budget": {
+        "max_output_tokens": 32768,
+        "max_context_bytes": 200000,
+        "transport_attempts": 3
+      }
+    },
+    "qwen35-9b": {
+      "model": {
+        "adapter": "command",
+        "model_id": "Qwen/Qwen3.5-9B@c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+        "family": "qwen3.5",
+        "command": [
+          ".venv/bin/python",
+          "-m",
+          "adaptive_tutor.adapters.local_vllm",
+          "--thinking",
+          "on",
+          "--top-p",
+          "0.95",
+          "--top-k",
+          "20",
+          "--min-p",
+          "0",
+          "--presence-penalty",
+          "1.5",
+          "--repetition-penalty",
+          "1.0",
+          "--http-timeout",
+          "3300"
+        ],
+        "temperature": 1.0,
+        "supports_seed": true,
+        "timeout_seconds": 3600
+      },
+      "rubric_version": "v0.2",
+      "contract_version": "decision-point-v3",
+      "seed": 329,
+      "budget": {
+        "max_output_tokens": 32768,
+        "max_context_bytes": 200000,
+        "transport_attempts": 3
+      }
+    }
+  },
+  "execution": {
+    "cluster": "SC",
+    "csid": "yuantian",
+    "account": "nlp",
+    "partition": "jag-standard",
+    "gpu": "NVIDIA RTX 6000 Ada 48GB",
+    "gpus_per_job": 1,
+    "scratch": "/nlp/scr/yuantian",
+    "transfer_node": "scdt.stanford.edu",
+    "vllm": "0.32.0",
+    "expected_torch": "2.13.0",
+    "expected_torch_cuda": "13.0",
+    "setup_job": "18563751",
+    "observed_driver": "610.43.02 (jagupard38, initial nvidia-smi; runtime CUDA check still required)",
+    "environment_record": "Retain pip freeze and CUDA test output from setup before inference; exact transitive dependency versions may differ from FarmShare and will be disclosed",
+    "vllm_arguments": [
+      "--max-model-len",
+      "131072",
+      "--reasoning-parser",
+      "qwen3",
+      "--language-model-only",
+      "--gpu-memory-utilization",
+      "0.92",
+      "--max-num-seqs",
+      "4",
+      "--seed",
+      "0"
+    ],
+    "offline_weights": true,
+    "flashinfer_sampler": false,
+    "concurrency": "Three separate seed runs share one model server for fixtures/Main 1; each has its own journal and output directory",
+    "inference_gate": "Preregistration must be committed and pushed, with user authorization, before smoke or any other v3 inference"
+  },
+  "run_plan": {
+    "smoke": "Each model, seed 329: four existing synthetic items plus the unchanged generated long synthetic item (five outcomes per model). Check startup, latency, long context and validity; a recorded contract failure is not silently repaired.",
+    "fixtures": "Each model, seeds 329/330/331: 13 fixed synthetic fixtures; evaluate against synthetic-fixture reference. These are not human accuracy evidence.",
+    "main1": "Each model, seeds 329/330/331: all 60 frozen Main 1 items, no selection or replacement based on results",
+    "same_hardware_control": {
+      "contract": "decision-point-v2",
+      "model": "qwen38-27b-fp8",
+      "seed": 329,
+      "items": "data/rq1/main60/items.jsonl",
+      "output_root": "outputs/rq1-v2-sc",
+      "purpose": "Compare v2/v3 on the same SC GPU type/runtime and describe differences from historical v2. This single rerun does not isolate hardware from concurrent-batching/randomness or dependency differences."
+    },
+    "v3_output_root": "outputs/rq1-v3",
+    "planned_item_outcomes": {
+      "v3_smoke": 10,
+      "v3_fixtures": 78,
+      "v3_main1": 360,
+      "v2_sc_main1": 60
+    }
+  },
+  "analysis": {
+    "references": [
+      "adjudicated",
+      "A (60 labels)",
+      "B (59 labels; M1-053 missing, not N/A)"
+    ],
+    "primary_metrics": [
+      "raw agreement",
+      "unweighted four-category Cohen kappa",
+      "FMR = valid predicted 0 with nonzero/N/A reference / valid predictions with nonzero/N/A reference",
+      "coverage = valid outputs / 60"
+    ],
+    "report_counts": "Always show FMR numerator/denominator, coverage numerator/denominator, failed and pending counts",
+    "intervals": "95% percentile item bootstrap, 10000 resamples; same analysis seeds/method as v2; ignores participant clustering",
+    "secondary": [
+      "Seeds 330 and 331 separately; per-behavior agreement and A/B-agreed vs A/B-disagreed subsets (descriptive)",
+      "Option (b): majority of seeds 329/330/331 only on items valid in all three runs; three-way ties use 329; report its own coverage",
+      "Option (c): on valid seed-329 outputs only, keep a 0 only at high confidence, otherwise derive N/A; preserve nonzero labels and original journals; no failed item receives a derived label"
+    ],
+    "error_followup": [
+      "M1-005",
+      "M1-027",
+      "M1-034",
+      "M1-035",
+      "M1-040",
+      "M1-044"
+    ],
+    "failure_policy": "Invalid or truncated model responses stay failed. No repair, resampling, manual journal edit or conversion of failures to N/A. All v3 failures are excluded from both primary and secondary scoring; no legacy quote-only re-scoring.",
+    "historical_reporting": "Preserve and report existing v2 alongside v3, plus the new v2-SC control separately. FMR decreases must be interpreted together with coverage changes; do not claim improvement from dropped failures alone.",
+    "reporting_gate": "Generate the v3 report only after all three seed runs per model have terminal outcomes for every item; recorded failures count as outcomes, not valid predictions"
+  },
+  "incidents_and_deviations": [
+    "Historical v1/v2 ran on FarmShare L40S; all v3 runs are planned on SC RTX 6000 Ada.",
+    "SC install is performed offline inside a Slurm allocation; dependency/model downloads run on scdt. Actual user storage capacity is 200 GB.",
+    "For preemption/time-limit interruption, retain job IDs, Slurm state/restart count and timestamps. Resume only pending work with identical frozen inputs; never retry a recorded failed outcome. Remove a stale lock only after its owning job is confirmed finished.",
+    "Any change to the finalized v3 prompt/contract requires separately reported v4, not retuning v3 on Main 1."
+  ],
+  "held_out_boundary": "Main 2 sampling rules and seed must be frozen before sampling. Agent prepares materials only; two humans label independently under v0.2 and adjudicate. No model prelabels. Main 2 FMR will not be pooled with opportunity-sparse Main 1. RQ2 remains on v2 until the held-out decision.",
+  "sha256": {
+    ".gitignore": "7429b7bf5708ec5f6fff538ced983950da308b9c68754764e014169a19a8efb5",
+    "docs/local-assessor.md": "06c7abd9ebc725fd6ff5b10858f1219abece042b4ff333acc2c52b0454001b57",
+    "configs/v2/assessment.qwen38-27b-fp8.json": "5b142cd37e1ff8952cf25cab6aff83bb6b04464eef60b1b78cf33a5335a814e4",
+    "configs/v3/assessment.qwen38-27b-fp8.json": "b177752220d46e1390c944193fd4ad2b2101620872aeec22568b8aac944c5ef6",
+    "configs/v3/assessment.qwen35-9b.json": "fcbf823140753ed398db776b83995a159bd95ecd0db045be7cf661d7f2f50526",
+    "scripts/rq1_vllm.sbatch": "cf8d55d21023e07ab785b1a2b6b989f930bceda62e2f321f7ec5d49aee222326",
+    "scripts/rq1_vllm_sc.sbatch": "b4adff7adece1f2c6efd89b9c11a82915177a7e8521cd4ace3d7ff4567d3e48d",
+    "scripts/rq1_report.py": "28eb35199f5ea671fc0a210c0a2f96cb7dd267b4116d2adfda6f74ee7cf073b7",
+    "src/adaptive_tutor/adapters/local_vllm.py": "8f286605ec239bea33b4b4d2e2fd15c148d441a197392fafee675e69421cd902",
+    "src/adaptive_tutor/rq1/core.py": "b91cfbc252677980a23a8ae944dbd5b4afc06c8f6839d726d3179b8bc89f319c",
+    "src/adaptive_tutor/rq1/pipeline.py": "f8df1918cc104ab55eee115d3072e495934357d0d5b8827f658a4026d0e05c58",
+    "src/adaptive_tutor/rq1/rubrics/specification_verification_v02.md": "046ceb7bc8fb5035ebd347c56e3a16b4b8240deb4d3279904bf4a77bfb845e1d",
+    "data/rq1/main60/items.jsonl": "d550b6dc830361d76598c01fa4133822f17be04a8099abb0efeccf5ffde84fc9",
+    "data/rq1/main60/reference_A.csv": "464ebfe4317d9062cdf358a278983552de8fac062165f7254c0cba099d6c7fd1",
+    "data/rq1/main60/reference_B.csv": "5ac3080849de433673dce6ad64da8e2d3d9418bdfa86b305ae9b1db2a0d5a675",
+    "data/rq1/main60/reference_adjudicated.csv": "cd5ef9dd0c6f13bccff53932b3cfb44993e59ed864221d2dd3f702365f0ffc9a",
+    "data/rq2/v02_fixtures/items.jsonl": "57915ad2bcc8fb6f1e78644751158b2e13b8f1e62c0964433dfd15fc7e69aaca",
+    "data/rq2/v02_fixtures/reference.csv": "142f5ea75609d912621c11cd38a40027b6f8e1251751714de16f52f0fd45a550",
+    "examples/assessment_items.synthetic.jsonl": "d204b0b1c742f92c4ce5f595c947fbc45b206ba369eab806825a0bde5a948b27",
+    "tests/test_sc_job.py": "aa14af511ec4039692d178a792c991faa562dfed42d714dba374ddd124aeb8fa",
+    "tests/test_rq1_report.py": "284165bebe3f429c4a95549eab57f6fc07a54863f04c91ca55d30f3e3c29f377"
+  },
+  "implementation_sha256": {
+    "src/adaptive_tutor/__init__.py": "2e5d3675e64b7b2c317d45ba2fd1aec7953fb004a141f6c08a26efa53f4f8388",
+    "src/adaptive_tutor/__main__.py": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
+    "src/adaptive_tutor/adapters/__init__.py": "b3c91d3e1ea2ba01de47fbae48f47d5427d350cbe0de84d83f4478bcd5c5b2e6",
+    "src/adaptive_tutor/adapters/base.py": "ac9afc8ad64ff7e108c35156e8fc3edbd9eca9c8fb3b268cb7b2c6c653be18f0",
+    "src/adaptive_tutor/adapters/command.py": "902c8df73febaf3ae96a02ba14b39ba7e6b403ba8d2a2edaf1a576eb1e0a6c96",
+    "src/adaptive_tutor/adapters/http_bridge.py": "6f9c2f7168bdbd53fb654f3289dec3313c31d8029002a7200c9645f0ec37b352",
+    "src/adaptive_tutor/adapters/local_vllm.py": "8f286605ec239bea33b4b4d2e2fd15c148d441a197392fafee675e69421cd902",
+    "src/adaptive_tutor/adapters/mock.py": "aadfa147ceb25e3218160aacb4e37b858c5a9f569358fdd56a3866df6b6710e6",
+    "src/adaptive_tutor/analysis.py": "218d26305141988109f79e370d435e71097948f638743c939ba78ae4c43ea2ce",
+    "src/adaptive_tutor/assessment.py": "efb11335152a0ce8cc3227709ce169a40eadccb4a2ffd2c34977ad4185d3289d",
+    "src/adaptive_tutor/audit.py": "ab6b32edb401b45fb51da89b64d374579b948996998d59daab71c00e11b1f149",
+    "src/adaptive_tutor/cli.py": "090cc7d02ccdd20b156b991f72dca9af2f912ad6016e25c783855bc570beec35",
+    "src/adaptive_tutor/coaching.py": "f7acc726120940e3d4a4459c720625391ce509a117c67c32b4696f9aeecc62c6",
+    "src/adaptive_tutor/evaluation.py": "5b65c5d0d454da656bef3ac59d4c9a62d81a5d959622a1971113e1c9a4610386",
+    "src/adaptive_tutor/learner.py": "9ae90abd0da00b31e725b7b8a021c322dc80beeec4b60801d0b94b72f9476653",
+    "src/adaptive_tutor/profiles.py": "eb0d9da66b65f667328d23d703bfe9668b9998b23fa69b92a5ac8ea6f72c878b",
+    "src/adaptive_tutor/rq1/__init__.py": "31edafcd994928baba5e14bd6da7d472d26989ad3e97a80a4e44a45822105ca7",
+    "src/adaptive_tutor/rq1/cli.py": "5bd0049ab719f932e14a20711a9dfd11185c2832aa97dd38ca5eaa886202c032",
+    "src/adaptive_tutor/rq1/core.py": "b91cfbc252677980a23a8ae944dbd5b4afc06c8f6839d726d3179b8bc89f319c",
+    "src/adaptive_tutor/rq1/metrics.py": "c0b3732a7e2bfa2af33d722dcf844bb479e75f93eddbff6ac480eec79a508c65",
+    "src/adaptive_tutor/rq1/mock.py": "1a53057eb4d583442a60713a13ba63d8c6961b6c9e767eebf5859f6dfa5bc556",
+    "src/adaptive_tutor/rq1/pipeline.py": "f8df1918cc104ab55eee115d3072e495934357d0d5b8827f658a4026d0e05c58",
+    "src/adaptive_tutor/runner.py": "a0af10cf1e178259d6fc17d5fd26fcce77345fa8b7975182d18ad46ca73b777f",
+    "src/adaptive_tutor/schema.py": "78875331310a584aa90a906ec6f8a27641c582256543afefbde8ad209108d3cd",
+    "src/adaptive_tutor/storage.py": "f78262c457d78ebe7d12ded428e7a4bac6fce232c3b5056fdbb6202c34fb16e9",
+    "src/adaptive_tutor/tasks.py": "56556a89324744b6f725bb18e9f311c04ae445df1a7c7ba16587d2e700a5d65e"
+  }
+}
