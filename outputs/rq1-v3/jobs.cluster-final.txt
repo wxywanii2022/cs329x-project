@@ -1,0 +1,9 @@
+18563751 setup nlp jag-standard rtx6000ada jagupard38 COMPLETED; no model calls
+18564163 v3 qwen38-27b-fp8 smoke seed329 submitted 2026-11-18T05:54:47Z
+18564495 v3 qwen35-9b smoke seed329 submitted 2026-11-18T05:57:36Z
+18564747 v3 qwen38-27b-fp8 fixtures seeds329,330,331 submitted 2026-11-18T06:10:02Z
+18564765 v2-SC qwen38-27b-fp8 main60 seed329 submitted 2026-11-18T06:11:04Z
+18564863 v3 qwen35-9b fixtures seeds329,330,331 submitted 2026-11-18T06:14:11Z
+18564864 v3 qwen38-27b-fp8 main60 seeds329,330,331 dependency=afterok:18564747 submitted 2026-11-18T06:14:12Z
+18564865 v3 qwen35-9b main60 seeds329,330,331 dependency=afterok:18564863 submitted 2026-11-18T06:14:12Z
+18564874 report v3-and-v2-SC dependency=afterok:18564864:18564865:18564765 submitted 2026-11-18T06:15:18Z

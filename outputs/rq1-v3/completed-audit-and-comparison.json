@@ -1,0 +1,870 @@
+{
+  "scope": "Main 1 development; primary seed329 remains fixed. This supplemental matched-item/true-zero analysis is descriptive, not a preregistered new primary endpoint.",
+  "reports": {
+    "v2_original": {
+      "n": 60,
+      "raw_agreement": 0.8333333333333334,
+      "cohen_kappa": 0.6878251821019773,
+      "confusion": [
+        [
+          3,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          12,
+          1
+        ],
+        [
+          6,
+          1,
+          1,
+          34
+        ]
+      ],
+      "false_missed_count": 6,
+      "non_missed_reference_count": 56,
+      "false_missed_rate": 0.10714285714285714,
+      "ci95": {
+        "raw_agreement": [
+          0.7333333333333333,
+          0.9166666666666666
+        ],
+        "cohen_kappa": [
+          0.5029239766081871,
+          0.8472505091649694
+        ],
+        "false_missed_rate": [
+          0.03508771929824561,
+          0.19298245614035087
+        ]
+      },
+      "by_behavior": {
+        "B1": {
+          "n": 15,
+          "raw_agreement": 0.8666666666666667,
+          "cohen_kappa": 0.7826086956521741,
+          "false_missed_count": 0
+        },
+        "B2": {
+          "n": 15,
+          "raw_agreement": 0.7333333333333333,
+          "cohen_kappa": 0.4871794871794871,
+          "false_missed_count": 3
+        },
+        "B3": {
+          "n": 15,
+          "raw_agreement": 0.8666666666666667,
+          "cohen_kappa": 0.6666666666666667,
+          "false_missed_count": 2
+        },
+        "B4": {
+          "n": 15,
+          "raw_agreement": 0.8666666666666667,
+          "cohen_kappa": 0.44444444444444453,
+          "false_missed_count": 1
+        }
+      }
+    },
+    "v2_sc": {
+      "n": 60,
+      "raw_agreement": 0.8166666666666667,
+      "cohen_kappa": 0.6524486571879936,
+      "confusion": [
+        [
+          2,
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          11,
+          1
+        ],
+        [
+          5,
+          1,
+          1,
+          35
+        ]
+      ],
+      "false_missed_count": 5,
+      "non_missed_reference_count": 56,
+      "false_missed_rate": 0.08928571428571429,
+      "ci95": {
+        "raw_agreement": [
+          0.7166666666666667,
+          0.9
+        ],
+        "cohen_kappa": [
+          0.4715208455666471,
+          0.8125
+        ],
+        "false_missed_rate": [
+          0.01818181818181818,
+          0.1724137931034483
+        ]
+      },
+      "by_behavior": {
+        "B1": {
+          "n": 15,
+          "raw_agreement": 0.8,
+          "cohen_kappa": 0.6896551724137933,
+          "false_missed_count": 0
+        },
+        "B2": {
+          "n": 15,
+          "raw_agreement": 0.8,
+          "cohen_kappa": 0.5714285714285715,
+          "false_missed_count": 2
+        },
+        "B3": {
+          "n": 15,
+          "raw_agreement": 0.7333333333333333,
+          "cohen_kappa": 0.41176470588235287,
+          "false_missed_count": 3
+        },
+        "B4": {
+          "n": 15,
+          "raw_agreement": 0.9333333333333333,
+          "cohen_kappa": 0.6341463414634146,
+          "false_missed_count": 0
+        }
+      }
+    },
+    "v3": {
+      "n": 59,
+      "raw_agreement": 0.8305084745762712,
+      "cohen_kappa": 0.6657223796033995,
+      "confusion": [
+        [
+          1,
+          2,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          12,
+          1
+        ],
+        [
+          2,
+          2,
+          2,
+          35
+        ]
+      ],
+      "false_missed_count": 2,
+      "non_missed_reference_count": 55,
+      "false_missed_rate": 0.03636363636363636,
+      "ci95": {
+        "raw_agreement": [
+          0.7288135593220338,
+          0.9152542372881356
+        ],
+        "cohen_kappa": [
+          0.47592332865825143,
+          0.8312356979405034
+        ],
+        "false_missed_rate": [
+          0.0,
+          0.09259259259259259
+        ]
+      },
+      "by_behavior": {
+        "B1": {
+          "n": 15,
+          "raw_agreement": 0.8666666666666667,
+          "cohen_kappa": 0.7826086956521741,
+          "false_missed_count": 0
+        },
+        "B2": {
+          "n": 15,
+          "raw_agreement": 0.6666666666666666,
+          "cohen_kappa": 0.28571428571428564,
+          "false_missed_count": 1
+        },
+        "B3": {
+          "n": 15,
+          "raw_agreement": 0.8,
+          "cohen_kappa": 0.4000000000000002,
+          "false_missed_count": 1
+        },
+        "B4": {
+          "n": 14,
+          "raw_agreement": 1.0,
+          "cohen_kappa": 1.0,
+          "false_missed_count": 0
+        }
+      }
+    }
+  },
+  "common_valid_items": 59,
+  "matched_valid_item_metrics": {
+    "v2_sc": {
+      "n": 59,
+      "raw_agreement": 0.8135593220338984,
+      "cohen_kappa": 0.6505115778136781,
+      "labels": [
+        "0",
+        "1",
+        "2",
+        "N/A"
+      ],
+      "confusion": [
+        [
+          2,
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          11,
+          1
+        ],
+        [
+          5,
+          1,
+          1,
+          34
+        ]
+      ],
+      "false_missed_count": 5,
+      "non_missed_reference_count": 55
+    },
+    "v3": {
+      "n": 59,
+      "raw_agreement": 0.8305084745762712,
+      "cohen_kappa": 0.6657223796033995,
+      "labels": [
+        "0",
+        "1",
+        "2",
+        "N/A"
+      ],
+      "confusion": [
+        [
+          1,
+          2,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          12,
+          1
+        ],
+        [
+          2,
+          2,
+          2,
+          35
+        ]
+      ],
+      "false_missed_count": 2,
+      "non_missed_reference_count": 55
+    }
+  },
+  "true_zero_outcomes": {
+    "v2_original": {
+      "M1-020": "0",
+      "M1-026": "0",
+      "M1-041": "0",
+      "M1-055": "1"
+    },
+    "v2_sc": {
+      "M1-020": "0",
+      "M1-026": "1",
+      "M1-041": "0",
+      "M1-055": "1"
+    },
+    "v3": {
+      "M1-020": "1",
+      "M1-026": "N/A",
+      "M1-041": "0",
+      "M1-055": "1"
+    }
+  },
+  "false_missed_items": {
+    "v2_original": [
+      "M1-005",
+      "M1-027",
+      "M1-034",
+      "M1-035",
+      "M1-040",
+      "M1-044"
+    ],
+    "v2_sc": [
+      "M1-005",
+      "M1-027",
+      "M1-034",
+      "M1-044",
+      "M1-046"
+    ],
+    "v3": [
+      "M1-005",
+      "M1-035"
+    ]
+  },
+  "original_vs_sc_label_changes": 5,
+  "m1_009_request_bytes": {
+    "v2_sc": 198365,
+    "v3": 200593
+  },
+  "runs": {
+    "outputs/rq1-v3/qwen35-9b/fixtures-s329": {
+      "valid": 12,
+      "failed": 1,
+      "total": 13,
+      "transport_failures": 0,
+      "journal_sha256": "79c14631b10e57c7d6d0c95af74244eea8f73384c303fe420bf353e1d742e999",
+      "failures": {
+        "F13": "ValidationError: Evidence quote not in cited turn"
+      }
+    },
+    "outputs/rq1-v3/qwen35-9b/fixtures-s330": {
+      "valid": 12,
+      "failed": 1,
+      "total": 13,
+      "transport_failures": 0,
+      "journal_sha256": "82c276cc22e35797dfc2c08f1fd5dbaa8242dfbb8404f6b22cc74a7fe591e607",
+      "failures": {
+        "F03": "ValidationError: Evidence quote not in cited turn"
+      }
+    },
+    "outputs/rq1-v3/qwen35-9b/fixtures-s331": {
+      "valid": 12,
+      "failed": 1,
+      "total": 13,
+      "transport_failures": 0,
+      "journal_sha256": "23c25926aa0e8e0b105f9985cd0993ff719f8d6047f16c5be3136e3a4a31f9d9",
+      "failures": {
+        "F13": "ValidationError: Evidence quote not in cited turn"
+      }
+    },
+    "outputs/rq1-v3/qwen35-9b/main60-s329": {
+      "valid": 57,
+      "failed": 3,
+      "total": 60,
+      "transport_failures": 0,
+      "journal_sha256": "ba762c3fcc10126c23092d8d0aa1f166570a80dcc28ea94f6bde08e2a0115e0f",
+      "failures": {
+        "M1-006": "ValidationError: Evidence quote not in cited turn",
+        "M1-009": "BudgetExceeded: Context byte budget exceeded",
+        "M1-041": "ValidationError: A 0 needs evidence quoting the opportunity from an earlier turn"
+      }
+    },
+    "outputs/rq1-v3/qwen35-9b/main60-s330": {
+      "valid": 56,
+      "failed": 4,
+      "total": 60,
+      "transport_failures": 0,
+      "journal_sha256": "1f77a00c71284448928982563ed81d95b6edd4456992318810ef82a1be65d1e6",
+      "failures": {
+        "M1-009": "BudgetExceeded: Context byte budget exceeded",
+        "M1-017": "ValidationError: Evidence quote not in cited turn",
+        "M1-031": "ValidationError: Evidence quote not in cited turn",
+        "M1-041": "ValidationError: Evidence quote not in cited turn"
+      }
+    },
+    "outputs/rq1-v3/qwen35-9b/main60-s331": {
+      "valid": 56,
+      "failed": 4,
+      "total": 60,
+      "transport_failures": 0,
+      "journal_sha256": "489455c9f6b74061aa25c0fd38ccbcc3ae70be7208df297f99932dda78e82b56",
+      "failures": {
+        "M1-005": "ValidationError: Evidence quote not in cited turn",
+        "M1-009": "BudgetExceeded: Context byte budget exceeded",
+        "M1-029": "ValidationError: Evidence quote not in cited turn",
+        "M1-048": "ValidationError: Missing keys: {'confidence', 'reason', 'unclear_rule', 'evidence', 'behavior', 'label', 'opportunity_status', 'na_reason'}"
+      }
+    },
+    "outputs/rq1-v3/qwen35-9b/smoke-s329": {
+      "valid": 5,
+      "failed": 0,
+      "total": 5,
+      "transport_failures": 0,
+      "journal_sha256": "df9da81914108c88fbab3c8706bd98b5ab22e367da06d2c672f166fe247a01bd",
+      "failures": {}
+    },
+    "outputs/rq1-v3/qwen38-27b-fp8/fixtures-s329": {
+      "valid": 13,
+      "failed": 0,
+      "total": 13,
+      "transport_failures": 0,
+      "journal_sha256": "ad733cd27d358b83bd658bc776c7e9fb59db5f701edf1e1fc3c8589023d4bcd5",
+      "failures": {}
+    },
+    "outputs/rq1-v3/qwen38-27b-fp8/fixtures-s330": {
+      "valid": 13,
+      "failed": 0,
+      "total": 13,
+      "transport_failures": 0,
+      "journal_sha256": "53a4530bc70aa3bbde70fda7aef49d4cdb01c6ca4000aef8e89c1c6e6486f8d5",
+      "failures": {}
+    },
+    "outputs/rq1-v3/qwen38-27b-fp8/fixtures-s331": {
+      "valid": 13,
+      "failed": 0,
+      "total": 13,
+      "transport_failures": 0,
+      "journal_sha256": "9f05254d89c35833b4c6d46e3012a1707b2c73bcfdca91f4f2e3fdb1aee4c8e6",
+      "failures": {}
+    },
+    "outputs/rq1-v3/qwen38-27b-fp8/main60-s329": {
+      "valid": 59,
+      "failed": 1,
+      "total": 60,
+      "transport_failures": 0,
+      "journal_sha256": "8967973458a49289f8bc04a8c9b0c979a994a056c1229c06b80e6234c82788e6",
+      "failures": {
+        "M1-009": "BudgetExceeded: Context byte budget exceeded"
+      }
+    },
+    "outputs/rq1-v3/qwen38-27b-fp8/main60-s330": {
+      "valid": 59,
+      "failed": 1,
+      "total": 60,
+      "transport_failures": 0,
+      "journal_sha256": "7487c181714fb3bce0cdcf0f149774a1ebc9e2b119b7b405f8ad2962f0d8fdad",
+      "failures": {
+        "M1-009": "BudgetExceeded: Context byte budget exceeded"
+      }
+    },
+    "outputs/rq1-v3/qwen38-27b-fp8/main60-s331": {
+      "valid": 59,
+      "failed": 1,
+      "total": 60,
+      "transport_failures": 0,
+      "journal_sha256": "bc5dd2d0d2a05fde8db2e8e5beb984ac9bf0cf14138cddac6d7265701f48d654",
+      "failures": {
+        "M1-009": "BudgetExceeded: Context byte budget exceeded"
+      }
+    },
+    "outputs/rq1-v3/qwen38-27b-fp8/smoke-s329": {
+      "valid": 5,
+      "failed": 0,
+      "total": 5,
+      "transport_failures": 0,
+      "journal_sha256": "aeb84b4b9d24c2830edf286d322184d7bf2ad1efe1a317a0fd42717a5c073931",
+      "failures": {}
+    },
+    "outputs/rq1-v2-sc/qwen38-27b-fp8/main60-s329": {
+      "valid": 60,
+      "failed": 0,
+      "total": 60,
+      "transport_failures": 0,
+      "journal_sha256": "d76d04ae9c068c598bbaabe22ddc5467f7f4f35060e2115bbb80ca00c8c68d5e",
+      "failures": {}
+    }
+  },
+  "fixture_checks": {
+    "outputs/rq1-v3/qwen35-9b/fixtures-s329": {
+      "reference_provenance": "synthetic-fixture",
+      "overall": {
+        "cohen_kappa": 0.76,
+        "confusion": [
+          [
+            1,
+            0,
+            0,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            4,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            4
+          ]
+        ],
+        "false_missed_count": 0,
+        "false_missed_definition": "candidate=0 among paired successful items with reference in {1,2,N/A}",
+        "false_missed_rate": 0.0,
+        "labels": [
+          "0",
+          "1",
+          "2",
+          "N/A"
+        ],
+        "n": 12,
+        "non_missed_reference_count": 9,
+        "raw_agreement": 0.8333333333333334
+      },
+      "disagreements": [
+        {
+          "behavior": "B1",
+          "candidate": "N/A",
+          "item_id": "F01",
+          "reference": "0"
+        },
+        {
+          "behavior": "B2",
+          "candidate": "N/A",
+          "item_id": "F04",
+          "reference": "0"
+        }
+      ],
+      "failed_predictions": 1
+    },
+    "outputs/rq1-v3/qwen35-9b/fixtures-s330": {
+      "reference_provenance": "synthetic-fixture",
+      "overall": {
+        "cohen_kappa": 0.6288659793814433,
+        "confusion": [
+          [
+            1,
+            0,
+            0,
+            2
+          ],
+          [
+            0,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            4,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            4
+          ]
+        ],
+        "false_missed_count": 0,
+        "false_missed_definition": "candidate=0 among paired successful items with reference in {1,2,N/A}",
+        "false_missed_rate": 0.0,
+        "labels": [
+          "0",
+          "1",
+          "2",
+          "N/A"
+        ],
+        "n": 12,
+        "non_missed_reference_count": 9,
+        "raw_agreement": 0.75
+      },
+      "disagreements": [
+        {
+          "behavior": "B1",
+          "candidate": "N/A",
+          "item_id": "F01",
+          "reference": "0"
+        },
+        {
+          "behavior": "B2",
+          "candidate": "N/A",
+          "item_id": "F04",
+          "reference": "0"
+        },
+        {
+          "behavior": "B3",
+          "candidate": "2",
+          "item_id": "F07",
+          "reference": "1"
+        }
+      ],
+      "failed_predictions": 1
+    },
+    "outputs/rq1-v3/qwen35-9b/fixtures-s331": {
+      "reference_provenance": "synthetic-fixture",
+      "overall": {
+        "cohen_kappa": 0.6288659793814433,
+        "confusion": [
+          [
+            1,
+            0,
+            0,
+            2
+          ],
+          [
+            0,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            4,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            4
+          ]
+        ],
+        "false_missed_count": 0,
+        "false_missed_definition": "candidate=0 among paired successful items with reference in {1,2,N/A}",
+        "false_missed_rate": 0.0,
+        "labels": [
+          "0",
+          "1",
+          "2",
+          "N/A"
+        ],
+        "n": 12,
+        "non_missed_reference_count": 9,
+        "raw_agreement": 0.75
+      },
+      "disagreements": [
+        {
+          "behavior": "B1",
+          "candidate": "N/A",
+          "item_id": "F01",
+          "reference": "0"
+        },
+        {
+          "behavior": "B2",
+          "candidate": "N/A",
+          "item_id": "F04",
+          "reference": "0"
+        },
+        {
+          "behavior": "B3",
+          "candidate": "2",
+          "item_id": "F07",
+          "reference": "1"
+        }
+      ],
+      "failed_predictions": 1
+    },
+    "outputs/rq1-v3/qwen38-27b-fp8/fixtures-s329": {
+      "reference_provenance": "synthetic-fixture",
+      "overall": {
+        "cohen_kappa": 0.7796610169491526,
+        "confusion": [
+          [
+            1,
+            1,
+            0,
+            1
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            4,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            5
+          ]
+        ],
+        "false_missed_count": 0,
+        "false_missed_definition": "candidate=0 among paired successful items with reference in {1,2,N/A}",
+        "false_missed_rate": 0.0,
+        "labels": [
+          "0",
+          "1",
+          "2",
+          "N/A"
+        ],
+        "n": 13,
+        "non_missed_reference_count": 10,
+        "raw_agreement": 0.8461538461538461
+      },
+      "disagreements": [
+        {
+          "behavior": "B1",
+          "candidate": "1",
+          "item_id": "F01",
+          "reference": "0"
+        },
+        {
+          "behavior": "B2",
+          "candidate": "N/A",
+          "item_id": "F04",
+          "reference": "0"
+        }
+      ],
+      "failed_predictions": 0
+    },
+    "outputs/rq1-v3/qwen38-27b-fp8/fixtures-s330": {
+      "reference_provenance": "synthetic-fixture",
+      "overall": {
+        "cohen_kappa": 0.7796610169491526,
+        "confusion": [
+          [
+            1,
+            1,
+            0,
+            1
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            4,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            5
+          ]
+        ],
+        "false_missed_count": 0,
+        "false_missed_definition": "candidate=0 among paired successful items with reference in {1,2,N/A}",
+        "false_missed_rate": 0.0,
+        "labels": [
+          "0",
+          "1",
+          "2",
+          "N/A"
+        ],
+        "n": 13,
+        "non_missed_reference_count": 10,
+        "raw_agreement": 0.8461538461538461
+      },
+      "disagreements": [
+        {
+          "behavior": "B1",
+          "candidate": "1",
+          "item_id": "F01",
+          "reference": "0"
+        },
+        {
+          "behavior": "B2",
+          "candidate": "N/A",
+          "item_id": "F04",
+          "reference": "0"
+        }
+      ],
+      "failed_predictions": 0
+    },
+    "outputs/rq1-v3/qwen38-27b-fp8/fixtures-s331": {
+      "reference_provenance": "synthetic-fixture",
+      "overall": {
+        "cohen_kappa": 0.7719298245614035,
+        "confusion": [
+          [
+            1,
+            0,
+            0,
+            2
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            4,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            5
+          ]
+        ],
+        "false_missed_count": 0,
+        "false_missed_definition": "candidate=0 among paired successful items with reference in {1,2,N/A}",
+        "false_missed_rate": 0.0,
+        "labels": [
+          "0",
+          "1",
+          "2",
+          "N/A"
+        ],
+        "n": 13,
+        "non_missed_reference_count": 10,
+        "raw_agreement": 0.8461538461538461
+      },
+      "disagreements": [
+        {
+          "behavior": "B1",
+          "candidate": "N/A",
+          "item_id": "F01",
+          "reference": "0"
+        },
+        {
+          "behavior": "B2",
+          "candidate": "N/A",
+          "item_id": "F04",
+          "reference": "0"
+        }
+      ],
+      "failed_predictions": 0
+    }
+  }
+}

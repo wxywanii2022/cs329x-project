@@ -4,3 +4,5 @@ src/adaptive_tutor/rq1/rubrics/*.md -text
 data/rq1/** -text
 outputs/rq1/** -text
 outputs/rq1-v2/** -text
+outputs/rq1-v3/** -text
+outputs/rq1-v2-sc/** -text

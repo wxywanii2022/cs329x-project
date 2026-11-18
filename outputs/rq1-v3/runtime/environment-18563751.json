@@ -1,0 +1,11 @@
+{
+  "host": "jagupard38.stanford.edu",
+  "python": "3.12.3",
+  "vllm": "0.32.0",
+  "torch": "2.13.0+cu130",
+  "cuda": "13.0",
+  "gpu": "NVIDIA RTX 6000 Ada Generation",
+  "gpu_memory_bytes": 50895519744,
+  "cuda_tensor_check": "passed",
+  "model_calls": 0
+}

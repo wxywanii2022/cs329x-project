@@ -1,4 +1,4 @@
-# RQ1 local assessor (open-weight model, served on FarmShare)
+# RQ1 local assessor (FarmShare v1/v2; SC v3)
 
 The `tutor-assess` pipeline ([assessment.md](assessment.md)) now has a real model behind it: an open-weight model served locally with vLLM and called through the `command` adapter `adaptive_tutor.adapters.local_vllm`. No API service is involved and the model sees only what the pipeline already allows: the frozen v0.2 rubric and the dialogue prefix up to the judged user turn.
 
@@ -47,14 +47,15 @@ On FarmShare, GPUs are often free while CPUs on those nodes are not, and memory 
 
 Smoke-test timing on one L40S: Qwen3.8-27B 12–41 s per item (about 300–600 output tokens including thinking; 41 s for the 53k-token item); Qwen3.5-9B 42–88 s (thinks 4–6× longer). The job script sets `VLLM_USE_FLASHINFER_SAMPLER=0` because FlashInfer's fused sampler needs `nvcc`, which the GPU nodes lack; vLLM does not use that sampler for seeded requests, so the sampling path is unchanged.
 
-## SC execution for v3 (preparation, no v3 model calls yet)
+## SC execution for v3
 
 The v1/v2 FarmShare script is preserved. `scripts/rq1_vllm_sc.sbatch` uses SC account
 `nlp`, partition `jag-standard`, one `rtx6000ada`, 8 CPUs and 48 GB host memory.
-All v3 runs will use RTX 6000 Ada; the historical v1/v2 runs used L40S. Keep the
-pinned models, vLLM arguments, decoding and seeds unchanged. A proposed same-hardware
-control reruns v2's primary 27B seed on SC in `outputs/rq1-v2-sc`, never in the
-historical result directories; include it in the preregistration before running it.
+All v3 runs used RTX 6000 Ada; the historical v1/v2 runs used L40S. The pinned
+models, vLLM arguments, decoding and seeds were unchanged. The preregistered
+same-hardware control reran v2's primary 27B seed on SC in `outputs/rq1-v2-sc`,
+never in the historical result directories. Preregistration was pushed as
+`d6e17c1` before the first v3 call.
 
 - Code and `.venv`: `/nlp/scr/yuantian/cs329x-project`; HF cache:
   `/nlp/scr/yuantian/hf`. The observed user filesystem capacity is **200 GB**, not
@@ -90,7 +91,7 @@ sbatch -t 01:00:00 scripts/rq1_vllm_sc.sbatch configs/v3/assessment.qwen38-27b-f
 sbatch -t 01:00:00 scripts/rq1_vllm_sc.sbatch configs/v3/assessment.qwen35-9b.json fixtures
 sbatch -t 03:00:00 scripts/rq1_vllm_sc.sbatch configs/v3/assessment.qwen38-27b-fp8.json main60
 sbatch -t 04:00:00 scripts/rq1_vllm_sc.sbatch configs/v3/assessment.qwen35-9b.json main60
-# Proposed control: only after it is included in the approved preregistration.
+# Same-hardware control, included in the approved preregistration.
 sbatch -t 02:00:00 --export=ALL,RUNS=outputs/rq1-v2-sc,SEEDS=329 scripts/rq1_vllm_sc.sbatch configs/v2/assessment.qwen38-27b-fp8.json main60
 ```
 
@@ -151,6 +152,9 @@ Recorded so the run can be audited; none changed a recorded model output.
 5. **Job script `wait` bug:** the first resume attempt made no progress. The killed run had left its `.run.lock` (SIGTERM skips the pipeline's lock cleanup), and the job then idled to its limit because a bare `wait` also waited on the vLLM server. The same bug made the 9B Main 1 job idle from 04:13, when all three seeds had finished, to its 04:22 limit without running `evaluate` (done afterwards on the login node); the 27B job ran out of time mid-run (incident 4). The script now waits on the pipeline runs only, and its time-limit handler releases locks held by the runs it stopped, never anyone else's.
 6. **v2 job limits:** the v2 27B jobs (one seed each, 1h10 limit so they start sooner) stopped at the limit with 39, 40 and 47 items done. The graceful stop recorded no failure, and resume jobs 1926354–1926356 finished the rest. The first seed-329 job ended as TIMEOUT rather than COMPLETED because vLLM's shutdown waited on the stopped client's open request; nothing was journaled after the stop.
 
+7. **SC execution (v3 and same-hardware v2 control):** historical v1/v2 used FarmShare L40S; v3 used SC RTX 6000 Ada. Runtime was vLLM 0.32.0, torch 2.13.0+cu130 and driver 610.43.02; exact packages and `sacct` records are retained under `outputs/rq1-v3/runtime/`. vLLM selected Marlin weight-only FP8 for the 27B block-scaled checkpoint and FlashAttention 2. FlashInfer availability warnings remain in the logs; backend/sampling settings were not changed or warnings suppressed. Hardware FP8 capability alone does not describe the selected arithmetic path. All new jobs completed with zero restarts and no journaled transport failures.
+8. **v3 byte-budget boundary:** the extra contract text makes M1-009 exceed the unchanged 200,000-byte request budget by 593 bytes (27B primary), despite successful synthetic long-context smoke. All six v3 outcomes for M1-009 remain failed. This was identified after the completed runs, not repaired or rerun; see the v3 results and supplemental audit below.
+
 ## Protocol v2: quote rule and quoting instruction (2026-11-02)
 
 v1 lost about a quarter of its items to formatting differences in quotes, which the assessor owner (cren8) judged not to be errors. v2 changes only how evidence is quoted and checked; the v0.2 labeling rules, models, decoding, seeds, budgets and analysis are unchanged. **The change was designed after seeing v1's Main 1 failures**, so v2 on Main 1 is not a held-out test of the change itself. It is reported next to v1, never instead of it, and the pilot development set should confirm it. Settings are fixed in `configs/v2/` and hashed in `outputs/rq1-v2/preregistration.json` before any v2 call.
@@ -199,7 +203,7 @@ Full tables: `outputs/rq1-v2/report.md`. Same reference, metrics and intervals a
 
 Reading: under v2 the 27B labels every Main 1 item with checked evidence. Its agreement with the adjudicated reference (κ 0.69) is close to a single annotator's (B: 0.70) and above A–B agreement (0.59). Its false-missed rate is higher than the annotators', mostly 0-for-N/A calls on items the humans disputed. It is still **not a validated assessor**: v2 was fixed after seeing Main 1, so the pilot development set must confirm it before it labels RQ2 data.
 
-## Protocol v3: opportunity gate (2026-11-14, not yet run)
+## Protocol v3: opportunity gate (designed 2026-11-14; run 2026-11-17–18)
 
 Goal: cut false "missed" labels without changing the v0.2 rules. All six v2 false-missed errors are 0 where the reference is N/A, and in each the model's reason describes only what the user did not do, never whether the opportunity existed. v3 targets that step. **v3 was designed after reading these six errors**, so v3 on Main 1 is a development result, reported next to v2 and never instead of it; only a new, independently labeled batch can test it.
 
@@ -208,6 +212,87 @@ Goal: cut false "missed" labels without changing the v0.2 rules. All six v2 fals
 3. **Validator: a 0 must cite its opportunity.** Under v3, a B3 0 needs an evidence quote from an earlier assistant or tool turn (the claim the user did not check), and a B4 0 needs a quote from any turn before the target (the problem). Otherwise the output is a **failure**, not N/A, consistent with the existing failure policy, so coverage is reported alongside FMR. B1/B2 zeros cite the request itself and are not gated, because their opportunity lives in the target turn and the task instructions.
 4. **Configs:** `configs/v3/` (same models, decoding, seeds and budgets as v2). Run with `RUNS=outputs/rq1-v3`, e.g. `sbatch --export=ALL,RUNS=outputs/rq1-v3,SEEDS=329 scripts/rq1_vllm.sbatch configs/v3/assessment.qwen38-27b-fp8.json main60`, then `scripts/rq1_report.py --runs outputs/rq1-v3 --save outputs/rq1-v3/report`.
 5. **RQ2 stays on v2 for now** (`ASSESSMENT_CONTRACT` in `schema.py`). Switch it only after the held-out result below decides which contract is primary, and then for both assessor and evaluator.
+
+### v3 results (Main 1, development)
+
+**The primary run gives fewer false "missed" labels, but also flags fewer genuine
+missed behaviors. This is a development result, not a held-out validation.** The
+primary remains option (a), 27B seed 329; neither seed 330's stronger agreement nor
+a secondary confidence rule replaces it.
+
+All model/report jobs completed normally with exit 0 and zero Slurm restarts.
+All 15 new run journals (smoke, fixtures, Main 1 and the SC v2 control) passed
+hash-chain/evidence audits, had every planned item outcome, and recorded no
+transport failure. A completed job does not imply every model output was valid.
+Full tables: `outputs/rq1-v3/report.md`, `outputs/rq1-v2-sc/report.md`.
+Supplemental audit/count comparison: `outputs/rq1-v3/completed-audit-and-comparison.json`.
+
+| Run vs adjudicated | Coverage | Raw agreement | κ | FMR (count) |
+|---|---|---|---|---|
+| Historical v2 27B, seed 329 (L40S) | 60/60 | 0.833 | 0.688 | 0.107 (6/56) |
+| v2 27B SC control, seed 329 | 60/60 | 0.817 | 0.652 | 0.089 (5/56) |
+| **v3 27B, seed 329 (primary)** | **59/60** | **0.831** | **0.666** | **0.036 (2/55)** |
+| v3 27B, seed 330 | 59/60 | 0.915 | 0.826 | 0.018 (1/55) |
+| v3 27B, seed 331 | 59/60 | 0.831 | 0.669 | 0.073 (4/55) |
+| v3 9B, seed 329 | 57/60 | 0.895 | 0.753 | 0.019 (1/54) |
+| v3 9B, seed 330 | 56/60 | 0.911 | 0.789 | 0.038 (2/53) |
+| v3 9B, seed 331 | 56/60 | 0.839 | 0.637 | 0.058 (3/52) |
+
+Primary 27B 95% item-bootstrap intervals are κ [0.48, 0.83], raw agreement
+[0.73, 0.92] and FMR [0.00, 0.09]; the SC v2 control gives κ [0.47, 0.81]
+and FMR [0.02, 0.17]. These small, overlapping estimates do not establish an
+improvement. The original v2 and SC v2 primary labels differ on 5/60 items;
+this rerun does not isolate hardware from batching/randomness or dependency differences.
+
+Against A and B separately, the v3 27B primary gives n=59/58, raw=0.864/0.793,
+κ=0.745/0.626 and FMR=1/54 / 2/53. The 9B primary gives n=57/56,
+raw=0.860/0.839, κ=0.695/0.669 and FMR=1/53 / 1/52. B's unfinished M1-053
+remains missing, not N/A. Full intervals for each reference are in the reports.
+
+**Coverage loss has an identified cause.** M1-009 fails the unchanged 200,000-byte
+request budget in every v3 seed/model. For the 27B primary, the complete request
+is 198,365 bytes under v2 and 200,593 under v3: the appended contract adds 2,228
+bytes. This is not GPU OOM or a failed opportunity quote, and no model call was
+made for that item. The successful 53k-token synthetic smoke case did not establish
+that this different real request would fit the byte budget. No budget was raised,
+no input truncated, and no recorded failure rerun or relabeled.
+
+The 27B has no other Main 1 failures (177/180 valid outcomes). The 9B has
+169/180 valid outcomes: three budget failures, six quote failures, one missing-field
+output and one opportunity-evidence failure (M1-041, primary seed). Failures are
+excluded from scoring and remain failures; no v3 quote-only sensitivity rescoring
+is applied.
+
+**Descriptive trade-off on common items.** On the 59 items valid under both SC
+primary runs, v2 has FMR 5/55, raw 0.814 and κ 0.651; v3 has FMR 2/55, raw 0.831
+and κ 0.666. Thus losing M1-009 does not by itself account for the lower false-missed
+numerator. But of the four reference zeros, v2-SC flags 2/4 and v3 only 1/4
+(historical v2: 3/4). These supplementary counts suggest a more conservative
+missed-behavior detector, not an unqualified increase in reliability.
+
+The six historical v2 false-missed items all have reference N/A:
+
+| Item | v3 primary outcome | Interpretation |
+|---|---|---|
+| M1-005 | 0 | Still false missed |
+| M1-027 | N/A | Matches reference |
+| M1-034 | 1 | No longer false missed, but still disagrees |
+| M1-035 | 0 | Still false missed |
+| M1-040 | N/A | Matches reference |
+| M1-044 | N/A | Matches reference |
+
+**Secondary rules remain secondary.** 27B majority voting gives κ 0.700,
+FMR 3/55 and coverage 59/60. The high-confidence-zero rule gives κ 0.721,
+FMR 0/55 and coverage 59/60, still flagging only one of four reference zeros.
+Zero observed errors (and its degenerate percentile-bootstrap interval) do not
+establish zero risk. The 9B majority result is κ 0.863 and FMR 1/49, but on only
+52/60 jointly valid items; its confidence rule does not change the primary labels.
+
+**Fixtures are a rule-application check, not accuracy evidence.** The 27B produces
+13/13 valid outputs per seed, matching the constructed reference on 11/13 each.
+All seeds disagree on F01 and F04, both reference zeros. The 9B produces 12/13
+valid per seed (one quote failure each), matching 10/12, 9/12 and 9/12 valid pairs.
+These disagreements/failures are retained, not used to retune v3 or rewrite fixtures.
 
 ### Held-out test for v3 (to fix before any held-out call)
 
@@ -219,8 +304,8 @@ Goal: cut false "missed" labels without changing the v0.2 rules. All six v2 fals
 
 ## Next steps
 
-1. **Run v3 on the fixtures and Main 1** (development) and freeze the primary decision rule.
-2. **Sample and label Main 2**, then run the frozen v3 and v2 on it.
+1. **Development runs completed; keep the frozen primary rule (a).** Review the coverage and false-/true-missed trade-off without retuning on Main 1.
+2. **Label Main 2 independently**, then adjudicate and run the frozen v3 and v2. A 60-item session-held-out annotation pack has been prepared and uploaded with user approval; it is not fully participant-disjoint. Two selected items exceed the current byte budget, so resolve and preregister the execution-budget policy before any held-out model call, consistently for v2/v3. No Main 2 labels or model prelabels have been generated by the agent.
 3. **Pilot development set:** rebuild the 20 pilot items as raw prefixes from the source records (as `scripts/import_main60.py` does for Main 1); the existing pilot files are paraphrases with v0.1 labels.
 4. **Participant linkage** for a true participant-disjoint test.
 
