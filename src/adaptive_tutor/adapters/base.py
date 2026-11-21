@@ -23,8 +23,10 @@ class RecordedFailure(RuntimeError):
 
 
 class Gateway:
-    def __init__(self, models: dict[str, ModelSpec], budget: Budget, journal: Journal, seed: int):
+    def __init__(self, models: dict[str, ModelSpec], budget: Budget, journal: Journal, seed: int,
+                 role_max_output_tokens: dict[str, int] | None = None):
         self.models, self.budget, self.journal, self.seed = models, budget, journal, seed
+        self.role_caps = dict(role_max_output_tokens or {})
         self.cache = {e["call_id"]: e for e in journal.events if e["kind"] in {"call_result", "call_failure"}}
         self.transports = {"mock": MockAdapter(), "command": CommandAdapter()}
 
@@ -41,7 +43,7 @@ class Gateway:
                    "sample_seed": int(digest([self.seed, call_id])[:8], 16),
                    "model": {"model_id": model.model_id, "temperature": model.temperature,
                              "supports_seed": model.supports_seed},
-                   "limits": {"max_output_tokens": max_output_tokens or self.budget.max_output_tokens,
+                   "limits": {"max_output_tokens": max_output_tokens or self.role_caps.get(role, self.budget.max_output_tokens),
                               "max_total_tokens": total_token_allowance}}
         request_hash = digest(request)
         context = dict(block_id=block_id, branch_id=branch_id, phase=phase, actor=role)

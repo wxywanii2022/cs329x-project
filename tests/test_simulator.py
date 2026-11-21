@@ -62,6 +62,21 @@ class ContractsTest(unittest.TestCase):
         with self.assertRaises(ValidationError):
             config(mode="research")
 
+    def test_role_output_cap_applies_only_to_named_role(self):
+        for bad in ({"coach": 10}, {"assessment": 0}, {"oops": 5}, {"assessment": True}):
+            with self.subTest(bad=bad), self.assertRaises(ValidationError):
+                config(role_max_output_tokens=bad)
+        cfg = config(role_max_output_tokens={"assessment": 32768})
+        with tempfile.TemporaryDirectory() as tmp:
+            ExperimentRunner(cfg, Path(tmp) / "run").run()
+            limits = {}
+            for e in Journal.read(Path(tmp) / "run" / "events.jsonl"):
+                if e["kind"] == "call_attempt" and e["request"]["role"] in {"assessment", "learner", "evaluator"}:
+                    limits.setdefault(e["request"]["role"], set()).add(e["request"]["limits"]["max_output_tokens"])
+        self.assertEqual(limits["assessment"], {32768})
+        self.assertEqual(limits["learner"], {cfg.budget.max_output_tokens})
+        self.assertEqual(limits["evaluator"], {cfg.budget.max_output_tokens})
+
     def test_development_tasks_cannot_silently_become_test_tasks(self):
         with self.assertRaises(ValidationError):
             build_bundle(config(split="test"))

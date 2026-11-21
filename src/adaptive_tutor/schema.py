@@ -98,11 +98,14 @@ class ExperimentConfig:
     split: str = "development"
     require_distinct_families: bool = False
     rubric_version: str = RUBRIC_VERSION
+    # Per-role default output cap, overriding budget.max_output_tokens (e.g. the frozen
+    # RQ1 assessor needs 32768 for thinking). Coaching keeps its own token budget.
+    role_max_output_tokens: dict = field(default_factory=dict)
 
     @classmethod
     def parse(cls, value: dict) -> ExperimentConfig:
         keys(value, {"seed", "profiles", "pairs", "replicates", "orientations", "models"},
-             {"budget", "mode", "split", "require_distinct_families", "rubric_version"})
+             {"budget", "mode", "split", "require_distinct_families", "rubric_version", "role_max_output_tokens"})
         integer(value["seed"], "seed")
         integer(value["replicates"], "replicates", 1)
         for name in ("profiles", "pairs", "orientations"):
@@ -129,6 +132,11 @@ class ExperimentConfig:
                     "Research mode forbids mock roles")
             require(all("REPLACE" not in m.model_id and "REPLACE" not in m.family for m in models.values()),
                     "Replace example model IDs and family names before a research run")
+        caps = value.get("role_max_output_tokens", {})
+        require(isinstance(caps, dict), "role_max_output_tokens must be an object")
+        keys(caps, set(), set(ROLES) - {"coach"})
+        for role, cap in caps.items():
+            integer(cap, f"role_max_output_tokens.{role}", 1)
         return cls(**{**value, "profiles": tuple(value["profiles"]), "pairs": tuple(value["pairs"]),
                       "orientations": tuple(value["orientations"]), "models": models,
                       "budget": Budget.parse(value.get("budget", {}))})

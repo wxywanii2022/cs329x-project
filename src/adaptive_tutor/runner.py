@@ -53,7 +53,8 @@ class ExperimentRunner:
                 require(not (self.output / "events.jsonl").exists(), "Journal exists without frozen inputs")
                 write_json(bundle_path, self.bundle)
             self.journal = Journal(self.output / "events.jsonl", self.config_hash)
-            self.gateway = Gateway(self.config.models, self.config.budget, self.journal, self.config.seed)
+            self.gateway = Gateway(self.config.models, self.config.budget, self.journal, self.config.seed,
+                                   self.config.role_max_output_tokens)
             self.logged_messages = {(e["block_id"], e["branch_id"], e["phase"], e["message_id"])
                                     for e in self.journal.events if e["kind"] == "message"}
             blocks = []

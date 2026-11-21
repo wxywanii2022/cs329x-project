@@ -15,10 +15,14 @@ open-weight assessor (Qwen3.8-27B-FP8, with Qwen3.5-9B as a size ablation) is se
 up in [docs/local-assessor.md](docs/local-assessor.md), with its pre-declared
 protocol and Main 1 results.
 
-The simulation assessor now makes four separate prefix-only calls, without an
-oracle opportunity label. It uses the explicitly separate candidate simulation
-rubric. The independent outcome evaluator has **not** yet been migrated to
-prefix-only packets; its existing full-record exposure remains a research gate.
+The simulation assessor and the independent outcome evaluator each make four separate
+prefix-only calls (dialogue truncated at that behavior's decision turn), without an
+oracle opportunity label, using the frozen v0.2 codebook and `decision-point-v2`
+contract; the audit rebuilds every payload and rejects any later turn.
+**RQ2 assessor (decided 2026-11-21 after the Main 2 held-out test):** v2 with
+Qwen3.8-27B-FP8, configured in `configs/live.example.json` with exactly the RQ1
+sampling flags and a per-role output cap (`role_max_output_tokens.assessment = 32768`,
+needed for thinking). See [docs/local-assessor.md](docs/local-assessor.md).
 Use new run directories after these code changes; historical outputs are not
 rewritten and should be audited with their original implementation version.
 
@@ -198,7 +202,7 @@ Follow `results.csv` → `pre_record_id` / `post_record_id` → scoring packet �
 
 See the full [adapter contract](docs/adapters.md). Each role can use a different executable process, so the validated RQ1 module and coach selection policy can be integrated without changing the runner. All processes receive one JSON request on stdin and return one JSON envelope on stdout. Shell invocation is disabled. Tool use is disabled in protocol v1.
 
-`configs/live.example.json` uses the optional Chat Completions HTTP bridge. Copy it to a new configuration, replace every model/family placeholder, and ensure each command uses an available Python interpreter. Set **four independent role endpoint/key pairs** in your environment, such as `TUTOR_LEARNER_URL` and `TUTOR_LEARNER_API_KEY`; repeat for `ASSESSMENT`, `COACH` and `EVALUATOR`. Keep credentials out of configuration and logs. The bridge does not load `.env` files automatically.
+`configs/live.example.json` uses the optional Chat Completions HTTP bridge. Copy it to a new configuration, replace every model/family placeholder, and ensure each command uses an available Python interpreter. Set **independent role endpoint/key pairs** in your environment, such as `TUTOR_LEARNER_URL` and `TUTOR_LEARNER_API_KEY`; repeat for `COACH` and `EVALUATOR`. The assessment role is already filled with the frozen RQ1 assessor and uses the local vLLM adapter instead: serve the pinned Qwen3.8-27B-FP8 revision with `vllm serve --host 127.0.0.1` (same server arguments as `scripts/rq1_vllm_sc.sbatch`) and set `TUTOR_ASSESSMENT_LOCAL_URL=http://127.0.0.1:<port>/v1/chat/completions`. Keep credentials out of configuration and logs. The bridge does not load `.env` files automatically.
 
 The bridge uses JSON mode, `max_completion_tokens`, and provider usage counts according to the [official Chat Completions API reference](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create). Compatibility with other providers must be checked in their adapters; different model families do not necessarily expose the same API. Select exact accessible model IDs after pilot testing. Aliases that resolve to a different returned ID fail the pinning check. Models must support the configured parameters, including temperature and JSON mode; unsupported settings are recorded as failures.
 
