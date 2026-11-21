@@ -13,6 +13,7 @@ outputs/*
 !outputs/rq1-v2/
 !outputs/rq1-v3/
 !outputs/rq1-v2-sc/
+!outputs/rq1-main2/
 outputs/rq1/code-snapshot/
 .run.lock
 .env
@@ -21,3 +22,6 @@ outputs/rq1/code-snapshot/
 # Local model settings and human-reference/source records
 /configs/*.local.json
 /private/
+# Main 2 model inputs are redacted but not guaranteed anonymous; copied to the cluster
+# out of band and pinned by SHA-256 in outputs/rq1-main2/preregistration.json.
+/data/rq1/main2/items.jsonl

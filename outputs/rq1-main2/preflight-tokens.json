@@ -1,0 +1,195 @@
+{
+ "recorded_at_utc": "2026-11-21T06:23:49.349937+00:00",
+ "script_sha256": "a22bffb070d4c7a56ce2025bd062e24a1e00d4018f7aa752d7448938de31fcda",
+ "items_sha256": "908c5665bea86e1b1feba7885c8cab340d9fb45e7d7350ed6e3312bb855b0887",
+ "sampling_plan_sha256": "709fb234aa3cb7eb97515005da5ad3c025784d7dad06e0ce3e01fb436ec01da1",
+ "model_generation_calls": 0,
+ "human_labels_read": false,
+ "heldout": {
+  "main2_sessions": 60,
+  "main2_items": 60,
+  "pilot_sessions": 20,
+  "main1_sessions": 60,
+  "plan_main1_list_matches_repo_main1": true,
+  "overlap_with_pilot": [],
+  "overlap_with_main1": [],
+  "participant_disjoint": false,
+  "note": "Session-held-out only; 16 of 60 items come from participants seen in earlier rounds (see sampling-audit.json).",
+  "pass": true
+ },
+ "byte_admission": [
+  {
+   "config": "assessment.v2.qwen35-9b.json",
+   "config_sha256": "c9a764a2a7118d46fa95b997750bfb0911816243ddc23fe9afd3fc4395216a33",
+   "seed": 329,
+   "max_context_bytes": 300000,
+   "max_request_bytes": 287870,
+   "argmax": "M2-046",
+   "over_budget": {}
+  },
+  {
+   "config": "assessment.v2.qwen35-9b.json",
+   "config_sha256": "c9a764a2a7118d46fa95b997750bfb0911816243ddc23fe9afd3fc4395216a33",
+   "seed": 330,
+   "max_context_bytes": 300000,
+   "max_request_bytes": 287871,
+   "argmax": "M2-046",
+   "over_budget": {}
+  },
+  {
+   "config": "assessment.v2.qwen35-9b.json",
+   "config_sha256": "c9a764a2a7118d46fa95b997750bfb0911816243ddc23fe9afd3fc4395216a33",
+   "seed": 331,
+   "max_context_bytes": 300000,
+   "max_request_bytes": 287870,
+   "argmax": "M2-046",
+   "over_budget": {}
+  },
+  {
+   "config": "assessment.v2.qwen38-27b-fp8.json",
+   "config_sha256": "fc52f64164ed57e3bac5cdf4a3b1e3468c2df510ab381648683521cde8e9b6e2",
+   "seed": 329,
+   "max_context_bytes": 300000,
+   "max_request_bytes": 287875,
+   "argmax": "M2-046",
+   "over_budget": {}
+  },
+  {
+   "config": "assessment.v2.qwen38-27b-fp8.json",
+   "config_sha256": "fc52f64164ed57e3bac5cdf4a3b1e3468c2df510ab381648683521cde8e9b6e2",
+   "seed": 330,
+   "max_context_bytes": 300000,
+   "max_request_bytes": 287876,
+   "argmax": "M2-046",
+   "over_budget": {}
+  },
+  {
+   "config": "assessment.v2.qwen38-27b-fp8.json",
+   "config_sha256": "fc52f64164ed57e3bac5cdf4a3b1e3468c2df510ab381648683521cde8e9b6e2",
+   "seed": 331,
+   "max_context_bytes": 300000,
+   "max_request_bytes": 287875,
+   "argmax": "M2-046",
+   "over_budget": {}
+  },
+  {
+   "config": "assessment.v3.qwen35-9b.json",
+   "config_sha256": "7f587bd100a0c7f68a7e84ff6434ac31f4344ab236d58507b872f6c7039a45ee",
+   "seed": 329,
+   "max_context_bytes": 300000,
+   "max_request_bytes": 290098,
+   "argmax": "M2-046",
+   "over_budget": {}
+  },
+  {
+   "config": "assessment.v3.qwen35-9b.json",
+   "config_sha256": "7f587bd100a0c7f68a7e84ff6434ac31f4344ab236d58507b872f6c7039a45ee",
+   "seed": 330,
+   "max_context_bytes": 300000,
+   "max_request_bytes": 290099,
+   "argmax": "M2-046",
+   "over_budget": {}
+  },
+  {
+   "config": "assessment.v3.qwen35-9b.json",
+   "config_sha256": "7f587bd100a0c7f68a7e84ff6434ac31f4344ab236d58507b872f6c7039a45ee",
+   "seed": 331,
+   "max_context_bytes": 300000,
+   "max_request_bytes": 290098,
+   "argmax": "M2-046",
+   "over_budget": {}
+  },
+  {
+   "config": "assessment.v3.qwen38-27b-fp8.json",
+   "config_sha256": "2377fec0f56346a4dc94f9d101c4b2d06937fbfaab67a59e2362416dcabe4c75",
+   "seed": 329,
+   "max_context_bytes": 300000,
+   "max_request_bytes": 290103,
+   "argmax": "M2-046",
+   "over_budget": {}
+  },
+  {
+   "config": "assessment.v3.qwen38-27b-fp8.json",
+   "config_sha256": "2377fec0f56346a4dc94f9d101c4b2d06937fbfaab67a59e2362416dcabe4c75",
+   "seed": 330,
+   "max_context_bytes": 300000,
+   "max_request_bytes": 290104,
+   "argmax": "M2-046",
+   "over_budget": {}
+  },
+  {
+   "config": "assessment.v3.qwen38-27b-fp8.json",
+   "config_sha256": "2377fec0f56346a4dc94f9d101c4b2d06937fbfaab67a59e2362416dcabe4c75",
+   "seed": 331,
+   "max_context_bytes": 300000,
+   "max_request_bytes": 290103,
+   "argmax": "M2-046",
+   "over_budget": {}
+  }
+ ],
+ "token_window": [
+  {
+   "config": "assessment.v2.qwen35-9b.json",
+   "model_id": "Qwen/Qwen3.5-9B@c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+   "max_input_tokens": 62995,
+   "argmax": "M2-046",
+   "input_limit": 98304,
+   "over_limit": {},
+   "top5": {
+    "M2-046": 62995,
+    "M2-047": 62304,
+    "M2-035": 14340,
+    "M2-045": 13441,
+    "M2-027": 12871
+   }
+  },
+  {
+   "config": "assessment.v2.qwen38-27b-fp8.json",
+   "model_id": "Qwen/Qwen3.8-27B-FP8@017b9c7af6b5689d5dd426a76e0bc077eb5ca20a",
+   "max_input_tokens": 63033,
+   "argmax": "M2-046",
+   "input_limit": 98304,
+   "over_limit": {},
+   "top5": {
+    "M2-046": 63033,
+    "M2-047": 62342,
+    "M2-035": 14378,
+    "M2-045": 13479,
+    "M2-027": 12909
+   }
+  },
+  {
+   "config": "assessment.v3.qwen35-9b.json",
+   "model_id": "Qwen/Qwen3.5-9B@c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+   "max_input_tokens": 63504,
+   "argmax": "M2-046",
+   "input_limit": 98304,
+   "over_limit": {},
+   "top5": {
+    "M2-046": 63504,
+    "M2-047": 62813,
+    "M2-035": 14849,
+    "M2-045": 13950,
+    "M2-027": 13380
+   }
+  },
+  {
+   "config": "assessment.v3.qwen38-27b-fp8.json",
+   "model_id": "Qwen/Qwen3.8-27B-FP8@017b9c7af6b5689d5dd426a76e0bc077eb5ca20a",
+   "max_input_tokens": 63542,
+   "argmax": "M2-046",
+   "input_limit": 98304,
+   "over_limit": {},
+   "top5": {
+    "M2-046": 63542,
+    "M2-047": 62851,
+    "M2-035": 14887,
+    "M2-045": 13988,
+    "M2-027": 13418
+   }
+  }
+ ],
+ "max_model_len": 131072,
+ "passed": true,
+ "transformers_version": "5.19.0"
+}

@@ -118,3 +118,44 @@ class SCJobTests(unittest.TestCase):
         run = self.root / 'outputs/rq1-v3/mock/main60-s329'
         for name in ('A', 'B', 'adjudicated'):
             self.assertTrue((run / f'vs-{name}.json').is_file())
+
+    def test_main2_requires_own_prereg_config_dir_and_pinned_items(self):
+        # Synthetic fixtures stand in for Main 2; no human data/model calls here.
+        import hashlib
+        data = self.root / 'data/rq1/main2'
+        data.mkdir(parents=True)
+        fixtures = self.root / 'data/rq2/v02_fixtures'
+        shutil.copyfile(fixtures / 'items.jsonl', data / 'items.jsonl')
+        for name in ('A', 'B', 'adjudicated'):
+            shutil.copyfile(fixtures / 'reference.csv', data / f'reference_{name}.csv')
+        configs = self.root / 'configs/main2'
+        configs.mkdir(parents=True)
+        main2_config = configs / 'assessment.mock.json'
+        shutil.copyfile(self.config, main2_config)
+        env = dict(RUNS='outputs/rq1-main2', SEEDS='329')
+
+        def job(config=main2_config, **extra):
+            return subprocess.run(['bash', str(SCRIPT), str(config), 'main2'], cwd=self.root,
+                                  env={**self.env, **env, **extra}, text=True, capture_output=True, timeout=30)
+
+        result = job()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('Missing Main 2 preregistration', result.stderr)
+        prereg = self.root / 'outputs/rq1-main2/preregistration.json'
+        prereg.parent.mkdir(parents=True)
+        prereg.write_text(json.dumps({'items_sha256': '0' * 64}))
+        result = job()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('not the preregistered file', result.stderr)
+        prereg.write_text(json.dumps({'items_sha256': hashlib.sha256((data / 'items.jsonl').read_bytes()).hexdigest()}))
+        result = job(config=self.config)
+        self.assertIn('requires a configs/main2/ config', result.stderr)
+        result = job(RUNS='outputs/rq1-v3')
+        self.assertIn('must go under outputs/rq1-main2', result.stderr)
+        result = self.run_job('main60', RUNS='outputs/rq1-main2')
+        self.assertIn('reserved for the main2 stage', result.stderr)
+        result = job()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        run = self.root / 'outputs/rq1-main2/mock/main2-s329'
+        for name in ('A', 'B', 'adjudicated'):
+            self.assertTrue((run / f'vs-{name}.json').is_file())

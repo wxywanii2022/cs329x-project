@@ -5,12 +5,16 @@
 #   sbatch scripts/rq1_vllm_sc.sbatch <config.json> smoke
 #   sbatch scripts/rq1_vllm_sc.sbatch <config.json> fixtures
 #   sbatch scripts/rq1_vllm_sc.sbatch <config.json> main60
+#   RUNS=outputs/rq1-main2 sbatch scripts/rq1_vllm_sc.sbatch configs/main2/<config.json> main2
 #
 # SEEDS (default "329 330 331") are run concurrently against the same server, each in
 # its own output directory; the first seed is the pre-declared primary run. Rerunning
 # the same command resumes completed calls. Outputs: $RUNS/<model-key>/<stage>-s<seed>/,
 # RUNS defaults to outputs/rq1-v3; use outputs/rq1-v2-sc for the same-GPU v2 control.
 # No v3 model call (including smoke) before the preregistration is committed/pushed.
+# main2 (session-held-out Main 2) additionally requires RUNS under outputs/rq1-main2, its own
+# preregistration there, a configs/main2/ config, and data/rq1/main2/items.jsonl matching the
+# preregistered SHA-256 (the items file is copied to the cluster, not tracked in Git).
 #SBATCH --job-name=rq1-vllm
 #SBATCH --account=nlp
 #SBATCH --partition=jag-standard
@@ -27,18 +31,18 @@ set -euo pipefail
 umask 077
 
 CONFIG=${1:?config path}
-STAGE=${2:?smoke, fixtures or main60}
-case "$STAGE" in smoke|fixtures|main60) ;; *) echo "unknown stage $STAGE"; exit 2 ;; esac
+STAGE=${2:?smoke, fixtures, main60 or main2}
+case "$STAGE" in smoke|fixtures|main60|main2) ;; *) echo "unknown stage $STAGE"; exit 2 ;; esac
 SEEDS=${SEEDS:-"329 330 331"}
 ROOT=$(pwd)
 PY="$ROOT/.venv/bin/python"
 KEY=$(basename "$CONFIG" .json); KEY=${KEY#assessment.}
 RUNS=${RUNS:-outputs/rq1-v3}
 # Refuse the historical v1/v2 directories, including aliases via ../ or symlinks.
-"$PY" - "$ROOT" "$RUNS" "$CONFIG" <<'EOF'
-import json, sys
+"$PY" - "$ROOT" "$RUNS" "$CONFIG" "$STAGE" <<'EOF'
+import hashlib, json, sys
 from pathlib import Path
-root, runs, config = Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3])
+root, runs, config, stage = Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3]), sys.argv[4]
 if runs.is_absolute():
     raise SystemExit('RUNS must be relative to the repository')
 dest = (root / runs).resolve()
@@ -48,6 +52,21 @@ for old in ('outputs/rq1', 'outputs/rq1-v2'):
 if json.loads(config.read_text()).get('contract_version') == 'decision-point-v3':
     if not (root / 'outputs/rq1-v3/preregistration.json').is_file():
         raise SystemExit('Missing v3 preregistration; commit and push it before any model call')
+main2 = (root / 'outputs/rq1-main2').resolve()
+if stage == 'main2':
+    if not dest.is_relative_to(main2):
+        raise SystemExit('main2 runs must go under outputs/rq1-main2')
+    prereg = main2 / 'preregistration.json'
+    if not prereg.is_file():
+        raise SystemExit('Missing Main 2 preregistration; commit and push it before any model call')
+    if config.resolve().parent != (root / 'configs/main2').resolve():
+        raise SystemExit('main2 requires a configs/main2/ config')
+    want = json.loads(prereg.read_text()).get('items_sha256')
+    items = root / 'data/rq1/main2/items.jsonl'
+    if not want or not items.is_file() or hashlib.sha256(items.read_bytes()).hexdigest() != want:
+        raise SystemExit('Main 2 items missing or not the preregistered file')
+elif dest.is_relative_to(main2):
+    raise SystemExit('outputs/rq1-main2 is reserved for the main2 stage')
 EOF
 OUT_ROOT="$ROOT/$RUNS/$KEY"
 mkdir -p "$ROOT/outputs/logs" && mkdir -m 700 -p "$OUT_ROOT"
@@ -154,9 +173,9 @@ EOF
     CONFIG329=$(seed_config 329)
     run_items "$ITEMS" "$OUT_ROOT/smoke-s329" "$CONFIG329"
     ;;
-main60|fixtures)
-    if [ "$STAGE" = main60 ]; then
-        DATA="$ROOT/data/rq1/main60"
+main60|main2|fixtures)
+    if [ "$STAGE" = main60 ] || [ "$STAGE" = main2 ]; then
+        DATA="$ROOT/data/rq1/$STAGE"
         REFS="A:independent-human B:independent-human adjudicated:adjudicated"
     else
         DATA="$ROOT/data/rq2/v02_fixtures"

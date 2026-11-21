@@ -1,0 +1,185 @@
+{
+ "purpose": "RQ1 Main 2: session-held-out evaluation of frozen v3 (primary) against frozen v2 on 60 newly sampled, independently human-labeled decision points. Recorded before any Main 2 model call.",
+ "recorded_at_utc": "2026-11-21T06:24:16.826920+00:00",
+ "items_sha256": "908c5665bea86e1b1feba7885c8cab340d9fb45e7d7350ed6e3312bb855b0887",
+ "git_head": "85a5c254a01fc5eaf91db7869c6142e04fd5d46a",
+ "git_head_meaning": "Base HEAD at record creation, not the commit containing this record; exact file contents are pinned below",
+ "decided_by": "Yuan Tian (2026-11-20): common 300,000-byte request budget for every Main 2 config; symmetric run matrix v2+v3 x 27B+9B x seeds 329/330/331",
+ "frozen_and_unchanged": {
+  "rubric": "v0.2 (sha256 in pinned files)",
+  "contract_v3_sha256": "e7874abe8ecf57f4d215f82641b88b9b2807a5d0992152f444435061d4043549",
+  "contract_v2_sha256": "4af2d8a6c20ad86e0a3e4ab32da8cde7e2b2eb9f76db1b53d2bb15b623476cff",
+  "models_revisions_decoding_timeouts": "identical to configs/v2 and configs/v3",
+  "v3_primary_rule": "option (a) from outputs/rq1-v3/preregistration.json: qwen38-27b-fp8 seed 329, raw valid output, no voting or confidence filtering"
+ },
+ "budget_amendment": {
+  "max_context_bytes": 300000,
+  "previous": 200000,
+  "scope": "Every configs/main2 config (v2/v3, both models, all seeds). The only difference from configs/v2 and configs/v3.",
+  "reason": "M2-046 (~290 KB) and M2-047 (~222 KB) requests exceed 200,000 bytes for both contracts; 300,000 admits all 60 items for both contracts. Chosen from input sizes only, not from labels or model output.",
+  "main1": "Main 1 configs, failures (including M1-009) and metrics stay unchanged; no Main 1 rerun is authorized by this record."
+ },
+ "sample": {
+  "items": 60,
+  "per_behavior": 15,
+  "per_agent": 12,
+  "per_agent_behavior": 3,
+  "items_sha256": "908c5665bea86e1b1feba7885c8cab340d9fb45e7d7350ed6e3312bb855b0887",
+  "items_location": "Not tracked in Git (redacted, not guaranteed anonymous). Byte-identical to the annotators' evidence; copied to the cluster and checked against this hash by the sbatch main2 stage.",
+  "sampling_plan_sha256": "709fb234aa3cb7eb97515005da5ad3c025784d7dad06e0ce3e01fb436ec01da1",
+  "selection_manifest_sha256": "0bdce13b759cf54c83200eb61c3795ee818d8c9dd2636aacd03dc7c2604b34ec",
+  "enrichment": "B2-B4 target turns pass frozen lexical/structural opportunity proxies; B1 unscreened. Not a population-uniform sample.",
+  "heldout": {
+   "main2_sessions": 60,
+   "main2_items": 60,
+   "pilot_sessions": 20,
+   "main1_sessions": 60,
+   "plan_main1_list_matches_repo_main1": true,
+   "overlap_with_pilot": [],
+   "overlap_with_main1": [],
+   "participant_disjoint": false,
+   "note": "Session-held-out only; 16 of 60 items come from participants seen in earlier rounds (see sampling-audit.json).",
+   "pass": true
+  },
+  "participants": "39 participants; 44 items from 23 unseen participants, 16 from 16 previously seen participants; at most 4 items per participant. Session-held-out, NOT participant-disjoint."
+ },
+ "human_reference": {
+  "process": "Two annotators (A, B) labeled all 60 independently under v0.2 without model suggestions. Raw agreement and kappa were computed before any discussion. The 9 disagreements were adjudicated by an anonymous third-party judge in two steps (independent label first, then blinded Rater X/Y view with per-row random order). The judge's texts were pasted to the coordinator, who stated the judge wrote them; workbooks were transcribed from those texts. Original A/B labels unchanged.",
+  "A_vs_B": {
+   "n": 60,
+   "raw": 0.85,
+   "kappa": 0.772,
+   "raw_ci95": [
+    0.75,
+    0.93
+   ],
+   "kappa_ci95": [
+    0.64,
+    0.9
+   ]
+  },
+  "adjudicated": {
+   "agreed": 51,
+   "adjudicated": 9,
+   "distribution": {
+    "2": 29,
+    "N/A": 20,
+    "0": 8,
+    "1": 3
+   }
+  },
+  "B_missing_confidence_note": "B's 4 initially blank confidence fields were filled by B before adjudication; labels unaffected.",
+  "finalized_before_any_main2_model_call": true
+ },
+ "run_matrix": {
+  "stage": "main2",
+  "output_root": "outputs/rq1-main2/<config-key>/main2-s<seed>/",
+  "configs": [
+   "v2.qwen35-9b",
+   "v2.qwen38-27b-fp8",
+   "v3.qwen35-9b",
+   "v3.qwen38-27b-fp8"
+  ],
+  "seeds": [
+   329,
+   330,
+   331
+  ],
+  "jobs": [
+   "RUNS=outputs/rq1-main2 sbatch scripts/rq1_vllm_sc.sbatch configs/main2/assessment.v2.qwen35-9b.json main2",
+   "RUNS=outputs/rq1-main2 sbatch scripts/rq1_vllm_sc.sbatch configs/main2/assessment.v2.qwen38-27b-fp8.json main2",
+   "RUNS=outputs/rq1-main2 sbatch scripts/rq1_vllm_sc.sbatch configs/main2/assessment.v3.qwen35-9b.json main2",
+   "RUNS=outputs/rq1-main2 sbatch scripts/rq1_vllm_sc.sbatch configs/main2/assessment.v3.qwen38-27b-fp8.json main2"
+  ],
+  "planned_item_outcomes": 720,
+  "hardware": "SC jag-standard, 1x RTX 6000 Ada 48GB per job, same vLLM runtime and arguments as the v3 Main 1 runs"
+ },
+ "token_preflight": {
+  "max_model_len": 131072,
+  "input_limit": 98304,
+  "results": [
+   {
+    "config": "assessment.v2.qwen35-9b.json",
+    "max_input_tokens": 62995,
+    "argmax": "M2-046",
+    "over_limit": {}
+   },
+   {
+    "config": "assessment.v2.qwen38-27b-fp8.json",
+    "max_input_tokens": 63033,
+    "argmax": "M2-046",
+    "over_limit": {}
+   },
+   {
+    "config": "assessment.v3.qwen35-9b.json",
+    "max_input_tokens": 63504,
+    "argmax": "M2-046",
+    "over_limit": {}
+   },
+   {
+    "config": "assessment.v3.qwen38-27b-fp8.json",
+    "max_input_tokens": 63542,
+    "argmax": "M2-046",
+    "over_limit": {}
+   }
+  ],
+  "transformers_version": "5.19.0",
+  "note": "Chat-templated system prompt + canonical payload with generation prompt and enable_thinking=True, pinned tokenizers from the offline HF cache; run on a compute node."
+ },
+ "analysis": {
+  "references": [
+   "adjudicated (primary)",
+   "A",
+   "B"
+  ],
+  "primary": "v3 qwen38-27b-fp8 seed 329 vs adjudicated; comparator v2 qwen38-27b-fp8 seed 329",
+  "metrics": [
+   "coverage = valid outputs / 60 with failure types",
+   "raw agreement",
+   "unweighted four-category Cohen kappa",
+   "FMR = valid predicted 0 with nonzero/N/A reference / valid predictions with nonzero/N/A reference (numerator/denominator shown)",
+   "reference-zero detection: valid predicted 0 among reference 0 (count/denominator)",
+   "4x4 confusion matrix"
+  ],
+  "intervals": "95% percentile item bootstrap, 10000 resamples, same method as Main 1; ignores participant clustering (disclosed)",
+  "secondary": [
+   "9B ablation, all seeds",
+   "seeds 330/331 separately",
+   "per-behavior agreement",
+   "common-valid v2/v3 comparison on items valid in both",
+   "options (b) majority vote and (c) high-confidence-zero as defined in the v3 preregistration"
+  ],
+  "separation": "Main 2 is reported separately; its FMR is never pooled with Main 1 (different sampling, opportunity-enriched).",
+  "interpretation": "Lower FMR is read together with coverage and reference-zero detection; dropped failures alone are not improvement. No automatic RQ2 contract switch."
+ },
+ "failure_policy": "Invalid, truncated or budget-rejected outputs stay failed; no repair, resampling, manual journal edit or conversion to N/A. Preemption interruptions are resumed only for pending calls with identical frozen inputs and recorded as incidents.",
+ "incidents_and_deviations": [
+  "Token preflight was first started on the SC login node, where it stalled on NFS reads; it was killed before producing output and rerun as a CPU-only Slurm job on a compute node.",
+  "Byte preflight was run locally (no tokenizer needed)."
+ ],
+ "sha256": {
+  ".gitignore": "51696eb0833b0b24697cf61eea216b250dff26fac4b7c9e5f1150883d364d67d",
+  "scripts/rq1_vllm_sc.sbatch": "fffee34ba9879863b3a361ec398e7394a39365c995f1fca076008072d13f2a75",
+  "scripts/preflight_main2.py": "a22bffb070d4c7a56ce2025bd062e24a1e00d4018f7aa752d7448938de31fcda",
+  "scripts/write_main2_prereg.py": "ae3cb579b2467cfa05a6284283cb6c1fc5967edb00bba3f87095655c0e177310",
+  "scripts/rq1_report.py": "28eb35199f5ea671fc0a210c0a2f96cb7dd267b4116d2adfda6f74ee7cf073b7",
+  "src/adaptive_tutor/adapters/base.py": "ac9afc8ad64ff7e108c35156e8fc3edbd9eca9c8fb3b268cb7b2c6c653be18f0",
+  "src/adaptive_tutor/adapters/local_vllm.py": "8f286605ec239bea33b4b4d2e2fd15c148d441a197392fafee675e69421cd902",
+  "src/adaptive_tutor/rq1/core.py": "b91cfbc252677980a23a8ae944dbd5b4afc06c8f6839d726d3179b8bc89f319c",
+  "src/adaptive_tutor/rq1/pipeline.py": "f8df1918cc104ab55eee115d3072e495934357d0d5b8827f658a4026d0e05c58",
+  "src/adaptive_tutor/rq1/metrics.py": "c0b3732a7e2bfa2af33d722dcf844bb479e75f93eddbff6ac480eec79a508c65",
+  "src/adaptive_tutor/rq1/rubrics/specification_verification_v02.md": "046ceb7bc8fb5035ebd347c56e3a16b4b8240deb4d3279904bf4a77bfb845e1d",
+  "data/rq1/main2/reference_A.csv": "fa147dbbf737aaa38d9799f639b957237bb34ee38056436e7223084e0804e2fe",
+  "data/rq1/main2/reference_B.csv": "dfa2ebd4f02fcee51faac521b4b833029142159df693ac63dfda149759d7e8f8",
+  "data/rq1/main2/reference_adjudicated.csv": "9e6f6972f8deaf058f0ae38313f74e454483f72aff919b5220717c69cfaa43c6",
+  "data/rq1/main2/sampling-audit.json": "4dcc6a1a468c3be0ba569eb94a16b68a8dc0bae2589ecfa9a13b3efe79ccafa4",
+  "data/rq1/main2/SHA256SUMS": "8f02eeee19b761da245293b7e9424eb54830eb6ff784832a97f4f30984d603c5",
+  "outputs/rq1-main2/preflight-local-bytes.json": "c62051f13c2b96af12b3857567d94500fbdf54173549f17a4543b99dc751885a",
+  "outputs/rq1-main2/preflight-tokens.json": "c7fda85c873a130a8814fbf8ac57348f1b8ff47a3c5c27af328ebfb60f59cbe1",
+  "tests/test_sc_job.py": "13e8ec20439940e8d086209c9f66976872b7ee374304b9411b674922904e5225",
+  "configs/main2/assessment.v2.qwen35-9b.json": "c9a764a2a7118d46fa95b997750bfb0911816243ddc23fe9afd3fc4395216a33",
+  "configs/main2/assessment.v2.qwen38-27b-fp8.json": "fc52f64164ed57e3bac5cdf4a3b1e3468c2df510ab381648683521cde8e9b6e2",
+  "configs/main2/assessment.v3.qwen35-9b.json": "7f587bd100a0c7f68a7e84ff6434ac31f4344ab236d58507b872f6c7039a45ee",
+  "configs/main2/assessment.v3.qwen38-27b-fp8.json": "2377fec0f56346a4dc94f9d101c4b2d06937fbfaab67a59e2362416dcabe4c75"
+ }
+}

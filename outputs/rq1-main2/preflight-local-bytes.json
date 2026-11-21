@@ -1,0 +1,133 @@
+{
+ "recorded_at_utc": "2026-11-21T05:40:21.392352+00:00",
+ "script_sha256": "a22bffb070d4c7a56ce2025bd062e24a1e00d4018f7aa752d7448938de31fcda",
+ "items_sha256": "908c5665bea86e1b1feba7885c8cab340d9fb45e7d7350ed6e3312bb855b0887",
+ "sampling_plan_sha256": "709fb234aa3cb7eb97515005da5ad3c025784d7dad06e0ce3e01fb436ec01da1",
+ "model_generation_calls": 0,
+ "human_labels_read": false,
+ "heldout": {
+  "main2_sessions": 60,
+  "main2_items": 60,
+  "pilot_sessions": 20,
+  "main1_sessions": 60,
+  "plan_main1_list_matches_repo_main1": true,
+  "overlap_with_pilot": [],
+  "overlap_with_main1": [],
+  "participant_disjoint": false,
+  "note": "Session-held-out only; 16 of 60 items come from participants seen in earlier rounds (see sampling-audit.json).",
+  "pass": true
+ },
+ "byte_admission": [
+  {
+   "config": "assessment.v2.qwen35-9b.json",
+   "config_sha256": "c9a764a2a7118d46fa95b997750bfb0911816243ddc23fe9afd3fc4395216a33",
+   "seed": 329,
+   "max_context_bytes": 300000,
+   "max_request_bytes": 287870,
+   "argmax": "M2-046",
+   "over_budget": {}
+  },
+  {
+   "config": "assessment.v2.qwen35-9b.json",
+   "config_sha256": "c9a764a2a7118d46fa95b997750bfb0911816243ddc23fe9afd3fc4395216a33",
+   "seed": 330,
+   "max_context_bytes": 300000,
+   "max_request_bytes": 287871,
+   "argmax": "M2-046",
+   "over_budget": {}
+  },
+  {
+   "config": "assessment.v2.qwen35-9b.json",
+   "config_sha256": "c9a764a2a7118d46fa95b997750bfb0911816243ddc23fe9afd3fc4395216a33",
+   "seed": 331,
+   "max_context_bytes": 300000,
+   "max_request_bytes": 287870,
+   "argmax": "M2-046",
+   "over_budget": {}
+  },
+  {
+   "config": "assessment.v2.qwen38-27b-fp8.json",
+   "config_sha256": "fc52f64164ed57e3bac5cdf4a3b1e3468c2df510ab381648683521cde8e9b6e2",
+   "seed": 329,
+   "max_context_bytes": 300000,
+   "max_request_bytes": 287875,
+   "argmax": "M2-046",
+   "over_budget": {}
+  },
+  {
+   "config": "assessment.v2.qwen38-27b-fp8.json",
+   "config_sha256": "fc52f64164ed57e3bac5cdf4a3b1e3468c2df510ab381648683521cde8e9b6e2",
+   "seed": 330,
+   "max_context_bytes": 300000,
+   "max_request_bytes": 287876,
+   "argmax": "M2-046",
+   "over_budget": {}
+  },
+  {
+   "config": "assessment.v2.qwen38-27b-fp8.json",
+   "config_sha256": "fc52f64164ed57e3bac5cdf4a3b1e3468c2df510ab381648683521cde8e9b6e2",
+   "seed": 331,
+   "max_context_bytes": 300000,
+   "max_request_bytes": 287875,
+   "argmax": "M2-046",
+   "over_budget": {}
+  },
+  {
+   "config": "assessment.v3.qwen35-9b.json",
+   "config_sha256": "7f587bd100a0c7f68a7e84ff6434ac31f4344ab236d58507b872f6c7039a45ee",
+   "seed": 329,
+   "max_context_bytes": 300000,
+   "max_request_bytes": 290098,
+   "argmax": "M2-046",
+   "over_budget": {}
+  },
+  {
+   "config": "assessment.v3.qwen35-9b.json",
+   "config_sha256": "7f587bd100a0c7f68a7e84ff6434ac31f4344ab236d58507b872f6c7039a45ee",
+   "seed": 330,
+   "max_context_bytes": 300000,
+   "max_request_bytes": 290099,
+   "argmax": "M2-046",
+   "over_budget": {}
+  },
+  {
+   "config": "assessment.v3.qwen35-9b.json",
+   "config_sha256": "7f587bd100a0c7f68a7e84ff6434ac31f4344ab236d58507b872f6c7039a45ee",
+   "seed": 331,
+   "max_context_bytes": 300000,
+   "max_request_bytes": 290098,
+   "argmax": "M2-046",
+   "over_budget": {}
+  },
+  {
+   "config": "assessment.v3.qwen38-27b-fp8.json",
+   "config_sha256": "2377fec0f56346a4dc94f9d101c4b2d06937fbfaab67a59e2362416dcabe4c75",
+   "seed": 329,
+   "max_context_bytes": 300000,
+   "max_request_bytes": 290103,
+   "argmax": "M2-046",
+   "over_budget": {}
+  },
+  {
+   "config": "assessment.v3.qwen38-27b-fp8.json",
+   "config_sha256": "2377fec0f56346a4dc94f9d101c4b2d06937fbfaab67a59e2362416dcabe4c75",
+   "seed": 330,
+   "max_context_bytes": 300000,
+   "max_request_bytes": 290104,
+   "argmax": "M2-046",
+   "over_budget": {}
+  },
+  {
+   "config": "assessment.v3.qwen38-27b-fp8.json",
+   "config_sha256": "2377fec0f56346a4dc94f9d101c4b2d06937fbfaab67a59e2362416dcabe4c75",
+   "seed": 331,
+   "max_context_bytes": 300000,
+   "max_request_bytes": 290103,
+   "argmax": "M2-046",
+   "over_budget": {}
+  }
+ ],
+ "token_window": "not run in this invocation",
+ "max_model_len": 131072,
+ "passed": true
+}

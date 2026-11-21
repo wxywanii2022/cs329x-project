@@ -1,0 +1,3 @@
+host=jagupard26.stanford.edu start=2026-11-21T06:22:16Z
+{"passed": true, "heldout": true, "max_bytes": 290104, "tokens": [["assessment.v2.qwen35-9b.json", 62995, "M2-046"], ["assessment.v2.qwen38-27b-fp8.json", 63033, "M2-046"], ["assessment.v3.qwen35-9b.json", 63504, "M2-046"], ["assessment.v3.qwen38-27b-fp8.json", 63542, "M2-046"]]}
+end=2026-11-21T06:24:04Z

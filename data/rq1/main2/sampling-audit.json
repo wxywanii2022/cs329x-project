@@ -1,0 +1,467 @@
+{
+  "audited_at_utc": "2026-11-19T21:47:17.229712+00:00",
+  "audit_script_sha256": "278a0f936bbbed6d07f8effbcb6f778ebaf6ace1fd95f858db4bdf0a6bb34dcf",
+  "artifacts": {
+    "sampling_plan.json": {
+      "path": "annotation_main2/sampling_plan.json",
+      "sha256": "709fb234aa3cb7eb97515005da5ad3c025784d7dad06e0ce3e01fb436ec01da1",
+      "bytes": 12340
+    },
+    "selection_manifest.json": {
+      "path": "annotation_main2/selection_manifest.json",
+      "sha256": "0bdce13b759cf54c83200eb61c3795ee818d8c9dd2636aacd03dc7c2604b34ec",
+      "bytes": 41128
+    }
+  },
+  "original_local_freeze_utc": "2026-11-18T08:35:28.371930+00:00",
+  "original_selection_utc": "2026-11-18T08:35:55.988570+00:00",
+  "provenance": "Post-selection audit of a recorded local pre-selection freeze; not proof of an earlier public registration.",
+  "model_calls": 0,
+  "labels_generated": 0,
+  "human_annotations_read": false,
+  "dependencies_and_all_146_candidate_source_hashes_verified": true,
+  "assignment_targets_and_display_order_reproduce_exactly": true,
+  "source_prefix_and_redacted_model_materials_match": true,
+  "source_scope": {
+    "eligible_sessions": 226,
+    "remaining_sessions": 146,
+    "excluded_pilot_and_main1_sessions": 80,
+    "selected_session_overlap": 0
+  },
+  "candidate_sessions_by_agent_behavior": {
+    "claude_code": {
+      "B1": 30,
+      "B2": 26,
+      "B3": 26,
+      "B4": 26
+    },
+    "codex": {
+      "B1": 33,
+      "B2": 30,
+      "B3": 30,
+      "B4": 30
+    },
+    "cowork": {
+      "B1": 20,
+      "B2": 16,
+      "B3": 9,
+      "B4": 9
+    },
+    "gemini_cli": {
+      "B1": 34,
+      "B2": 31,
+      "B3": 27,
+      "B4": 27
+    },
+    "manus": {
+      "B1": 29,
+      "B2": 25,
+      "B3": 27,
+      "B4": 27
+    }
+  },
+  "eligible_turn_counts": {
+    "B1": 884,
+    "B2": 329,
+    "B3": 477,
+    "B4": 477
+  },
+  "selected_screen_pass_counts": {
+    "B1": 15,
+    "B2": 15,
+    "B3": 15,
+    "B4": 15
+  },
+  "selected_each_agent_behavior": 3,
+  "selected_unique_sessions": 60,
+  "selected_participants": 39,
+  "selected_max_items_per_participant": 4,
+  "selected_unseen_participant_items": 44,
+  "selected_seen_participant_items": 16,
+  "interpretation": "B2/B3/B4 are proxy-enriched by hard eligibility screens, not human-verified opportunities; B1 is unscreened. B4 has no visible-problem detector. This is not uniform population sampling.",
+  "main2_items_sha256": "908c5665bea86e1b1feba7885c8cab340d9fb45e7d7350ed6e3312bb855b0887",
+  "frozen_config_sha256": {
+    "configs/v2/assessment.qwen38-27b-fp8.json": "5b142cd37e1ff8952cf25cab6aff83bb6b04464eef60b1b78cf33a5335a814e4",
+    "configs/v2/assessment.qwen35-9b.json": "518280eaf418da3640c5ee78e19f80e26205627306ad0cf908694298b1440796",
+    "configs/v3/assessment.qwen38-27b-fp8.json": "b177752220d46e1390c944193fd4ad2b2101620872aeec22568b8aac944c5ef6",
+    "configs/v3/assessment.qwen35-9b.json": "fcbf823140753ed398db776b83995a159bd95ecd0db045be7cf661d7f2f50526"
+  },
+  "byte_measurement": "len(canonical(Gateway request).encode('utf-8')); includes prompt and envelope, not just dialogue; no Gateway or adapter instantiated",
+  "current_max_context_bytes": 200000,
+  "proposed_max_context_bytes": 300000,
+  "token_window_preflight": "NOT PERFORMED; byte admission does not certify token-window or GPU feasibility",
+  "byte_audit": [
+    {
+      "dataset": "main1",
+      "contract": "v2",
+      "model": "qwen38-27b-fp8",
+      "seed": 329,
+      "items": 60,
+      "max_request_bytes": 198365,
+      "exceeds_200000": {},
+      "exceeds_300000": {},
+      "focus_items": {
+        "M1-009": 198365
+      }
+    },
+    {
+      "dataset": "main1",
+      "contract": "v2",
+      "model": "qwen38-27b-fp8",
+      "seed": 330,
+      "items": 60,
+      "max_request_bytes": 198365,
+      "exceeds_200000": {},
+      "exceeds_300000": {},
+      "focus_items": {
+        "M1-009": 198365
+      }
+    },
+    {
+      "dataset": "main1",
+      "contract": "v2",
+      "model": "qwen38-27b-fp8",
+      "seed": 331,
+      "items": 60,
+      "max_request_bytes": 198364,
+      "exceeds_200000": {},
+      "exceeds_300000": {},
+      "focus_items": {
+        "M1-009": 198364
+      }
+    },
+    {
+      "dataset": "main2",
+      "contract": "v2",
+      "model": "qwen38-27b-fp8",
+      "seed": 329,
+      "items": 60,
+      "max_request_bytes": 287875,
+      "exceeds_200000": {
+        "M2-046": 287875,
+        "M2-047": 219824
+      },
+      "exceeds_300000": {},
+      "focus_items": {
+        "M2-046": 287875,
+        "M2-047": 219824
+      }
+    },
+    {
+      "dataset": "main2",
+      "contract": "v2",
+      "model": "qwen38-27b-fp8",
+      "seed": 330,
+      "items": 60,
+      "max_request_bytes": 287876,
+      "exceeds_200000": {
+        "M2-046": 287876,
+        "M2-047": 219824
+      },
+      "exceeds_300000": {},
+      "focus_items": {
+        "M2-046": 287876,
+        "M2-047": 219824
+      }
+    },
+    {
+      "dataset": "main2",
+      "contract": "v2",
+      "model": "qwen38-27b-fp8",
+      "seed": 331,
+      "items": 60,
+      "max_request_bytes": 287875,
+      "exceeds_200000": {
+        "M2-046": 287875,
+        "M2-047": 219823
+      },
+      "exceeds_300000": {},
+      "focus_items": {
+        "M2-046": 287875,
+        "M2-047": 219823
+      }
+    },
+    {
+      "dataset": "main1",
+      "contract": "v2",
+      "model": "qwen35-9b",
+      "seed": 329,
+      "items": 60,
+      "max_request_bytes": 198360,
+      "exceeds_200000": {},
+      "exceeds_300000": {},
+      "focus_items": {
+        "M1-009": 198360
+      }
+    },
+    {
+      "dataset": "main1",
+      "contract": "v2",
+      "model": "qwen35-9b",
+      "seed": 330,
+      "items": 60,
+      "max_request_bytes": 198360,
+      "exceeds_200000": {},
+      "exceeds_300000": {},
+      "focus_items": {
+        "M1-009": 198360
+      }
+    },
+    {
+      "dataset": "main1",
+      "contract": "v2",
+      "model": "qwen35-9b",
+      "seed": 331,
+      "items": 60,
+      "max_request_bytes": 198359,
+      "exceeds_200000": {},
+      "exceeds_300000": {},
+      "focus_items": {
+        "M1-009": 198359
+      }
+    },
+    {
+      "dataset": "main2",
+      "contract": "v2",
+      "model": "qwen35-9b",
+      "seed": 329,
+      "items": 60,
+      "max_request_bytes": 287870,
+      "exceeds_200000": {
+        "M2-046": 287870,
+        "M2-047": 219819
+      },
+      "exceeds_300000": {},
+      "focus_items": {
+        "M2-046": 287870,
+        "M2-047": 219819
+      }
+    },
+    {
+      "dataset": "main2",
+      "contract": "v2",
+      "model": "qwen35-9b",
+      "seed": 330,
+      "items": 60,
+      "max_request_bytes": 287871,
+      "exceeds_200000": {
+        "M2-046": 287871,
+        "M2-047": 219819
+      },
+      "exceeds_300000": {},
+      "focus_items": {
+        "M2-046": 287871,
+        "M2-047": 219819
+      }
+    },
+    {
+      "dataset": "main2",
+      "contract": "v2",
+      "model": "qwen35-9b",
+      "seed": 331,
+      "items": 60,
+      "max_request_bytes": 287870,
+      "exceeds_200000": {
+        "M2-046": 287870,
+        "M2-047": 219818
+      },
+      "exceeds_300000": {},
+      "focus_items": {
+        "M2-046": 287870,
+        "M2-047": 219818
+      }
+    },
+    {
+      "dataset": "main1",
+      "contract": "v3",
+      "model": "qwen38-27b-fp8",
+      "seed": 329,
+      "items": 60,
+      "max_request_bytes": 200593,
+      "exceeds_200000": {
+        "M1-009": 200593
+      },
+      "exceeds_300000": {},
+      "focus_items": {
+        "M1-009": 200593
+      }
+    },
+    {
+      "dataset": "main1",
+      "contract": "v3",
+      "model": "qwen38-27b-fp8",
+      "seed": 330,
+      "items": 60,
+      "max_request_bytes": 200593,
+      "exceeds_200000": {
+        "M1-009": 200593
+      },
+      "exceeds_300000": {},
+      "focus_items": {
+        "M1-009": 200593
+      }
+    },
+    {
+      "dataset": "main1",
+      "contract": "v3",
+      "model": "qwen38-27b-fp8",
+      "seed": 331,
+      "items": 60,
+      "max_request_bytes": 200592,
+      "exceeds_200000": {
+        "M1-009": 200592
+      },
+      "exceeds_300000": {},
+      "focus_items": {
+        "M1-009": 200592
+      }
+    },
+    {
+      "dataset": "main2",
+      "contract": "v3",
+      "model": "qwen38-27b-fp8",
+      "seed": 329,
+      "items": 60,
+      "max_request_bytes": 290103,
+      "exceeds_200000": {
+        "M2-046": 290103,
+        "M2-047": 222052
+      },
+      "exceeds_300000": {},
+      "focus_items": {
+        "M2-046": 290103,
+        "M2-047": 222052
+      }
+    },
+    {
+      "dataset": "main2",
+      "contract": "v3",
+      "model": "qwen38-27b-fp8",
+      "seed": 330,
+      "items": 60,
+      "max_request_bytes": 290104,
+      "exceeds_200000": {
+        "M2-046": 290104,
+        "M2-047": 222052
+      },
+      "exceeds_300000": {},
+      "focus_items": {
+        "M2-046": 290104,
+        "M2-047": 222052
+      }
+    },
+    {
+      "dataset": "main2",
+      "contract": "v3",
+      "model": "qwen38-27b-fp8",
+      "seed": 331,
+      "items": 60,
+      "max_request_bytes": 290103,
+      "exceeds_200000": {
+        "M2-046": 290103,
+        "M2-047": 222051
+      },
+      "exceeds_300000": {},
+      "focus_items": {
+        "M2-046": 290103,
+        "M2-047": 222051
+      }
+    },
+    {
+      "dataset": "main1",
+      "contract": "v3",
+      "model": "qwen35-9b",
+      "seed": 329,
+      "items": 60,
+      "max_request_bytes": 200588,
+      "exceeds_200000": {
+        "M1-009": 200588
+      },
+      "exceeds_300000": {},
+      "focus_items": {
+        "M1-009": 200588
+      }
+    },
+    {
+      "dataset": "main1",
+      "contract": "v3",
+      "model": "qwen35-9b",
+      "seed": 330,
+      "items": 60,
+      "max_request_bytes": 200588,
+      "exceeds_200000": {
+        "M1-009": 200588
+      },
+      "exceeds_300000": {},
+      "focus_items": {
+        "M1-009": 200588
+      }
+    },
+    {
+      "dataset": "main1",
+      "contract": "v3",
+      "model": "qwen35-9b",
+      "seed": 331,
+      "items": 60,
+      "max_request_bytes": 200587,
+      "exceeds_200000": {
+        "M1-009": 200587
+      },
+      "exceeds_300000": {},
+      "focus_items": {
+        "M1-009": 200587
+      }
+    },
+    {
+      "dataset": "main2",
+      "contract": "v3",
+      "model": "qwen35-9b",
+      "seed": 329,
+      "items": 60,
+      "max_request_bytes": 290098,
+      "exceeds_200000": {
+        "M2-046": 290098,
+        "M2-047": 222047
+      },
+      "exceeds_300000": {},
+      "focus_items": {
+        "M2-046": 290098,
+        "M2-047": 222047
+      }
+    },
+    {
+      "dataset": "main2",
+      "contract": "v3",
+      "model": "qwen35-9b",
+      "seed": 330,
+      "items": 60,
+      "max_request_bytes": 290099,
+      "exceeds_200000": {
+        "M2-046": 290099,
+        "M2-047": 222047
+      },
+      "exceeds_300000": {},
+      "focus_items": {
+        "M2-046": 290099,
+        "M2-047": 222047
+      }
+    },
+    {
+      "dataset": "main2",
+      "contract": "v3",
+      "model": "qwen35-9b",
+      "seed": 331,
+      "items": 60,
+      "max_request_bytes": 290098,
+      "exceeds_200000": {
+        "M2-046": 290098,
+        "M2-047": 222046
+      },
+      "exceeds_300000": {},
+      "focus_items": {
+        "M2-046": 290098,
+        "M2-047": 222046
+      }
+    }
+  ]
+}
