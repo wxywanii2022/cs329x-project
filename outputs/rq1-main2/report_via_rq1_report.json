@@ -1,0 +1,4358 @@
+{
+  "primary_seed": 329,
+  "bootstrap_reps": 10000,
+  "humans": {
+    "A_vs_B": {
+      "n": 60,
+      "raw_agreement": 0.85,
+      "cohen_kappa": 0.7715736040609136,
+      "confusion": [
+        [
+          5,
+          2,
+          1,
+          2
+        ],
+        [
+          0,
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          3,
+          25,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          19
+        ]
+      ],
+      "false_missed_count": 0,
+      "non_missed_reference_count": 50,
+      "false_missed_rate": 0.0,
+      "ci95": {
+        "raw_agreement": [
+          0.75,
+          0.9333333333333333
+        ],
+        "cohen_kappa": [
+          0.6323851203501095,
+          0.8946906537955244
+        ],
+        "false_missed_rate": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "A_vs_adjudicated": {
+      "n": 60,
+      "raw_agreement": 0.95,
+      "cohen_kappa": 0.9215002180549497,
+      "confusion": [
+        [
+          8,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          2,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          28,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          19
+        ]
+      ],
+      "false_missed_count": 2,
+      "non_missed_reference_count": 52,
+      "false_missed_rate": 0.038461538461538464,
+      "ci95": {
+        "raw_agreement": [
+          0.8833333333333333,
+          1.0
+        ],
+        "cohen_kappa": [
+          0.8241942235244872,
+          1.0
+        ],
+        "false_missed_rate": [
+          0.0,
+          0.09803921568627451
+        ]
+      }
+    },
+    "B_vs_adjudicated": {
+      "n": 60,
+      "raw_agreement": 0.9,
+      "cohen_kappa": 0.8464818763326226,
+      "confusion": [
+        [
+          5,
+          1,
+          0,
+          2
+        ],
+        [
+          0,
+          3,
+          0,
+          0
+        ],
+        [
+          0,
+          3,
+          26,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          20
+        ]
+      ],
+      "false_missed_count": 0,
+      "non_missed_reference_count": 52,
+      "false_missed_rate": 0.0,
+      "ci95": {
+        "raw_agreement": [
+          0.8166666666666667,
+          0.9666666666666667
+        ],
+        "cohen_kappa": [
+          0.7282832441333882,
+          0.9478260869565219
+        ],
+        "false_missed_rate": [
+          0.0,
+          0.0
+        ]
+      }
+    }
+  },
+  "reference_distribution": {
+    "2": 29,
+    "N/A": 20,
+    "0": 8,
+    "1": 3
+  },
+  "models": {
+    "v2.qwen35-9b": {
+      "model_id": "Qwen/Qwen3.5-9B@c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+      "model_spec": {
+        "adapter": "command",
+        "command": [
+          ".venv/bin/python",
+          "-m",
+          "adaptive_tutor.adapters.local_vllm",
+          "--thinking",
+          "on",
+          "--top-p",
+          "0.95",
+          "--top-k",
+          "20",
+          "--min-p",
+          "0",
+          "--presence-penalty",
+          "1.5",
+          "--repetition-penalty",
+          "1.0",
+          "--http-timeout",
+          "3300"
+        ],
+        "family": "qwen3.5",
+        "model_id": "Qwen/Qwen3.5-9B@c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+        "supports_seed": true,
+        "temperature": 1.0,
+        "timeout_seconds": 3600
+      },
+      "budget": {
+        "max_coaching_tokens": 4000,
+        "max_coaching_turns": 2,
+        "max_context_bytes": 300000,
+        "max_output_tokens": 32768,
+        "transport_attempts": 3
+      },
+      "contract": "decision-point-v2",
+      "seeds": {
+        "329": {
+          "completed": 57,
+          "failed": 3,
+          "pending": 0,
+          "coverage": {
+            "valid": 57,
+            "total": 60,
+            "fraction": 0.95
+          },
+          "failures": {
+            "M2-001": "ValidationError: Evidence quote not in cited turn",
+            "M2-021": "ValidationError: Evidence quote not in cited turn",
+            "M2-040": "ValidationError: Evidence quote not in cited turn"
+          },
+          "label_distribution": {
+            "2": 22,
+            "N/A": 22,
+            "0": 10,
+            "1": 3
+          },
+          "output_tokens_median": 3362,
+          "output_tokens_max": 7842,
+          "latency_s_median": 72.119,
+          "quote_only_failures": 3,
+          "posthoc_vs_adjudicated_with_quote_failures": {
+            "n": 60,
+            "raw_agreement": 0.7666666666666667,
+            "cohen_kappa": 0.6451204055766794,
+            "confusion": [
+              [
+                6,
+                0,
+                1,
+                1
+              ],
+              [
+                0,
+                1,
+                0,
+                2
+              ],
+              [
+                2,
+                1,
+                23,
+                3
+              ],
+              [
+                3,
+                1,
+                0,
+                16
+              ]
+            ],
+            "false_missed_count": 5,
+            "non_missed_reference_count": 52,
+            "false_missed_rate": 0.09615384615384616,
+            "ci95": {
+              "raw_agreement": [
+                0.65,
+                0.8666666666666667
+              ],
+              "cohen_kappa": [
+                0.4793388429752066,
+                0.7945205479452055
+              ],
+              "false_missed_rate": [
+                0.02,
+                0.1836734693877551
+              ]
+            }
+          },
+          "vs_adjudicated": {
+            "n": 57,
+            "raw_agreement": 0.7543859649122807,
+            "cohen_kappa": 0.6264044943820225,
+            "confusion": [
+              [
+                5,
+                0,
+                1,
+                1
+              ],
+              [
+                0,
+                1,
+                0,
+                2
+              ],
+              [
+                2,
+                1,
+                21,
+                3
+              ],
+              [
+                3,
+                1,
+                0,
+                16
+              ]
+            ],
+            "false_missed_count": 5,
+            "non_missed_reference_count": 50,
+            "false_missed_rate": 0.1,
+            "ci95": {
+              "raw_agreement": [
+                0.631578947368421,
+                0.8596491228070176
+              ],
+              "cohen_kappa": [
+                0.4558472553699284,
+                0.7829604950023799
+              ],
+              "false_missed_rate": [
+                0.02040816326530612,
+                0.19148936170212766
+              ]
+            },
+            "by_behavior": {
+              "B1": {
+                "n": 14,
+                "raw_agreement": 1.0,
+                "cohen_kappa": 1.0,
+                "false_missed_count": 0
+              },
+              "B2": {
+                "n": 14,
+                "raw_agreement": 0.6428571428571429,
+                "cohen_kappa": 0.4214876033057853,
+                "false_missed_count": 2
+              },
+              "B3": {
+                "n": 14,
+                "raw_agreement": 0.5714285714285714,
+                "cohen_kappa": 0.36842105263157887,
+                "false_missed_count": 2
+              },
+              "B4": {
+                "n": 15,
+                "raw_agreement": 0.8,
+                "cohen_kappa": 0.6280991735537191,
+                "false_missed_count": 1
+              }
+            }
+          },
+          "vs_A": {
+            "n": 57,
+            "raw_agreement": 0.7192982456140351,
+            "cohen_kappa": 0.5740308267164876,
+            "confusion": [
+              [
+                5,
+                0,
+                2,
+                2
+              ],
+              [
+                0,
+                1,
+                0,
+                1
+              ],
+              [
+                2,
+                1,
+                20,
+                4
+              ],
+              [
+                3,
+                1,
+                0,
+                15
+              ]
+            ],
+            "false_missed_count": 5,
+            "non_missed_reference_count": 48,
+            "false_missed_rate": 0.10416666666666667,
+            "ci95": {
+              "raw_agreement": [
+                0.5964912280701754,
+                0.8245614035087719
+              ],
+              "cohen_kappa": [
+                0.3938973647711511,
+                0.7336448598130841
+              ],
+              "false_missed_rate": [
+                0.02127659574468085,
+                0.19607843137254902
+              ]
+            }
+          },
+          "vs_B": {
+            "n": 57,
+            "raw_agreement": 0.7017543859649122,
+            "cohen_kappa": 0.5546874999999999,
+            "confusion": [
+              [
+                4,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                2,
+                4
+              ],
+              [
+                2,
+                1,
+                19,
+                2
+              ],
+              [
+                4,
+                1,
+                1,
+                16
+              ]
+            ],
+            "false_missed_count": 6,
+            "non_missed_reference_count": 53,
+            "false_missed_rate": 0.11320754716981132,
+            "ci95": {
+              "raw_agreement": [
+                0.5789473684210527,
+                0.8070175438596491
+              ],
+              "cohen_kappa": [
+                0.38334901222953904,
+                0.7135678391959799
+              ],
+              "false_missed_rate": [
+                0.037037037037037035,
+                0.2037037037037037
+              ]
+            }
+          }
+        },
+        "330": {
+          "completed": 52,
+          "failed": 8,
+          "pending": 0,
+          "coverage": {
+            "valid": 52,
+            "total": 60,
+            "fraction": 0.8666666666666667
+          },
+          "failures": {
+            "M2-006": "ValidationError: Evidence quote not in cited turn",
+            "M2-025": "ValidationError: Evidence quote not in cited turn",
+            "M2-035": "ValidationError: Evidence quote not in cited turn",
+            "M2-041": "ValidationError: Evidence quote not in cited turn",
+            "M2-047": "ValidationError: Evidence quote not in cited turn",
+            "M2-055": "ValidationError: Evidence quote not in cited turn",
+            "M2-057": "ValidationError: Evidence quote not in cited turn",
+            "M2-058": "ValidationError: Evidence quote not in cited turn"
+          },
+          "label_distribution": {
+            "2": 18,
+            "0": 12,
+            "N/A": 20,
+            "1": 2
+          },
+          "output_tokens_median": 3846.0,
+          "output_tokens_max": 7501,
+          "latency_s_median": 82.2185,
+          "quote_only_failures": 8,
+          "posthoc_vs_adjudicated_with_quote_failures": {
+            "n": 60,
+            "raw_agreement": 0.6666666666666666,
+            "cohen_kappa": 0.495798319327731,
+            "confusion": [
+              [
+                5,
+                0,
+                0,
+                3
+              ],
+              [
+                1,
+                0,
+                0,
+                2
+              ],
+              [
+                3,
+                2,
+                20,
+                4
+              ],
+              [
+                3,
+                0,
+                2,
+                15
+              ]
+            ],
+            "false_missed_count": 7,
+            "non_missed_reference_count": 52,
+            "false_missed_rate": 0.1346153846153846,
+            "ci95": {
+              "raw_agreement": [
+                0.55,
+                0.7833333333333333
+              ],
+              "cohen_kappa": [
+                0.329192546583851,
+                0.6610169491525424
+              ],
+              "false_missed_rate": [
+                0.0425531914893617,
+                0.23529411764705882
+              ]
+            }
+          },
+          "vs_adjudicated": {
+            "n": 52,
+            "raw_agreement": 0.6730769230769231,
+            "cohen_kappa": 0.5153508771929826,
+            "confusion": [
+              [
+                5,
+                0,
+                0,
+                2
+              ],
+              [
+                1,
+                0,
+                0,
+                2
+              ],
+              [
+                3,
+                2,
+                17,
+                3
+              ],
+              [
+                3,
+                0,
+                1,
+                13
+              ]
+            ],
+            "false_missed_count": 7,
+            "non_missed_reference_count": 45,
+            "false_missed_rate": 0.15555555555555556,
+            "ci95": {
+              "raw_agreement": [
+                0.5384615384615384,
+                0.7884615384615384
+              ],
+              "cohen_kappa": [
+                0.3375796178343949,
+                0.6872607982504101
+              ],
+              "false_missed_rate": [
+                0.0625,
+                0.26666666666666666
+              ]
+            },
+            "by_behavior": {
+              "B1": {
+                "n": 14,
+                "raw_agreement": 0.8571428571428571,
+                "cohen_kappa": 0.6989247311827956,
+                "false_missed_count": 0
+              },
+              "B2": {
+                "n": 14,
+                "raw_agreement": 0.5714285714285714,
+                "cohen_kappa": 0.28813559322033894,
+                "false_missed_count": 2
+              },
+              "B3": {
+                "n": 13,
+                "raw_agreement": 0.46153846153846156,
+                "cohen_kappa": 0.17272727272727276,
+                "false_missed_count": 4
+              },
+              "B4": {
+                "n": 11,
+                "raw_agreement": 0.8181818181818182,
+                "cohen_kappa": 0.5925925925925927,
+                "false_missed_count": 1
+              }
+            }
+          },
+          "vs_A": {
+            "n": 52,
+            "raw_agreement": 0.7115384615384616,
+            "cohen_kappa": 0.5714285714285714,
+            "confusion": [
+              [
+                7,
+                0,
+                0,
+                2
+              ],
+              [
+                0,
+                0,
+                0,
+                2
+              ],
+              [
+                2,
+                2,
+                17,
+                3
+              ],
+              [
+                3,
+                0,
+                1,
+                13
+              ]
+            ],
+            "false_missed_count": 5,
+            "non_missed_reference_count": 43,
+            "false_missed_rate": 0.11627906976744186,
+            "ci95": {
+              "raw_agreement": [
+                0.5769230769230769,
+                0.8269230769230769
+              ],
+              "cohen_kappa": [
+                0.39165818921668366,
+                0.7398554752640356
+              ],
+              "false_missed_rate": [
+                0.025,
+                0.21739130434782608
+              ]
+            }
+          },
+          "vs_B": {
+            "n": 52,
+            "raw_agreement": 0.6730769230769231,
+            "cohen_kappa": 0.5195652173913045,
+            "confusion": [
+              [
+                4,
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                1,
+                2
+              ],
+              [
+                3,
+                1,
+                16,
+                3
+              ],
+              [
+                4,
+                0,
+                1,
+                14
+              ]
+            ],
+            "false_missed_count": 8,
+            "non_missed_reference_count": 47,
+            "false_missed_rate": 0.1702127659574468,
+            "ci95": {
+              "raw_agreement": [
+                0.5384615384615384,
+                0.7884615384615384
+              ],
+              "cohen_kappa": [
+                0.34680502457673407,
+                0.6933962264150944
+              ],
+              "false_missed_rate": [
+                0.06666666666666667,
+                0.2826086956521739
+              ]
+            }
+          }
+        },
+        "331": {
+          "completed": 55,
+          "failed": 5,
+          "pending": 0,
+          "coverage": {
+            "valid": 55,
+            "total": 60,
+            "fraction": 0.9166666666666666
+          },
+          "failures": {
+            "M2-001": "ValidationError: Evidence quote not in cited turn",
+            "M2-006": "ValidationError: Missing keys: {'confidence', 'reason', 'unclear_rule', 'opportunity_status', 'behavior', 'na_reason', 'evidence', 'label'}",
+            "M2-017": "ValidationError: Evidence quote not in cited turn",
+            "M2-057": "ValidationError: Evidence quote not in cited turn",
+            "M2-058": "ValidationError: Evidence quote not in cited turn"
+          },
+          "label_distribution": {
+            "0": 8,
+            "N/A": 24,
+            "2": 21,
+            "1": 2
+          },
+          "output_tokens_median": 3305,
+          "output_tokens_max": 9111,
+          "latency_s_median": 70.404,
+          "quote_only_failures": 4,
+          "posthoc_vs_adjudicated_with_quote_failures": {
+            "n": 59,
+            "raw_agreement": 0.6949152542372882,
+            "cohen_kappa": 0.5315394794883106,
+            "confusion": [
+              [
+                4,
+                0,
+                0,
+                4
+              ],
+              [
+                0,
+                1,
+                2,
+                0
+              ],
+              [
+                2,
+                0,
+                20,
+                6
+              ],
+              [
+                3,
+                1,
+                0,
+                16
+              ]
+            ],
+            "false_missed_count": 5,
+            "non_missed_reference_count": 51,
+            "false_missed_rate": 0.09803921568627451,
+            "ci95": {
+              "raw_agreement": [
+                0.576271186440678,
+                0.8135593220338984
+              ],
+              "cohen_kappa": [
+                0.3542031523642733,
+                0.6955909943714823
+              ],
+              "false_missed_rate": [
+                0.02040816326530612,
+                0.1875
+              ]
+            }
+          },
+          "vs_adjudicated": {
+            "n": 55,
+            "raw_agreement": 0.6727272727272727,
+            "cohen_kappa": 0.49592668024439923,
+            "confusion": [
+              [
+                3,
+                0,
+                0,
+                4
+              ],
+              [
+                0,
+                1,
+                2,
+                0
+              ],
+              [
+                2,
+                0,
+                19,
+                6
+              ],
+              [
+                3,
+                1,
+                0,
+                14
+              ]
+            ],
+            "false_missed_count": 5,
+            "non_missed_reference_count": 48,
+            "false_missed_rate": 0.10416666666666667,
+            "ci95": {
+              "raw_agreement": [
+                0.5454545454545454,
+                0.8
+              ],
+              "cohen_kappa": [
+                0.3176178660049627,
+                0.669579464773348
+              ],
+              "false_missed_rate": [
+                0.021739130434782608,
+                0.2
+              ]
+            },
+            "by_behavior": {
+              "B1": {
+                "n": 15,
+                "raw_agreement": 0.9333333333333333,
+                "cohen_kappa": 0.8214285714285714,
+                "false_missed_count": 0
+              },
+              "B2": {
+                "n": 13,
+                "raw_agreement": 0.6923076923076923,
+                "cohen_kappa": 0.4901960784313725,
+                "false_missed_count": 2
+              },
+              "B3": {
+                "n": 13,
+                "raw_agreement": 0.3076923076923077,
+                "cohen_kappa": 0.033057851239669436,
+                "false_missed_count": 2
+              },
+              "B4": {
+                "n": 14,
+                "raw_agreement": 0.7142857142857143,
+                "cohen_kappa": 0.3707865168539326,
+                "false_missed_count": 1
+              }
+            }
+          },
+          "vs_A": {
+            "n": 55,
+            "raw_agreement": 0.6909090909090909,
+            "cohen_kappa": 0.5256215119228818,
+            "confusion": [
+              [
+                4,
+                0,
+                1,
+                4
+              ],
+              [
+                0,
+                1,
+                1,
+                0
+              ],
+              [
+                1,
+                0,
+                19,
+                6
+              ],
+              [
+                3,
+                1,
+                0,
+                14
+              ]
+            ],
+            "false_missed_count": 4,
+            "non_missed_reference_count": 46,
+            "false_missed_rate": 0.08695652173913043,
+            "ci95": {
+              "raw_agreement": [
+                0.5636363636363636,
+                0.8181818181818182
+              ],
+              "cohen_kappa": [
+                0.34554973821989515,
+                0.6982543640897757
+              ],
+              "false_missed_rate": [
+                0.020833333333333332,
+                0.17647058823529413
+              ]
+            }
+          },
+          "vs_B": {
+            "n": 55,
+            "raw_agreement": 0.6727272727272727,
+            "cohen_kappa": 0.5037593984962405,
+            "confusion": [
+              [
+                3,
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                4,
+                2
+              ],
+              [
+                2,
+                0,
+                17,
+                5
+              ],
+              [
+                3,
+                1,
+                0,
+                16
+              ]
+            ],
+            "false_missed_count": 5,
+            "non_missed_reference_count": 51,
+            "false_missed_rate": 0.09803921568627451,
+            "ci95": {
+              "raw_agreement": [
+                0.5454545454545454,
+                0.8
+              ],
+              "cohen_kappa": [
+                0.32895354293758794,
+                0.6734289955467592
+              ],
+              "false_missed_rate": [
+                0.02,
+                0.1875
+              ]
+            }
+          }
+        }
+      },
+      "primary": {
+        "vs_adjudicated_on_AB_agreed": {
+          "n": 48,
+          "raw_agreement": 0.7916666666666666,
+          "cohen_kappa": 0.6812749003984063,
+          "confusion": [
+            [
+              4,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              18,
+              2
+            ],
+            [
+              3,
+              1,
+              0,
+              15
+            ]
+          ],
+          "false_missed_count": 5,
+          "non_missed_reference_count": 44,
+          "false_missed_rate": 0.11363636363636363
+        },
+        "vs_adjudicated_on_AB_disagreed": {
+          "n": 9,
+          "raw_agreement": 0.5555555555555556,
+          "cohen_kappa": 0.37931034482758624,
+          "confusion": [
+            [
+              1,
+              0,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              3,
+              1
+            ],
+            [
+              0,
+              0,
+              0,
+              1
+            ]
+          ],
+          "false_missed_count": 0,
+          "non_missed_reference_count": 6,
+          "false_missed_rate": 0.0
+        },
+        "disagreements": [
+          {
+            "item_id": "M2-004",
+            "behavior": "B4",
+            "adjudicated": "N/A",
+            "A": "N/A",
+            "B": "N/A",
+            "model": "0",
+            "confidence": "high",
+            "reason": "User confirms network settings update but does not identify a specific problem in the agent's output or request a correction.",
+            "unclear_rule": "",
+            "output_tokens": 5390
+          },
+          {
+            "item_id": "M2-016",
+            "behavior": "B2",
+            "adjudicated": "N/A",
+            "A": "N/A",
+            "B": "N/A",
+            "model": "0",
+            "confidence": "high",
+            "reason": "The user requests an analytical presentation on benefits and savings but provides no specific requirements for supporting evidence or sources.",
+            "unclear_rule": "",
+            "output_tokens": 5335
+          },
+          {
+            "item_id": "M2-018",
+            "behavior": "B2",
+            "adjudicated": "2",
+            "A": "2",
+            "B": "2",
+            "model": "N/A",
+            "confidence": "high",
+            "reason": "sources are supplied in the task instructions with no requirement for the output to cite evidence or detail the calculation method.",
+            "unclear_rule": "",
+            "output_tokens": 4058
+          },
+          {
+            "item_id": "M2-027",
+            "behavior": "B4",
+            "adjudicated": "N/A",
+            "A": "N/A",
+            "B": "N/A",
+            "model": "1",
+            "confidence": "medium",
+            "reason": "User requests verification of calculations but does not identify a specific error or provide clear correction guidance.",
+            "unclear_rule": "Verifying output accuracy vs identifying a problem to correct",
+            "output_tokens": 1233
+          },
+          {
+            "item_id": "M2-033",
+            "behavior": "B3",
+            "adjudicated": "0",
+            "A": "0",
+            "B": "N/A",
+            "model": "2",
+            "confidence": "medium",
+            "reason": "The user specifically challenges the agent's reported font typeface and requests a precise replacement, treating the formatting claim as a verifiable property.",
+            "unclear_rule": "",
+            "output_tokens": 6814
+          },
+          {
+            "item_id": "M2-035",
+            "behavior": "B4",
+            "adjudicated": "2",
+            "A": "2",
+            "B": "1",
+            "model": "N/A",
+            "confidence": "high",
+            "reason": "User repeats original task instructions without identifying a problem in prior output",
+            "unclear_rule": "",
+            "output_tokens": 601
+          },
+          {
+            "item_id": "M2-039",
+            "behavior": "B3",
+            "adjudicated": "1",
+            "A": "0",
+            "B": "1",
+            "model": "N/A",
+            "confidence": "high",
+            "reason": "The user issued new quality criteria for revision rather than selecting a prior agent claim to verify.",
+            "unclear_rule": "",
+            "output_tokens": 4908
+          },
+          {
+            "item_id": "M2-042",
+            "behavior": "B2",
+            "adjudicated": "2",
+            "A": "2",
+            "B": "2",
+            "model": "1",
+            "confidence": "high",
+            "reason": "Turn requests specific calculations without requiring citation, source attribution, or evidence trail for the numerical results.",
+            "unclear_rule": "",
+            "output_tokens": 730
+          },
+          {
+            "item_id": "M2-045",
+            "behavior": "B3",
+            "adjudicated": "2",
+            "A": "2",
+            "B": "2",
+            "model": "0",
+            "confidence": "high",
+            "reason": "User accepts the output without verifying or checking substantive claims; instead flags errors which is B4 behavior.",
+            "unclear_rule": "",
+            "output_tokens": 621
+          },
+          {
+            "item_id": "M2-046",
+            "behavior": "B2",
+            "adjudicated": "1",
+            "A": "1",
+            "B": "1",
+            "model": "N/A",
+            "confidence": "high",
+            "reason": "User request asks agent to produce output but doesn't specify how the agent should obtain the underlying data or verify claims within that output.",
+            "unclear_rule": "",
+            "output_tokens": 931
+          },
+          {
+            "item_id": "M2-047",
+            "behavior": "B3",
+            "adjudicated": "0",
+            "A": "0",
+            "B": "1",
+            "model": "N/A",
+            "confidence": "medium",
+            "reason": "Turn is task specification/instruction turn, not a response to an agent output containing substantive claims to verify",
+            "unclear_rule": "",
+            "output_tokens": 799
+          },
+          {
+            "item_id": "M2-049",
+            "behavior": "B2",
+            "adjudicated": "2",
+            "A": "2",
+            "B": "2",
+            "model": "0",
+            "confidence": "high",
+            "reason": "The turn requests a payroll spreadsheet based on CBA guidelines but does not specify evidence requirements, citation standards, or verification methods for any claims in the output.",
+            "unclear_rule": "",
+            "output_tokens": 830
+          },
+          {
+            "item_id": "M2-052",
+            "behavior": "B3",
+            "adjudicated": "N/A",
+            "A": "N/A",
+            "B": "N/A",
+            "model": "0",
+            "confidence": "high",
+            "reason": "The user accepts the agent's factual claim about the file listing and proceeds without verifying or challenging the information.",
+            "unclear_rule": "",
+            "output_tokens": 3133
+          },
+          {
+            "item_id": "M2-053",
+            "behavior": "B3",
+            "adjudicated": "2",
+            "A": "2",
+            "B": "2",
+            "model": "N/A",
+            "confidence": "high",
+            "reason": "No visible substantive claim from agent regarding inclusion of 'Additional Talks' to verify.",
+            "unclear_rule": "",
+            "output_tokens": 1260
+          }
+        ]
+      },
+      "stability": {
+        "seeds": [
+          329,
+          330,
+          331
+        ],
+        "items_completed_in_all": 48,
+        "unanimous": 28,
+        "unstable_items": [
+          "M2-002",
+          "M2-004",
+          "M2-019",
+          "M2-022",
+          "M2-027",
+          "M2-028",
+          "M2-029",
+          "M2-031",
+          "M2-033",
+          "M2-034",
+          "M2-036",
+          "M2-038",
+          "M2-039",
+          "M2-042",
+          "M2-045",
+          "M2-046",
+          "M2-049",
+          "M2-051",
+          "M2-053",
+          "M2-059"
+        ],
+        "mean_pairwise_kappa": 0.5348282442748091,
+        "majority_coverage": {
+          "valid": 48,
+          "total": 60
+        },
+        "majority_vs_adjudicated": {
+          "n": 48,
+          "raw_agreement": 0.75,
+          "cohen_kappa": 0.625,
+          "confusion": [
+            [
+              4,
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              1,
+              0,
+              2
+            ],
+            [
+              3,
+              1,
+              17,
+              2
+            ],
+            [
+              2,
+              1,
+              0,
+              14
+            ]
+          ],
+          "false_missed_count": 5,
+          "non_missed_reference_count": 43,
+          "false_missed_rate": 0.11627906976744186,
+          "ci95": {
+            "raw_agreement": [
+              0.625,
+              0.8541666666666666
+            ],
+            "cohen_kappa": [
+              0.44686299615877084,
+              0.7878787878787878
+            ],
+            "false_missed_rate": [
+              0.024390243902439025,
+              0.21951219512195122
+            ]
+          }
+        }
+      }
+    },
+    "v2.qwen38-27b-fp8": {
+      "model_id": "Qwen/Qwen3.8-27B-FP8@017b9c7af6b5689d5dd426a76e0bc077eb5ca20a",
+      "model_spec": {
+        "adapter": "command",
+        "command": [
+          ".venv/bin/python",
+          "-m",
+          "adaptive_tutor.adapters.local_vllm",
+          "--thinking",
+          "on",
+          "--top-p",
+          "0.95",
+          "--top-k",
+          "20",
+          "--min-p",
+          "0",
+          "--presence-penalty",
+          "0",
+          "--repetition-penalty",
+          "1.0",
+          "--http-timeout",
+          "3300"
+        ],
+        "family": "qwen3.8",
+        "model_id": "Qwen/Qwen3.8-27B-FP8@017b9c7af6b5689d5dd426a76e0bc077eb5ca20a",
+        "supports_seed": true,
+        "temperature": 1.0,
+        "timeout_seconds": 3600
+      },
+      "budget": {
+        "max_coaching_tokens": 4000,
+        "max_coaching_turns": 2,
+        "max_context_bytes": 300000,
+        "max_output_tokens": 32768,
+        "transport_attempts": 3
+      },
+      "contract": "decision-point-v2",
+      "seeds": {
+        "329": {
+          "completed": 60,
+          "failed": 0,
+          "pending": 0,
+          "coverage": {
+            "valid": 60,
+            "total": 60,
+            "fraction": 1.0
+          },
+          "failures": {},
+          "label_distribution": {
+            "2": 30,
+            "N/A": 19,
+            "0": 9,
+            "1": 2
+          },
+          "output_tokens_median": 1542.0,
+          "output_tokens_max": 10693,
+          "latency_s_median": 58.1495,
+          "quote_only_failures": 0,
+          "posthoc_vs_adjudicated_with_quote_failures": {
+            "n": 60,
+            "raw_agreement": 0.9166666666666666,
+            "cohen_kappa": 0.867957746478873,
+            "confusion": [
+              [
+                7,
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                2,
+                0,
+                1
+              ],
+              [
+                0,
+                0,
+                29,
+                0
+              ],
+              [
+                2,
+                0,
+                1,
+                17
+              ]
+            ],
+            "false_missed_count": 2,
+            "non_missed_reference_count": 52,
+            "false_missed_rate": 0.038461538461538464,
+            "ci95": {
+              "raw_agreement": [
+                0.8333333333333334,
+                0.9833333333333333
+              ],
+              "cohen_kappa": [
+                0.7484862598975315,
+                0.9718309859154929
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.09615384615384616
+              ]
+            }
+          },
+          "vs_adjudicated": {
+            "n": 60,
+            "raw_agreement": 0.9166666666666666,
+            "cohen_kappa": 0.867957746478873,
+            "confusion": [
+              [
+                7,
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                2,
+                0,
+                1
+              ],
+              [
+                0,
+                0,
+                29,
+                0
+              ],
+              [
+                2,
+                0,
+                1,
+                17
+              ]
+            ],
+            "false_missed_count": 2,
+            "non_missed_reference_count": 52,
+            "false_missed_rate": 0.038461538461538464,
+            "ci95": {
+              "raw_agreement": [
+                0.8333333333333334,
+                0.9833333333333333
+              ],
+              "cohen_kappa": [
+                0.7484862598975315,
+                0.9718309859154929
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.09615384615384616
+              ]
+            },
+            "by_behavior": {
+              "B1": {
+                "n": 15,
+                "raw_agreement": 1.0,
+                "cohen_kappa": 1.0,
+                "false_missed_count": 0
+              },
+              "B2": {
+                "n": 15,
+                "raw_agreement": 0.8666666666666667,
+                "cohen_kappa": 0.7169811320754718,
+                "false_missed_count": 1
+              },
+              "B3": {
+                "n": 15,
+                "raw_agreement": 0.8666666666666667,
+                "cohen_kappa": 0.7916666666666667,
+                "false_missed_count": 1
+              },
+              "B4": {
+                "n": 15,
+                "raw_agreement": 0.9333333333333333,
+                "cohen_kappa": 0.8484848484848485,
+                "false_missed_count": 0
+              }
+            }
+          },
+          "vs_A": {
+            "n": 60,
+            "raw_agreement": 0.9166666666666666,
+            "cohen_kappa": 0.868131868131868,
+            "confusion": [
+              [
+                7,
+                0,
+                1,
+                2
+              ],
+              [
+                0,
+                2,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                29,
+                0
+              ],
+              [
+                2,
+                0,
+                0,
+                17
+              ]
+            ],
+            "false_missed_count": 2,
+            "non_missed_reference_count": 50,
+            "false_missed_rate": 0.04,
+            "ci95": {
+              "raw_agreement": [
+                0.8333333333333334,
+                0.9833333333333333
+              ],
+              "cohen_kappa": [
+                0.7483690587138864,
+                0.971936389148737
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.1
+              ]
+            }
+          },
+          "vs_B": {
+            "n": 60,
+            "raw_agreement": 0.85,
+            "cohen_kappa": 0.7695262483994877,
+            "confusion": [
+              [
+                5,
+                0,
+                0,
+                0
+              ],
+              [
+                1,
+                2,
+                3,
+                1
+              ],
+              [
+                0,
+                0,
+                26,
+                0
+              ],
+              [
+                3,
+                0,
+                1,
+                18
+              ]
+            ],
+            "false_missed_count": 4,
+            "non_missed_reference_count": 55,
+            "false_missed_rate": 0.07272727272727272,
+            "ci95": {
+              "raw_agreement": [
+                0.75,
+                0.9333333333333333
+              ],
+              "cohen_kappa": [
+                0.6326530612244898,
+                0.894829097283085
+              ],
+              "false_missed_rate": [
+                0.017543859649122806,
+                0.14814814814814814
+              ]
+            }
+          }
+        },
+        "330": {
+          "completed": 60,
+          "failed": 0,
+          "pending": 0,
+          "coverage": {
+            "valid": 60,
+            "total": 60,
+            "fraction": 1.0
+          },
+          "failures": {},
+          "label_distribution": {
+            "2": 29,
+            "0": 8,
+            "N/A": 19,
+            "1": 4
+          },
+          "output_tokens_median": 1831.0,
+          "output_tokens_max": 8804,
+          "latency_s_median": 71.845,
+          "quote_only_failures": 0,
+          "posthoc_vs_adjudicated_with_quote_failures": {
+            "n": 60,
+            "raw_agreement": 0.8833333333333333,
+            "cohen_kappa": 0.817629179331307,
+            "confusion": [
+              [
+                6,
+                0,
+                0,
+                2
+              ],
+              [
+                0,
+                3,
+                0,
+                0
+              ],
+              [
+                1,
+                1,
+                27,
+                0
+              ],
+              [
+                1,
+                0,
+                2,
+                17
+              ]
+            ],
+            "false_missed_count": 2,
+            "non_missed_reference_count": 52,
+            "false_missed_rate": 0.038461538461538464,
+            "ci95": {
+              "raw_agreement": [
+                0.8,
+                0.95
+              ],
+              "cohen_kappa": [
+                0.6822594880847308,
+                0.9268887083671811
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.09803921568627451
+              ]
+            }
+          },
+          "vs_adjudicated": {
+            "n": 60,
+            "raw_agreement": 0.8833333333333333,
+            "cohen_kappa": 0.817629179331307,
+            "confusion": [
+              [
+                6,
+                0,
+                0,
+                2
+              ],
+              [
+                0,
+                3,
+                0,
+                0
+              ],
+              [
+                1,
+                1,
+                27,
+                0
+              ],
+              [
+                1,
+                0,
+                2,
+                17
+              ]
+            ],
+            "false_missed_count": 2,
+            "non_missed_reference_count": 52,
+            "false_missed_rate": 0.038461538461538464,
+            "ci95": {
+              "raw_agreement": [
+                0.8,
+                0.95
+              ],
+              "cohen_kappa": [
+                0.6822594880847308,
+                0.9268887083671811
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.09803921568627451
+              ]
+            },
+            "by_behavior": {
+              "B1": {
+                "n": 15,
+                "raw_agreement": 1.0,
+                "cohen_kappa": 1.0,
+                "false_missed_count": 0
+              },
+              "B2": {
+                "n": 15,
+                "raw_agreement": 0.9333333333333333,
+                "cohen_kappa": 0.8529411764705883,
+                "false_missed_count": 0
+              },
+              "B3": {
+                "n": 15,
+                "raw_agreement": 0.7333333333333333,
+                "cohen_kappa": 0.5999999999999999,
+                "false_missed_count": 2
+              },
+              "B4": {
+                "n": 15,
+                "raw_agreement": 0.8666666666666667,
+                "cohen_kappa": 0.7142857142857143,
+                "false_missed_count": 0
+              }
+            }
+          },
+          "vs_A": {
+            "n": 60,
+            "raw_agreement": 0.8666666666666667,
+            "cohen_kappa": 0.7922077922077922,
+            "confusion": [
+              [
+                7,
+                1,
+                0,
+                2
+              ],
+              [
+                0,
+                2,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                27,
+                1
+              ],
+              [
+                1,
+                0,
+                2,
+                16
+              ]
+            ],
+            "false_missed_count": 1,
+            "non_missed_reference_count": 50,
+            "false_missed_rate": 0.02,
+            "ci95": {
+              "raw_agreement": [
+                0.7833333333333333,
+                0.95
+              ],
+              "cohen_kappa": [
+                0.6508244422890398,
+                0.9182189913675601
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.06382978723404255
+              ]
+            }
+          },
+          "vs_B": {
+            "n": 60,
+            "raw_agreement": 0.8333333333333334,
+            "cohen_kappa": 0.7457627118644068,
+            "confusion": [
+              [
+                5,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                3,
+                3,
+                1
+              ],
+              [
+                1,
+                1,
+                24,
+                0
+              ],
+              [
+                2,
+                0,
+                2,
+                18
+              ]
+            ],
+            "false_missed_count": 3,
+            "non_missed_reference_count": 55,
+            "false_missed_rate": 0.05454545454545454,
+            "ci95": {
+              "raw_agreement": [
+                0.7333333333333333,
+                0.9166666666666666
+              ],
+              "cohen_kappa": [
+                0.5961295750946571,
+                0.8760330578512394
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.1206896551724138
+              ]
+            }
+          }
+        },
+        "331": {
+          "completed": 60,
+          "failed": 0,
+          "pending": 0,
+          "coverage": {
+            "valid": 60,
+            "total": 60,
+            "fraction": 1.0
+          },
+          "failures": {},
+          "label_distribution": {
+            "2": 29,
+            "N/A": 17,
+            "0": 9,
+            "1": 5
+          },
+          "output_tokens_median": 1600.0,
+          "output_tokens_max": 10669,
+          "latency_s_median": 63.9655,
+          "quote_only_failures": 0,
+          "posthoc_vs_adjudicated_with_quote_failures": {
+            "n": 60,
+            "raw_agreement": 0.9,
+            "cohen_kappa": 0.8456260720411665,
+            "confusion": [
+              [
+                7,
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                3,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                28,
+                0
+              ],
+              [
+                2,
+                1,
+                1,
+                16
+              ]
+            ],
+            "false_missed_count": 2,
+            "non_missed_reference_count": 52,
+            "false_missed_rate": 0.038461538461538464,
+            "ci95": {
+              "raw_agreement": [
+                0.8166666666666667,
+                0.9666666666666667
+              ],
+              "cohen_kappa": [
+                0.7233864207879296,
+                0.9488054607508533
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.09803921568627451
+              ]
+            }
+          },
+          "vs_adjudicated": {
+            "n": 60,
+            "raw_agreement": 0.9,
+            "cohen_kappa": 0.8456260720411665,
+            "confusion": [
+              [
+                7,
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                3,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                28,
+                0
+              ],
+              [
+                2,
+                1,
+                1,
+                16
+              ]
+            ],
+            "false_missed_count": 2,
+            "non_missed_reference_count": 52,
+            "false_missed_rate": 0.038461538461538464,
+            "ci95": {
+              "raw_agreement": [
+                0.8166666666666667,
+                0.9666666666666667
+              ],
+              "cohen_kappa": [
+                0.7233864207879296,
+                0.9488054607508533
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.09803921568627451
+              ]
+            },
+            "by_behavior": {
+              "B1": {
+                "n": 15,
+                "raw_agreement": 1.0,
+                "cohen_kappa": 1.0,
+                "false_missed_count": 0
+              },
+              "B2": {
+                "n": 15,
+                "raw_agreement": 0.8666666666666667,
+                "cohen_kappa": 0.7391304347826089,
+                "false_missed_count": 1
+              },
+              "B3": {
+                "n": 15,
+                "raw_agreement": 0.8666666666666667,
+                "cohen_kappa": 0.7986577181208054,
+                "false_missed_count": 1
+              },
+              "B4": {
+                "n": 15,
+                "raw_agreement": 0.8666666666666667,
+                "cohen_kappa": 0.7142857142857143,
+                "false_missed_count": 0
+              }
+            }
+          },
+          "vs_A": {
+            "n": 60,
+            "raw_agreement": 0.85,
+            "cohen_kappa": 0.7688356164383562,
+            "confusion": [
+              [
+                7,
+                1,
+                1,
+                1
+              ],
+              [
+                0,
+                2,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                27,
+                1
+              ],
+              [
+                2,
+                1,
+                1,
+                15
+              ]
+            ],
+            "false_missed_count": 2,
+            "non_missed_reference_count": 50,
+            "false_missed_rate": 0.04,
+            "ci95": {
+              "raw_agreement": [
+                0.75,
+                0.9333333333333333
+              ],
+              "cohen_kappa": [
+                0.6254681647940075,
+                0.8962386511024644
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.10204081632653061
+              ]
+            }
+          },
+          "vs_B": {
+            "n": 60,
+            "raw_agreement": 0.8333333333333334,
+            "cohen_kappa": 0.7491638795986624,
+            "confusion": [
+              [
+                5,
+                0,
+                0,
+                0
+              ],
+              [
+                1,
+                3,
+                3,
+                0
+              ],
+              [
+                0,
+                1,
+                25,
+                0
+              ],
+              [
+                3,
+                1,
+                1,
+                17
+              ]
+            ],
+            "false_missed_count": 4,
+            "non_missed_reference_count": 55,
+            "false_missed_rate": 0.07272727272727272,
+            "ci95": {
+              "raw_agreement": [
+                0.7333333333333333,
+                0.9166666666666666
+              ],
+              "cohen_kappa": [
+                0.6108949416342412,
+                0.8756218905472638
+              ],
+              "false_missed_rate": [
+                0.017543859649122806,
+                0.14814814814814814
+              ]
+            }
+          }
+        }
+      },
+      "primary": {
+        "vs_adjudicated_on_AB_agreed": {
+          "n": 51,
+          "raw_agreement": 0.9607843137254902,
+          "cohen_kappa": 0.9368029739776952,
+          "confusion": [
+            [
+              5,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              25,
+              0
+            ],
+            [
+              2,
+              0,
+              0,
+              17
+            ]
+          ],
+          "false_missed_count": 2,
+          "non_missed_reference_count": 46,
+          "false_missed_rate": 0.043478260869565216
+        },
+        "vs_adjudicated_on_AB_disagreed": {
+          "n": 9,
+          "raw_agreement": 0.6666666666666666,
+          "cohen_kappa": 0.490566037735849,
+          "confusion": [
+            [
+              2,
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              4,
+              0
+            ],
+            [
+              0,
+              0,
+              1,
+              0
+            ]
+          ],
+          "false_missed_count": 0,
+          "non_missed_reference_count": 6,
+          "false_missed_rate": 0.0
+        },
+        "disagreements": [
+          {
+            "item_id": "M2-016",
+            "behavior": "B2",
+            "adjudicated": "N/A",
+            "A": "N/A",
+            "B": "N/A",
+            "model": "0",
+            "confidence": "medium",
+            "reason": "The turn requests a benefits presentation but gives no source, data, or justification requirement.",
+            "unclear_rule": "",
+            "output_tokens": 3760
+          },
+          {
+            "item_id": "M2-031",
+            "behavior": "B4",
+            "adjudicated": "0",
+            "A": "0",
+            "B": "N/A",
+            "model": "N/A",
+            "confidence": "medium",
+            "reason": "The target turn only confirms the identified transaction and does not address an established problem in the agent's output.",
+            "unclear_rule": "",
+            "output_tokens": 3626
+          },
+          {
+            "item_id": "M2-039",
+            "behavior": "B3",
+            "adjudicated": "1",
+            "A": "0",
+            "B": "1",
+            "model": "N/A",
+            "confidence": "medium",
+            "reason": "The turn states new quality criteria for the test questions rather than selecting a specific checkable claim from the agent's prior output for verification.",
+            "unclear_rule": "",
+            "output_tokens": 3630
+          },
+          {
+            "item_id": "M2-052",
+            "behavior": "B3",
+            "adjudicated": "N/A",
+            "A": "N/A",
+            "B": "N/A",
+            "model": "0",
+            "confidence": "high",
+            "reason": "The prior file-count claim was checkable, but the target only accepts it and sets a future working location rather than requesting verification.",
+            "unclear_rule": "",
+            "output_tokens": 1422
+          },
+          {
+            "item_id": "M2-057",
+            "behavior": "B2",
+            "adjudicated": "N/A",
+            "A": "2",
+            "B": "N/A",
+            "model": "2",
+            "confidence": "medium",
+            "reason": "The turn requests a specific calculation of revenue recognized from long-term contracts for each of the three years.",
+            "unclear_rule": "",
+            "output_tokens": 3508
+          }
+        ]
+      },
+      "stability": {
+        "seeds": [
+          329,
+          330,
+          331
+        ],
+        "items_completed_in_all": 60,
+        "unanimous": 52,
+        "unstable_items": [
+          "M2-002",
+          "M2-009",
+          "M2-016",
+          "M2-019",
+          "M2-039",
+          "M2-047",
+          "M2-053",
+          "M2-057"
+        ],
+        "mean_pairwise_kappa": 0.8527928948076061,
+        "majority_coverage": {
+          "valid": 60,
+          "total": 60
+        },
+        "majority_vs_adjudicated": {
+          "n": 60,
+          "raw_agreement": 0.9166666666666666,
+          "cohen_kappa": 0.8704103671706265,
+          "confusion": [
+            [
+              7,
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              3,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              28,
+              0
+            ],
+            [
+              2,
+              0,
+              1,
+              17
+            ]
+          ],
+          "false_missed_count": 2,
+          "non_missed_reference_count": 52,
+          "false_missed_rate": 0.038461538461538464,
+          "ci95": {
+            "raw_agreement": [
+              0.8333333333333334,
+              0.9833333333333333
+            ],
+            "cohen_kappa": [
+              0.7511520737327188,
+              0.972565157750343
+            ],
+            "false_missed_rate": [
+              0.0,
+              0.09803921568627451
+            ]
+          }
+        }
+      }
+    },
+    "v3.qwen35-9b": {
+      "model_id": "Qwen/Qwen3.5-9B@c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+      "model_spec": {
+        "adapter": "command",
+        "command": [
+          ".venv/bin/python",
+          "-m",
+          "adaptive_tutor.adapters.local_vllm",
+          "--thinking",
+          "on",
+          "--top-p",
+          "0.95",
+          "--top-k",
+          "20",
+          "--min-p",
+          "0",
+          "--presence-penalty",
+          "1.5",
+          "--repetition-penalty",
+          "1.0",
+          "--http-timeout",
+          "3300"
+        ],
+        "family": "qwen3.5",
+        "model_id": "Qwen/Qwen3.5-9B@c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+        "supports_seed": true,
+        "temperature": 1.0,
+        "timeout_seconds": 3600
+      },
+      "budget": {
+        "max_coaching_tokens": 4000,
+        "max_coaching_turns": 2,
+        "max_context_bytes": 300000,
+        "max_output_tokens": 32768,
+        "transport_attempts": 3
+      },
+      "contract": "decision-point-v3",
+      "seeds": {
+        "329": {
+          "completed": 58,
+          "failed": 2,
+          "pending": 0,
+          "coverage": {
+            "valid": 58,
+            "total": 60,
+            "fraction": 0.9666666666666667
+          },
+          "failures": {
+            "M2-057": "ValidationError: Evidence quote not in cited turn",
+            "M2-058": "ValidationError: Evidence quote not in cited turn"
+          },
+          "label_distribution": {
+            "2": 19,
+            "0": 6,
+            "N/A": 32,
+            "1": 1
+          },
+          "output_tokens_median": 2175.0,
+          "output_tokens_max": 8423,
+          "latency_s_median": 46.854,
+          "quote_only_failures": 0,
+          "posthoc_vs_adjudicated_with_quote_failures": null,
+          "vs_adjudicated": {
+            "n": 58,
+            "raw_agreement": 0.7241379310344828,
+            "cohen_kappa": 0.57548032936871,
+            "confusion": [
+              [
+                5,
+                0,
+                0,
+                3
+              ],
+              [
+                0,
+                0,
+                0,
+                3
+              ],
+              [
+                1,
+                1,
+                19,
+                8
+              ],
+              [
+                0,
+                0,
+                0,
+                18
+              ]
+            ],
+            "false_missed_count": 1,
+            "non_missed_reference_count": 50,
+            "false_missed_rate": 0.02,
+            "ci95": {
+              "raw_agreement": [
+                0.603448275862069,
+                0.8275862068965517
+              ],
+              "cohen_kappa": [
+                0.4159369527145359,
+                0.7344862665310276
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.06382978723404255
+              ]
+            },
+            "by_behavior": {
+              "B1": {
+                "n": 15,
+                "raw_agreement": 0.9333333333333333,
+                "cohen_kappa": 0.8369565217391305,
+                "false_missed_count": 0
+              },
+              "B2": {
+                "n": 14,
+                "raw_agreement": 0.5,
+                "cohen_kappa": 0.23437499999999997,
+                "false_missed_count": 0
+              },
+              "B3": {
+                "n": 14,
+                "raw_agreement": 0.5714285714285714,
+                "cohen_kappa": 0.39568345323741005,
+                "false_missed_count": 1
+              },
+              "B4": {
+                "n": 15,
+                "raw_agreement": 0.8666666666666667,
+                "cohen_kappa": 0.6875,
+                "false_missed_count": 0
+              }
+            }
+          },
+          "vs_A": {
+            "n": 58,
+            "raw_agreement": 0.7413793103448276,
+            "cohen_kappa": 0.6034639927073838,
+            "confusion": [
+              [
+                6,
+                0,
+                0,
+                4
+              ],
+              [
+                0,
+                0,
+                0,
+                2
+              ],
+              [
+                0,
+                1,
+                19,
+                8
+              ],
+              [
+                0,
+                0,
+                0,
+                18
+              ]
+            ],
+            "false_missed_count": 0,
+            "non_missed_reference_count": 48,
+            "false_missed_rate": 0.0,
+            "ci95": {
+              "raw_agreement": [
+                0.6206896551724138,
+                0.8448275862068966
+              ],
+              "cohen_kappa": [
+                0.44133099824868655,
+                0.7602204869085898
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "vs_B": {
+            "n": 58,
+            "raw_agreement": 0.6551724137931034,
+            "cohen_kappa": 0.4710442316461468,
+            "confusion": [
+              [
+                3,
+                0,
+                0,
+                2
+              ],
+              [
+                0,
+                0,
+                2,
+                5
+              ],
+              [
+                1,
+                1,
+                17,
+                7
+              ],
+              [
+                2,
+                0,
+                0,
+                18
+              ]
+            ],
+            "false_missed_count": 3,
+            "non_missed_reference_count": 53,
+            "false_missed_rate": 0.05660377358490566,
+            "ci95": {
+              "raw_agreement": [
+                0.5344827586206896,
+                0.7758620689655172
+              ],
+              "cohen_kappa": [
+                0.3077578857630009,
+                0.6387158600862483
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.12727272727272726
+              ]
+            }
+          }
+        },
+        "330": {
+          "completed": 56,
+          "failed": 4,
+          "pending": 0,
+          "coverage": {
+            "valid": 56,
+            "total": 60,
+            "fraction": 0.9333333333333333
+          },
+          "failures": {
+            "M2-001": "ValidationError: Evidence quote not in cited turn",
+            "M2-047": "ValidationError: Evidence quote not in cited turn",
+            "M2-051": "ValidationError: Evidence quote not in cited turn",
+            "M2-055": "ValidationError: Evidence quote not in cited turn"
+          },
+          "label_distribution": {
+            "N/A": 31,
+            "2": 17,
+            "0": 5,
+            "1": 3
+          },
+          "output_tokens_median": 4561.0,
+          "output_tokens_max": 7881,
+          "latency_s_median": 97.443,
+          "quote_only_failures": 0,
+          "posthoc_vs_adjudicated_with_quote_failures": null,
+          "vs_adjudicated": {
+            "n": 56,
+            "raw_agreement": 0.7321428571428571,
+            "cohen_kappa": 0.5890410958904109,
+            "confusion": [
+              [
+                4,
+                0,
+                0,
+                3
+              ],
+              [
+                0,
+                2,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                17,
+                9
+              ],
+              [
+                1,
+                0,
+                0,
+                18
+              ]
+            ],
+            "false_missed_count": 1,
+            "non_missed_reference_count": 49,
+            "false_missed_rate": 0.02040816326530612,
+            "ci95": {
+              "raw_agreement": [
+                0.6071428571428571,
+                0.8392857142857143
+              ],
+              "cohen_kappa": [
+                0.4142792178262847,
+                0.7507418397626113
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.06382978723404255
+              ]
+            },
+            "by_behavior": {
+              "B1": {
+                "n": 15,
+                "raw_agreement": 0.9333333333333333,
+                "cohen_kappa": 0.8529411764705883,
+                "false_missed_count": 0
+              },
+              "B2": {
+                "n": 14,
+                "raw_agreement": 0.5714285714285714,
+                "cohen_kappa": 0.35384615384615387,
+                "false_missed_count": 1
+              },
+              "B3": {
+                "n": 14,
+                "raw_agreement": 0.5,
+                "cohen_kappa": 0.3194444444444445,
+                "false_missed_count": 0
+              },
+              "B4": {
+                "n": 13,
+                "raw_agreement": 0.9230769230769231,
+                "cohen_kappa": 0.8194444444444445,
+                "false_missed_count": 0
+              }
+            }
+          },
+          "vs_A": {
+            "n": 56,
+            "raw_agreement": 0.7321428571428571,
+            "cohen_kappa": 0.5938104448742746,
+            "confusion": [
+              [
+                4,
+                0,
+                0,
+                5
+              ],
+              [
+                0,
+                2,
+                0,
+                0
+              ],
+              [
+                1,
+                1,
+                17,
+                8
+              ],
+              [
+                0,
+                0,
+                0,
+                18
+              ]
+            ],
+            "false_missed_count": 1,
+            "non_missed_reference_count": 47,
+            "false_missed_rate": 0.02127659574468085,
+            "ci95": {
+              "raw_agreement": [
+                0.6071428571428571,
+                0.8392857142857143
+              ],
+              "cohen_kappa": [
+                0.4256410256410257,
+                0.7518463810930577
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.06666666666666667
+              ]
+            }
+          },
+          "vs_B": {
+            "n": 56,
+            "raw_agreement": 0.6607142857142857,
+            "cohen_kappa": 0.47689282202556543,
+            "confusion": [
+              [
+                2,
+                0,
+                0,
+                3
+              ],
+              [
+                0,
+                2,
+                2,
+                2
+              ],
+              [
+                0,
+                1,
+                15,
+                8
+              ],
+              [
+                3,
+                0,
+                0,
+                18
+              ]
+            ],
+            "false_missed_count": 3,
+            "non_missed_reference_count": 51,
+            "false_missed_rate": 0.058823529411764705,
+            "ci95": {
+              "raw_agreement": [
+                0.5357142857142857,
+                0.7857142857142857
+              ],
+              "cohen_kappa": [
+                0.29683576092415875,
+                0.6492693110647181
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.1320754716981132
+              ]
+            }
+          }
+        },
+        "331": {
+          "completed": 50,
+          "failed": 10,
+          "pending": 0,
+          "coverage": {
+            "valid": 50,
+            "total": 60,
+            "fraction": 0.8333333333333334
+          },
+          "failures": {
+            "M2-008": "ValidationError: A 0 needs evidence quoting the opportunity from an earlier turn",
+            "M2-013": "ValidationError: Evidence quote not in cited turn",
+            "M2-017": "ValidationError: Evidence quote not in cited turn",
+            "M2-020": "ValidationError: Evidence quote not in cited turn",
+            "M2-032": "ValidationError: Evidence quote not in cited turn",
+            "M2-039": "ValidationError: Evidence quote not in cited turn",
+            "M2-051": "ValidationError: Evidence quote not in cited turn",
+            "M2-053": "ValidationError: Evidence quote not in cited turn",
+            "M2-055": "ValidationError: Evidence quote not in cited turn",
+            "M2-056": "ValidationError: Evidence quote not in cited turn"
+          },
+          "label_distribution": {
+            "2": 18,
+            "N/A": 26,
+            "0": 5,
+            "1": 1
+          },
+          "output_tokens_median": 3597.0,
+          "output_tokens_max": 9505,
+          "latency_s_median": 76.855,
+          "quote_only_failures": 0,
+          "posthoc_vs_adjudicated_with_quote_failures": null,
+          "vs_adjudicated": {
+            "n": 50,
+            "raw_agreement": 0.74,
+            "cohen_kappa": 0.5854591836734694,
+            "confusion": [
+              [
+                3,
+                0,
+                0,
+                3
+              ],
+              [
+                0,
+                0,
+                0,
+                2
+              ],
+              [
+                0,
+                1,
+                18,
+                5
+              ],
+              [
+                2,
+                0,
+                0,
+                16
+              ]
+            ],
+            "false_missed_count": 2,
+            "non_missed_reference_count": 44,
+            "false_missed_rate": 0.045454545454545456,
+            "ci95": {
+              "raw_agreement": [
+                0.62,
+                0.86
+              ],
+              "cohen_kappa": [
+                0.4031830238726791,
+                0.759780370624571
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.11627906976744186
+              ]
+            },
+            "by_behavior": {
+              "B1": {
+                "n": 13,
+                "raw_agreement": 0.9230769230769231,
+                "cohen_kappa": 0.8289473684210528,
+                "false_missed_count": 0
+              },
+              "B2": {
+                "n": 15,
+                "raw_agreement": 0.5333333333333333,
+                "cohen_kappa": 0.25,
+                "false_missed_count": 2
+              },
+              "B3": {
+                "n": 11,
+                "raw_agreement": 0.6363636363636364,
+                "cohen_kappa": 0.47619047619047616,
+                "false_missed_count": 0
+              },
+              "B4": {
+                "n": 11,
+                "raw_agreement": 0.9090909090909091,
+                "cohen_kappa": 0.7608695652173912,
+                "false_missed_count": 0
+              }
+            }
+          },
+          "vs_A": {
+            "n": 50,
+            "raw_agreement": 0.74,
+            "cohen_kappa": 0.590937696664569,
+            "confusion": [
+              [
+                3,
+                0,
+                0,
+                4
+              ],
+              [
+                0,
+                0,
+                0,
+                2
+              ],
+              [
+                1,
+                1,
+                18,
+                4
+              ],
+              [
+                1,
+                0,
+                0,
+                16
+              ]
+            ],
+            "false_missed_count": 2,
+            "non_missed_reference_count": 43,
+            "false_missed_rate": 0.046511627906976744,
+            "ci95": {
+              "raw_agreement": [
+                0.62,
+                0.86
+              ],
+              "cohen_kappa": [
+                0.41622883829538815,
+                0.7617426820966644
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.11904761904761904
+              ]
+            }
+          },
+          "vs_B": {
+            "n": 50,
+            "raw_agreement": 0.7,
+            "cohen_kappa": 0.52561669829222,
+            "confusion": [
+              [
+                2,
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                0,
+                2,
+                4
+              ],
+              [
+                0,
+                1,
+                16,
+                4
+              ],
+              [
+                3,
+                0,
+                0,
+                17
+              ]
+            ],
+            "false_missed_count": 3,
+            "non_missed_reference_count": 47,
+            "false_missed_rate": 0.06382978723404255,
+            "ci95": {
+              "raw_agreement": [
+                0.56,
+                0.82
+              ],
+              "cohen_kappa": [
+                0.3396226415094339,
+                0.7035573122529645
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.14583333333333334
+              ]
+            }
+          }
+        }
+      },
+      "primary": {
+        "vs_adjudicated_on_AB_agreed": {
+          "n": 50,
+          "raw_agreement": 0.76,
+          "cohen_kappa": 0.609375,
+          "confusion": [
+            [
+              3,
+              0,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              0,
+              2
+            ],
+            [
+              0,
+              1,
+              17,
+              7
+            ],
+            [
+              0,
+              0,
+              0,
+              18
+            ]
+          ],
+          "false_missed_count": 0,
+          "non_missed_reference_count": 45,
+          "false_missed_rate": 0.0
+        },
+        "vs_adjudicated_on_AB_disagreed": {
+          "n": 8,
+          "raw_agreement": 0.5,
+          "cohen_kappa": 0.3191489361702128,
+          "confusion": [
+            [
+              2,
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              0,
+              2,
+              1
+            ],
+            [
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "false_missed_count": 1,
+          "non_missed_reference_count": 5,
+          "false_missed_rate": 0.2
+        },
+        "disagreements": [
+          {
+            "item_id": "M2-002",
+            "behavior": "B3",
+            "adjudicated": "2",
+            "A": "0",
+            "B": "2",
+            "model": "0",
+            "confidence": "high",
+            "reason": "User identifies a content defect in the agent's output rather than selecting an agent claim to check or ask for verification.",
+            "unclear_rule": "",
+            "output_tokens": 8423
+          },
+          {
+            "item_id": "M2-006",
+            "behavior": "B4",
+            "adjudicated": "2",
+            "A": "2",
+            "B": "2",
+            "model": "N/A",
+            "confidence": "high",
+            "reason": "The user requests corrections but specific content errors are not visible in prior turns, preventing citation of a pre-existing problem as required.",
+            "unclear_rule": "",
+            "output_tokens": 7052
+          },
+          {
+            "item_id": "M2-007",
+            "behavior": "B3",
+            "adjudicated": "0",
+            "A": "0",
+            "B": "0",
+            "model": "N/A",
+            "confidence": "high",
+            "reason": "User says share (delivery request), not selecting a substantive claim to verify",
+            "unclear_rule": "",
+            "output_tokens": 774
+          },
+          {
+            "item_id": "M2-014",
+            "behavior": "B2",
+            "adjudicated": "2",
+            "A": "2",
+            "B": "2",
+            "model": "1",
+            "confidence": "high",
+            "reason": "User requests factual data gathering and analysis but does not specify particular sources, verification methods, or citation requirements for the claims.",
+            "unclear_rule": "",
+            "output_tokens": 758
+          },
+          {
+            "item_id": "M2-028",
+            "behavior": "B2",
+            "adjudicated": "2",
+            "A": "2",
+            "B": "2",
+            "model": "N/A",
+            "confidence": "high",
+            "reason": "This is a computation/recalculation task based on internal assumptions, not a request requiring external evidence or source support.",
+            "unclear_rule": "",
+            "output_tokens": 596
+          },
+          {
+            "item_id": "M2-029",
+            "behavior": "B2",
+            "adjudicated": "2",
+            "A": "2",
+            "B": "2",
+            "model": "N/A",
+            "confidence": "high",
+            "reason": "Task requests use of provided reference files but does not specify any evidence support standard for the required output.",
+            "unclear_rule": "",
+            "output_tokens": 925
+          },
+          {
+            "item_id": "M2-034",
+            "behavior": "B1",
+            "adjudicated": "1",
+            "A": "1",
+            "B": "1",
+            "model": "N/A",
+            "confidence": "high",
+            "reason": "The user requests delivery of existing content without establishing new deliverable requirements; the original task specifications in turn 1 fully define the output.",
+            "unclear_rule": "",
+            "output_tokens": 823
+          },
+          {
+            "item_id": "M2-035",
+            "behavior": "B4",
+            "adjudicated": "2",
+            "A": "2",
+            "B": "1",
+            "model": "N/A",
+            "confidence": "high",
+            "reason": "User is restating requirements from turn 3 without adding new specifications; the assistant has not yet produced an output problem that requires correction at turn 147.",
+            "unclear_rule": "",
+            "output_tokens": 668
+          },
+          {
+            "item_id": "M2-036",
+            "behavior": "B2",
+            "adjudicated": "2",
+            "A": "2",
+            "B": "2",
+            "model": "N/A",
+            "confidence": "high",
+            "reason": "The user asks for calculations but does not require the output to include evidence, citations, or work display; the data source was already supplied by the tool.",
+            "unclear_rule": "",
+            "output_tokens": 1645
+          },
+          {
+            "item_id": "M2-039",
+            "behavior": "B3",
+            "adjudicated": "1",
+            "A": "0",
+            "B": "1",
+            "model": "N/A",
+            "confidence": "high",
+            "reason": "No visible agent output before turn 16 contains specific test questions requiring verification; turn 16 provides new specifications rather than checking existing claims.",
+            "unclear_rule": "",
+            "output_tokens": 1097
+          },
+          {
+            "item_id": "M2-042",
+            "behavior": "B2",
+            "adjudicated": "2",
+            "A": "2",
+            "B": "2",
+            "model": "N/A",
+            "confidence": "medium",
+            "reason": "No prior agent output contains factual claims requiring evidence support to verify; turn 24 itself is a new task request, not a response to agent-generated claims.",
+            "unclear_rule": "",
+            "output_tokens": 873
+          },
+          {
+            "item_id": "M2-046",
+            "behavior": "B2",
+            "adjudicated": "1",
+            "A": "1",
+            "B": "1",
+            "model": "N/A",
+            "confidence": "high",
+            "reason": "user requests report with reasoned arguments but does not specify evidence types, sources, or verification standards required for the claims",
+            "unclear_rule": "",
+            "output_tokens": 873
+          },
+          {
+            "item_id": "M2-047",
+            "behavior": "B3",
+            "adjudicated": "0",
+            "A": "0",
+            "B": "1",
+            "model": "N/A",
+            "confidence": "high",
+            "reason": "Turn 244 restates task instructions without selecting or checking a substantive claim from an earlier agent output.",
+            "unclear_rule": "",
+            "output_tokens": 962
+          },
+          {
+            "item_id": "M2-049",
+            "behavior": "B2",
+            "adjudicated": "2",
+            "A": "2",
+            "B": "2",
+            "model": "N/A",
+            "confidence": "high",
+            "reason": "The task requests building a spreadsheet tool rather than making factual claims needing evidentiary support.",
+            "unclear_rule": "",
+            "output_tokens": 755
+          },
+          {
+            "item_id": "M2-053",
+            "behavior": "B3",
+            "adjudicated": "2",
+            "A": "2",
+            "B": "2",
+            "model": "N/A",
+            "confidence": "high",
+            "reason": "Cannot judge B3 because I cannot verify any claim against the 'Additional Talks' list from available context; the user is checking completion but I cannot see the source material.",
+            "unclear_rule": "",
+            "output_tokens": 889
+          },
+          {
+            "item_id": "M2-059",
+            "behavior": "B3",
+            "adjudicated": "0",
+            "A": "0",
+            "B": "0",
+            "model": "N/A",
+            "confidence": "high",
+            "reason": "User provides new task instruction following file delivery and progress update, which precludes verification behavior per section 16.",
+            "unclear_rule": "",
+            "output_tokens": 6281
+          }
+        ],
+        "secondary_high_confidence_zero": {
+          "coverage": {
+            "valid": 58,
+            "total": 60
+          },
+          "vs_adjudicated": {
+            "n": 58,
+            "raw_agreement": 0.7241379310344828,
+            "cohen_kappa": 0.57548032936871,
+            "confusion": [
+              [
+                5,
+                0,
+                0,
+                3
+              ],
+              [
+                0,
+                0,
+                0,
+                3
+              ],
+              [
+                1,
+                1,
+                19,
+                8
+              ],
+              [
+                0,
+                0,
+                0,
+                18
+              ]
+            ],
+            "false_missed_count": 1,
+            "non_missed_reference_count": 50,
+            "false_missed_rate": 0.02,
+            "ci95": {
+              "raw_agreement": [
+                0.603448275862069,
+                0.8275862068965517
+              ],
+              "cohen_kappa": [
+                0.4159369527145359,
+                0.7344862665310276
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.06382978723404255
+              ]
+            }
+          },
+          "vs_A": {
+            "n": 58,
+            "raw_agreement": 0.7413793103448276,
+            "cohen_kappa": 0.6034639927073838,
+            "confusion": [
+              [
+                6,
+                0,
+                0,
+                4
+              ],
+              [
+                0,
+                0,
+                0,
+                2
+              ],
+              [
+                0,
+                1,
+                19,
+                8
+              ],
+              [
+                0,
+                0,
+                0,
+                18
+              ]
+            ],
+            "false_missed_count": 0,
+            "non_missed_reference_count": 48,
+            "false_missed_rate": 0.0,
+            "ci95": {
+              "raw_agreement": [
+                0.6206896551724138,
+                0.8448275862068966
+              ],
+              "cohen_kappa": [
+                0.44133099824868655,
+                0.7602204869085898
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "vs_B": {
+            "n": 58,
+            "raw_agreement": 0.6551724137931034,
+            "cohen_kappa": 0.4710442316461468,
+            "confusion": [
+              [
+                3,
+                0,
+                0,
+                2
+              ],
+              [
+                0,
+                0,
+                2,
+                5
+              ],
+              [
+                1,
+                1,
+                17,
+                7
+              ],
+              [
+                2,
+                0,
+                0,
+                18
+              ]
+            ],
+            "false_missed_count": 3,
+            "non_missed_reference_count": 53,
+            "false_missed_rate": 0.05660377358490566,
+            "ci95": {
+              "raw_agreement": [
+                0.5344827586206896,
+                0.7758620689655172
+              ],
+              "cohen_kappa": [
+                0.3077578857630009,
+                0.6387158600862483
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.12727272727272726
+              ]
+            }
+          }
+        },
+        "v2_false_missed_followup": []
+      },
+      "stability": {
+        "seeds": [
+          329,
+          330,
+          331
+        ],
+        "items_completed_in_all": 46,
+        "unanimous": 29,
+        "unstable_items": [
+          "M2-002",
+          "M2-006",
+          "M2-007",
+          "M2-014",
+          "M2-016",
+          "M2-018",
+          "M2-021",
+          "M2-028",
+          "M2-033",
+          "M2-034",
+          "M2-035",
+          "M2-036",
+          "M2-038",
+          "M2-042",
+          "M2-045",
+          "M2-046",
+          "M2-050"
+        ],
+        "mean_pairwise_kappa": 0.5742685150355626,
+        "majority_coverage": {
+          "valid": 46,
+          "total": 60
+        },
+        "majority_vs_adjudicated": {
+          "n": 46,
+          "raw_agreement": 0.782608695652174,
+          "cohen_kappa": 0.6530920060331825,
+          "confusion": [
+            [
+              4,
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              0,
+              2
+            ],
+            [
+              0,
+              1,
+              16,
+              6
+            ],
+            [
+              0,
+              0,
+              0,
+              16
+            ]
+          ],
+          "false_missed_count": 0,
+          "non_missed_reference_count": 41,
+          "false_missed_rate": 0.0,
+          "ci95": {
+            "raw_agreement": [
+              0.6521739130434783,
+              0.8913043478260869
+            ],
+            "cohen_kappa": [
+              0.46759259259259256,
+              0.8222565687789798
+            ],
+            "false_missed_rate": [
+              0.0,
+              0.0
+            ]
+          }
+        }
+      }
+    },
+    "v3.qwen38-27b-fp8": {
+      "model_id": "Qwen/Qwen3.8-27B-FP8@017b9c7af6b5689d5dd426a76e0bc077eb5ca20a",
+      "model_spec": {
+        "adapter": "command",
+        "command": [
+          ".venv/bin/python",
+          "-m",
+          "adaptive_tutor.adapters.local_vllm",
+          "--thinking",
+          "on",
+          "--top-p",
+          "0.95",
+          "--top-k",
+          "20",
+          "--min-p",
+          "0",
+          "--presence-penalty",
+          "0",
+          "--repetition-penalty",
+          "1.0",
+          "--http-timeout",
+          "3300"
+        ],
+        "family": "qwen3.8",
+        "model_id": "Qwen/Qwen3.8-27B-FP8@017b9c7af6b5689d5dd426a76e0bc077eb5ca20a",
+        "supports_seed": true,
+        "temperature": 1.0,
+        "timeout_seconds": 3600
+      },
+      "budget": {
+        "max_coaching_tokens": 4000,
+        "max_coaching_turns": 2,
+        "max_context_bytes": 300000,
+        "max_output_tokens": 32768,
+        "transport_attempts": 3
+      },
+      "contract": "decision-point-v3",
+      "seeds": {
+        "329": {
+          "completed": 60,
+          "failed": 0,
+          "pending": 0,
+          "coverage": {
+            "valid": 60,
+            "total": 60,
+            "fraction": 1.0
+          },
+          "failures": {},
+          "label_distribution": {
+            "N/A": 22,
+            "2": 26,
+            "0": 9,
+            "1": 3
+          },
+          "output_tokens_median": 1961.5,
+          "output_tokens_max": 8139,
+          "latency_s_median": 79.9045,
+          "quote_only_failures": 0,
+          "posthoc_vs_adjudicated_with_quote_failures": null,
+          "vs_adjudicated": {
+            "n": 60,
+            "raw_agreement": 0.8666666666666667,
+            "cohen_kappa": 0.7935483870967742,
+            "confusion": [
+              [
+                6,
+                0,
+                0,
+                2
+              ],
+              [
+                1,
+                2,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                26,
+                2
+              ],
+              [
+                2,
+                0,
+                0,
+                18
+              ]
+            ],
+            "false_missed_count": 3,
+            "non_missed_reference_count": 52,
+            "false_missed_rate": 0.057692307692307696,
+            "ci95": {
+              "raw_agreement": [
+                0.7833333333333333,
+                0.95
+              ],
+              "cohen_kappa": [
+                0.6541019955654102,
+                0.9172033118675252
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.12962962962962962
+              ]
+            },
+            "by_behavior": {
+              "B1": {
+                "n": 15,
+                "raw_agreement": 1.0,
+                "cohen_kappa": 1.0,
+                "false_missed_count": 0
+              },
+              "B2": {
+                "n": 15,
+                "raw_agreement": 0.8666666666666667,
+                "cohen_kappa": 0.7457627118644068,
+                "false_missed_count": 1
+              },
+              "B3": {
+                "n": 15,
+                "raw_agreement": 0.6666666666666666,
+                "cohen_kappa": 0.4932432432432432,
+                "false_missed_count": 2
+              },
+              "B4": {
+                "n": 15,
+                "raw_agreement": 0.9333333333333333,
+                "cohen_kappa": 0.8484848484848485,
+                "false_missed_count": 0
+              }
+            }
+          },
+          "vs_A": {
+            "n": 60,
+            "raw_agreement": 0.8666666666666667,
+            "cohen_kappa": 0.7941680960548886,
+            "confusion": [
+              [
+                7,
+                0,
+                0,
+                3
+              ],
+              [
+                0,
+                2,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                26,
+                2
+              ],
+              [
+                2,
+                0,
+                0,
+                17
+              ]
+            ],
+            "false_missed_count": 2,
+            "non_missed_reference_count": 50,
+            "false_missed_rate": 0.04,
+            "ci95": {
+              "raw_agreement": [
+                0.7666666666666667,
+                0.95
+              ],
+              "cohen_kappa": [
+                0.6521739130434783,
+                0.918552036199095
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.1
+              ]
+            }
+          },
+          "vs_B": {
+            "n": 60,
+            "raw_agreement": 0.8166666666666667,
+            "cohen_kappa": 0.7219882055602358,
+            "confusion": [
+              [
+                5,
+                0,
+                0,
+                0
+              ],
+              [
+                1,
+                2,
+                3,
+                1
+              ],
+              [
+                0,
+                1,
+                23,
+                2
+              ],
+              [
+                3,
+                0,
+                0,
+                19
+              ]
+            ],
+            "false_missed_count": 4,
+            "non_missed_reference_count": 55,
+            "false_missed_rate": 0.07272727272727272,
+            "ci95": {
+              "raw_agreement": [
+                0.7166666666666667,
+                0.9166666666666666
+              ],
+              "cohen_kappa": [
+                0.5706618962432914,
+                0.8585461689587428
+              ],
+              "false_missed_rate": [
+                0.017543859649122806,
+                0.14814814814814814
+              ]
+            }
+          }
+        },
+        "330": {
+          "completed": 60,
+          "failed": 0,
+          "pending": 0,
+          "coverage": {
+            "valid": 60,
+            "total": 60,
+            "fraction": 1.0
+          },
+          "failures": {},
+          "label_distribution": {
+            "2": 28,
+            "N/A": 21,
+            "0": 7,
+            "1": 4
+          },
+          "output_tokens_median": 1701.5,
+          "output_tokens_max": 12277,
+          "latency_s_median": 63.20099999999999,
+          "quote_only_failures": 0,
+          "posthoc_vs_adjudicated_with_quote_failures": null,
+          "vs_adjudicated": {
+            "n": 60,
+            "raw_agreement": 0.9333333333333333,
+            "cohen_kappa": 0.8956521739130435,
+            "confusion": [
+              [
+                6,
+                0,
+                0,
+                2
+              ],
+              [
+                0,
+                3,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                28,
+                0
+              ],
+              [
+                1,
+                0,
+                0,
+                19
+              ]
+            ],
+            "false_missed_count": 1,
+            "non_missed_reference_count": 52,
+            "false_missed_rate": 0.019230769230769232,
+            "ci95": {
+              "raw_agreement": [
+                0.8666666666666667,
+                0.9833333333333333
+              ],
+              "cohen_kappa": [
+                0.7907585004359199,
+                0.9744354495100127
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.061224489795918366
+              ]
+            },
+            "by_behavior": {
+              "B1": {
+                "n": 15,
+                "raw_agreement": 1.0,
+                "cohen_kappa": 1.0,
+                "false_missed_count": 0
+              },
+              "B2": {
+                "n": 15,
+                "raw_agreement": 1.0,
+                "cohen_kappa": 1.0,
+                "false_missed_count": 0
+              },
+              "B3": {
+                "n": 15,
+                "raw_agreement": 0.8,
+                "cohen_kappa": 0.7058823529411766,
+                "false_missed_count": 1
+              },
+              "B4": {
+                "n": 15,
+                "raw_agreement": 0.9333333333333333,
+                "cohen_kappa": 0.8484848484848485,
+                "false_missed_count": 0
+              }
+            }
+          },
+          "vs_A": {
+            "n": 60,
+            "raw_agreement": 0.8833333333333333,
+            "cohen_kappa": 0.8182604932929467,
+            "confusion": [
+              [
+                6,
+                1,
+                1,
+                2
+              ],
+              [
+                0,
+                2,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                27,
+                1
+              ],
+              [
+                1,
+                0,
+                0,
+                18
+              ]
+            ],
+            "false_missed_count": 1,
+            "non_missed_reference_count": 50,
+            "false_missed_rate": 0.02,
+            "ci95": {
+              "raw_agreement": [
+                0.8,
+                0.95
+              ],
+              "cohen_kappa": [
+                0.6895578551269991,
+                0.9252801992528019
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.06382978723404255
+              ]
+            }
+          },
+          "vs_B": {
+            "n": 60,
+            "raw_agreement": 0.8833333333333333,
+            "cohen_kappa": 0.8210481465700894,
+            "confusion": [
+              [
+                5,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                3,
+                3,
+                1
+              ],
+              [
+                0,
+                1,
+                25,
+                0
+              ],
+              [
+                2,
+                0,
+                0,
+                20
+              ]
+            ],
+            "false_missed_count": 2,
+            "non_missed_reference_count": 55,
+            "false_missed_rate": 0.03636363636363636,
+            "ci95": {
+              "raw_agreement": [
+                0.8,
+                0.95
+              ],
+              "cohen_kappa": [
+                0.6923076923076924,
+                0.9260172626387175
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.09259259259259259
+              ]
+            }
+          }
+        },
+        "331": {
+          "completed": 59,
+          "failed": 1,
+          "pending": 0,
+          "coverage": {
+            "valid": 59,
+            "total": 60,
+            "fraction": 0.9833333333333333
+          },
+          "failures": {
+            "M2-045": "ValidationError: Evidence quote not in cited turn"
+          },
+          "label_distribution": {
+            "2": 25,
+            "1": 6,
+            "N/A": 20,
+            "0": 8
+          },
+          "output_tokens_median": 1875,
+          "output_tokens_max": 9999,
+          "latency_s_median": 74.281,
+          "quote_only_failures": 0,
+          "posthoc_vs_adjudicated_with_quote_failures": null,
+          "vs_adjudicated": {
+            "n": 59,
+            "raw_agreement": 0.864406779661017,
+            "cohen_kappa": 0.7946933449325795,
+            "confusion": [
+              [
+                6,
+                0,
+                0,
+                2
+              ],
+              [
+                0,
+                3,
+                0,
+                0
+              ],
+              [
+                1,
+                3,
+                24,
+                0
+              ],
+              [
+                1,
+                0,
+                1,
+                18
+              ]
+            ],
+            "false_missed_count": 2,
+            "non_missed_reference_count": 51,
+            "false_missed_rate": 0.0392156862745098,
+            "ci95": {
+              "raw_agreement": [
+                0.7796610169491526,
+                0.9491525423728814
+              ],
+              "cohen_kappa": [
+                0.6555462885738115,
+                0.918918918918919
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.09803921568627451
+              ]
+            },
+            "by_behavior": {
+              "B1": {
+                "n": 15,
+                "raw_agreement": 0.9333333333333333,
+                "cohen_kappa": 0.8557692307692308,
+                "false_missed_count": 0
+              },
+              "B2": {
+                "n": 15,
+                "raw_agreement": 0.9333333333333333,
+                "cohen_kappa": 0.8529411764705883,
+                "false_missed_count": 0
+              },
+              "B3": {
+                "n": 14,
+                "raw_agreement": 0.7142857142857143,
+                "cohen_kappa": 0.5757575757575758,
+                "false_missed_count": 1
+              },
+              "B4": {
+                "n": 15,
+                "raw_agreement": 0.8666666666666667,
+                "cohen_kappa": 0.7058823529411765,
+                "false_missed_count": 1
+              }
+            }
+          },
+          "vs_A": {
+            "n": 59,
+            "raw_agreement": 0.8305084745762712,
+            "cohen_kappa": 0.7444781290601992,
+            "confusion": [
+              [
+                6,
+                2,
+                0,
+                2
+              ],
+              [
+                0,
+                2,
+                0,
+                0
+              ],
+              [
+                1,
+                2,
+                24,
+                1
+              ],
+              [
+                1,
+                0,
+                1,
+                17
+              ]
+            ],
+            "false_missed_count": 2,
+            "non_missed_reference_count": 49,
+            "false_missed_rate": 0.04081632653061224,
+            "ci95": {
+              "raw_agreement": [
+                0.7288135593220338,
+                0.9152542372881356
+              ],
+              "cohen_kappa": [
+                0.5988213961922032,
+                0.8739316239316239
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.10204081632653061
+              ]
+            }
+          },
+          "vs_B": {
+            "n": 59,
+            "raw_agreement": 0.864406779661017,
+            "cohen_kappa": 0.7977720651242503,
+            "confusion": [
+              [
+                5,
+                0,
+                0,
+                0
+              ],
+              [
+                1,
+                4,
+                1,
+                1
+              ],
+              [
+                0,
+                2,
+                23,
+                0
+              ],
+              [
+                2,
+                0,
+                1,
+                19
+              ]
+            ],
+            "false_missed_count": 3,
+            "non_missed_reference_count": 54,
+            "false_missed_rate": 0.05555555555555555,
+            "ci95": {
+              "raw_agreement": [
+                0.7627118644067796,
+                0.9491525423728814
+              ],
+              "cohen_kappa": [
+                0.6602687140115162,
+                0.9199819168173601
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.125
+              ]
+            }
+          }
+        }
+      },
+      "primary": {
+        "vs_adjudicated_on_AB_agreed": {
+          "n": 51,
+          "raw_agreement": 0.9215686274509803,
+          "cohen_kappa": 0.875836883749239,
+          "confusion": [
+            [
+              5,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              23,
+              1
+            ],
+            [
+              2,
+              0,
+              0,
+              17
+            ]
+          ],
+          "false_missed_count": 2,
+          "non_missed_reference_count": 46,
+          "false_missed_rate": 0.043478260869565216
+        },
+        "vs_adjudicated_on_AB_disagreed": {
+          "n": 9,
+          "raw_agreement": 0.5555555555555556,
+          "cohen_kappa": 0.38983050847457634,
+          "confusion": [
+            [
+              1,
+              0,
+              0,
+              2
+            ],
+            [
+              1,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              3,
+              1
+            ],
+            [
+              0,
+              0,
+              0,
+              1
+            ]
+          ],
+          "false_missed_count": 1,
+          "non_missed_reference_count": 6,
+          "false_missed_rate": 0.16666666666666666
+        },
+        "disagreements": [
+          {
+            "item_id": "M2-001",
+            "behavior": "B2",
+            "adjudicated": "2",
+            "A": "2",
+            "B": "2",
+            "model": "N/A",
+            "confidence": "medium",
+            "reason": "The user supplies the source documents and constrains the article to them, with instructions focused on narrative structure and style rather than an evidence-verification or citation methodology.",
+            "unclear_rule": "",
+            "output_tokens": 2115
+          },
+          {
+            "item_id": "M2-002",
+            "behavior": "B3",
+            "adjudicated": "2",
+            "A": "0",
+            "B": "2",
+            "model": "N/A",
+            "confidence": "medium",
+            "reason": "The user is reporting a possible missing column and asking about its impact, not selecting or requesting verification of a specific substantive claim made by the agent.",
+            "unclear_rule": "",
+            "output_tokens": 8139
+          },
+          {
+            "item_id": "M2-016",
+            "behavior": "B2",
+            "adjudicated": "N/A",
+            "A": "N/A",
+            "B": "N/A",
+            "model": "0",
+            "confidence": "medium",
+            "reason": "The request seeks a board presentation making benefit and fund-saving claims, but it gives no usable source, data, citation, or calculation requirement.",
+            "unclear_rule": "",
+            "output_tokens": 5915
+          },
+          {
+            "item_id": "M2-031",
+            "behavior": "B4",
+            "adjudicated": "0",
+            "A": "0",
+            "B": "N/A",
+            "model": "N/A",
+            "confidence": "medium",
+            "reason": "The preceding agent output is a confirmation question about a transaction, and no specific problem in that output is established as needing correction.",
+            "unclear_rule": "",
+            "output_tokens": 2864
+          },
+          {
+            "item_id": "M2-039",
+            "behavior": "B3",
+            "adjudicated": "1",
+            "A": "0",
+            "B": "1",
+            "model": "0",
+            "confidence": "medium",
+            "reason": "The agent's summary made checkable regulatory claims (e.g., the 11 U.S.C. § 362 automatic-stay reference), but the user moved on to a new requirement without selecting any claim to verify.",
+            "unclear_rule": "",
+            "output_tokens": 7255
+          },
+          {
+            "item_id": "M2-047",
+            "behavior": "B3",
+            "adjudicated": "0",
+            "A": "0",
+            "B": "1",
+            "model": "N/A",
+            "confidence": "high",
+            "reason": "The target user turn only restates the task instructions and does not respond to or select any checkable claim from the preceding agent output.",
+            "unclear_rule": "",
+            "output_tokens": 1477
+          },
+          {
+            "item_id": "M2-052",
+            "behavior": "B3",
+            "adjudicated": "N/A",
+            "A": "N/A",
+            "B": "N/A",
+            "model": "0",
+            "confidence": "high",
+            "reason": "The user accepts the assistant's checkable file-list claim and moves on without asking for verification.",
+            "unclear_rule": "",
+            "output_tokens": 1195
+          },
+          {
+            "item_id": "M2-053",
+            "behavior": "B3",
+            "adjudicated": "2",
+            "A": "2",
+            "B": "2",
+            "model": "1",
+            "confidence": "medium",
+            "reason": "The user asks for verification of a broad category rather than identifying one specific claim to check.",
+            "unclear_rule": "",
+            "output_tokens": 2074
+          }
+        ],
+        "secondary_high_confidence_zero": {
+          "coverage": {
+            "valid": 60,
+            "total": 60
+          },
+          "vs_adjudicated": {
+            "n": 60,
+            "raw_agreement": 0.8666666666666667,
+            "cohen_kappa": 0.7903014416775885,
+            "confusion": [
+              [
+                5,
+                0,
+                0,
+                3
+              ],
+              [
+                0,
+                2,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                26,
+                2
+              ],
+              [
+                1,
+                0,
+                0,
+                19
+              ]
+            ],
+            "false_missed_count": 1,
+            "non_missed_reference_count": 52,
+            "false_missed_rate": 0.019230769230769232,
+            "ci95": {
+              "raw_agreement": [
+                0.7666666666666667,
+                0.95
+              ],
+              "cohen_kappa": [
+                0.6497080900750626,
+                0.9168975069252077
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.061224489795918366
+              ]
+            }
+          },
+          "vs_A": {
+            "n": 60,
+            "raw_agreement": 0.85,
+            "cohen_kappa": 0.7657266811279827,
+            "confusion": [
+              [
+                5,
+                0,
+                0,
+                5
+              ],
+              [
+                0,
+                2,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                26,
+                2
+              ],
+              [
+                1,
+                0,
+                0,
+                18
+              ]
+            ],
+            "false_missed_count": 1,
+            "non_missed_reference_count": 50,
+            "false_missed_rate": 0.02,
+            "ci95": {
+              "raw_agreement": [
+                0.75,
+                0.9333333333333333
+              ],
+              "cohen_kappa": [
+                0.6216897856242118,
+                0.8945518453427065
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.06382978723404255
+              ]
+            }
+          },
+          "vs_B": {
+            "n": 60,
+            "raw_agreement": 0.85,
+            "cohen_kappa": 0.767541971588463,
+            "confusion": [
+              [
+                5,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                2,
+                3,
+                2
+              ],
+              [
+                0,
+                1,
+                23,
+                2
+              ],
+              [
+                1,
+                0,
+                0,
+                21
+              ]
+            ],
+            "false_missed_count": 1,
+            "non_missed_reference_count": 55,
+            "false_missed_rate": 0.01818181818181818,
+            "ci95": {
+              "raw_agreement": [
+                0.75,
+                0.9333333333333333
+              ],
+              "cohen_kappa": [
+                0.6218487394957983,
+                0.8956521739130435
+              ],
+              "false_missed_rate": [
+                0.0,
+                0.05660377358490566
+              ]
+            }
+          }
+        },
+        "v2_false_missed_followup": []
+      },
+      "stability": {
+        "seeds": [
+          329,
+          330,
+          331
+        ],
+        "items_completed_in_all": 59,
+        "unanimous": 52,
+        "unstable_items": [
+          "M2-001",
+          "M2-002",
+          "M2-009",
+          "M2-016",
+          "M2-035",
+          "M2-038",
+          "M2-039"
+        ],
+        "mean_pairwise_kappa": 0.8720298886136489,
+        "majority_coverage": {
+          "valid": 59,
+          "total": 60
+        },
+        "majority_vs_adjudicated": {
+          "n": 59,
+          "raw_agreement": 0.9152542372881356,
+          "cohen_kappa": 0.8685968819599109,
+          "confusion": [
+            [
+              6,
+              0,
+              0,
+              2
+            ],
+            [
+              0,
+              3,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              26,
+              1
+            ],
+            [
+              1,
+              0,
+              0,
+              19
+            ]
+          ],
+          "false_missed_count": 1,
+          "non_missed_reference_count": 51,
+          "false_missed_rate": 0.0196078431372549,
+          "ci95": {
+            "raw_agreement": [
+              0.847457627118644,
+              0.9830508474576272
+            ],
+            "cohen_kappa": [
+              0.7491733585262162,
+              0.9721172022684311
+            ],
+            "false_missed_rate": [
+              0.0,
+              0.0625
+            ]
+          }
+        }
+      }
+    }
+  }
+}

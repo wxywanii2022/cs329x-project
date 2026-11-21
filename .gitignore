@@ -25,3 +25,9 @@ outputs/rq1/code-snapshot/
 # Main 2 model inputs are redacted but not guaranteed anonymous; copied to the cluster
 # out of band and pinned by SHA-256 in outputs/rq1-main2/preregistration.json.
 /data/rq1/main2/items.jsonl
+# Main 2 run files embed conversation text (see /data/rq1/main2/items.jsonl); hashes in RAW_SHA256SUMS.
+outputs/rq1-main2/*/main2-s*/frozen_inputs.json
+outputs/rq1-main2/*/main2-s*/events.jsonl
+outputs/rq1-main2/*/main2-s*/trace.jsonl
+outputs/rq1-main2/*/main2-s*/predictions.jsonl
+outputs/rq1-main2/*/main2-s*/labels.csv

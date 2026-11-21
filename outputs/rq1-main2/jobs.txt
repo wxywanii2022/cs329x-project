@@ -1,0 +1,5 @@
+18614506 v3.qwen38-27b-fp8 main2 seeds329,330,331 submitted 2026-11-21T06:36:51Z
+18614507 v2.qwen38-27b-fp8 main2 seeds329,330,331 submitted 2026-11-21T06:36:51Z
+18614508 v3.qwen35-9b main2 seeds329,330,331 submitted 2026-11-21T06:36:52Z
+18614509 v2.qwen35-9b main2 seeds329,330,331 submitted 2026-11-21T06:36:53Z
+time limits of 18614506-18614509 lowered from 06:00:00 to 04:00:00 at 2026-11-21T06:46:54Z while pending, to improve backfill; resume-by-resubmission applies if any hits the limit

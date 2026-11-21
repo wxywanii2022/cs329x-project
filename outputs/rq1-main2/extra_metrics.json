@@ -1,0 +1,351 @@
+{
+ "qwen38-27b-fp8/s329": {
+  "v2_vs_adjudicated_zero_detection": {
+   "detected": 7,
+   "failed": 0,
+   "reference_zeros": 8
+  },
+  "v2_vs_A_zero_detection": {
+   "detected": 7,
+   "failed": 0,
+   "reference_zeros": 10
+  },
+  "v2_vs_B_zero_detection": {
+   "detected": 5,
+   "failed": 0,
+   "reference_zeros": 5
+  },
+  "v3_vs_adjudicated_zero_detection": {
+   "detected": 6,
+   "failed": 0,
+   "reference_zeros": 8
+  },
+  "v3_vs_A_zero_detection": {
+   "detected": 7,
+   "failed": 0,
+   "reference_zeros": 10
+  },
+  "v3_vs_B_zero_detection": {
+   "detected": 5,
+   "failed": 0,
+   "reference_zeros": 5
+  },
+  "common_valid": {
+   "n": 60,
+   "v2": {
+    "raw": 0.9166666666666666,
+    "kappa": 0.867957746478873,
+    "fmr": "2/52"
+   },
+   "v3": {
+    "raw": 0.8666666666666667,
+    "kappa": 0.7935483870967742,
+    "fmr": "3/52"
+   },
+   "only_v2_correct": [
+    "M2-001",
+    "M2-002",
+    "M2-047",
+    "M2-053"
+   ],
+   "only_v3_correct": [
+    "M2-057"
+   ]
+  }
+ },
+ "qwen38-27b-fp8/s330": {
+  "v2_vs_adjudicated_zero_detection": {
+   "detected": 6,
+   "failed": 0,
+   "reference_zeros": 8
+  },
+  "v2_vs_A_zero_detection": {
+   "detected": 7,
+   "failed": 0,
+   "reference_zeros": 10
+  },
+  "v2_vs_B_zero_detection": {
+   "detected": 5,
+   "failed": 0,
+   "reference_zeros": 5
+  },
+  "v3_vs_adjudicated_zero_detection": {
+   "detected": 6,
+   "failed": 0,
+   "reference_zeros": 8
+  },
+  "v3_vs_A_zero_detection": {
+   "detected": 6,
+   "failed": 0,
+   "reference_zeros": 10
+  },
+  "v3_vs_B_zero_detection": {
+   "detected": 5,
+   "failed": 0,
+   "reference_zeros": 5
+  },
+  "common_valid": {
+   "n": 60,
+   "v2": {
+    "raw": 0.8833333333333333,
+    "kappa": 0.817629179331307,
+    "fmr": "2/52"
+   },
+   "v3": {
+    "raw": 0.9333333333333333,
+    "kappa": 0.8956521739130435,
+    "fmr": "1/52"
+   },
+   "only_v2_correct": [],
+   "only_v3_correct": [
+    "M2-002",
+    "M2-009",
+    "M2-019"
+   ]
+  }
+ },
+ "qwen38-27b-fp8/s331": {
+  "v2_vs_adjudicated_zero_detection": {
+   "detected": 7,
+   "failed": 0,
+   "reference_zeros": 8
+  },
+  "v2_vs_A_zero_detection": {
+   "detected": 7,
+   "failed": 0,
+   "reference_zeros": 10
+  },
+  "v2_vs_B_zero_detection": {
+   "detected": 5,
+   "failed": 0,
+   "reference_zeros": 5
+  },
+  "v3_vs_adjudicated_zero_detection": {
+   "detected": 6,
+   "failed": 0,
+   "reference_zeros": 8
+  },
+  "v3_vs_A_zero_detection": {
+   "detected": 6,
+   "failed": 0,
+   "reference_zeros": 10
+  },
+  "v3_vs_B_zero_detection": {
+   "detected": 5,
+   "failed": 0,
+   "reference_zeros": 5
+  },
+  "common_valid": {
+   "n": 59,
+   "v2": {
+    "raw": 0.8983050847457628,
+    "kappa": 0.8440528634361234,
+    "fmr": "2/51"
+   },
+   "v3": {
+    "raw": 0.864406779661017,
+    "kappa": 0.7946933449325795,
+    "fmr": "2/51"
+   },
+   "only_v2_correct": [
+    "M2-002",
+    "M2-035",
+    "M2-038",
+    "M2-047"
+   ],
+   "only_v3_correct": [
+    "M2-016",
+    "M2-019"
+   ]
+  }
+ },
+ "qwen35-9b/s329": {
+  "v2_vs_adjudicated_zero_detection": {
+   "detected": 5,
+   "failed": 1,
+   "reference_zeros": 8
+  },
+  "v2_vs_A_zero_detection": {
+   "detected": 5,
+   "failed": 1,
+   "reference_zeros": 10
+  },
+  "v2_vs_B_zero_detection": {
+   "detected": 4,
+   "failed": 1,
+   "reference_zeros": 5
+  },
+  "v3_vs_adjudicated_zero_detection": {
+   "detected": 5,
+   "failed": 0,
+   "reference_zeros": 8
+  },
+  "v3_vs_A_zero_detection": {
+   "detected": 6,
+   "failed": 0,
+   "reference_zeros": 10
+  },
+  "v3_vs_B_zero_detection": {
+   "detected": 3,
+   "failed": 0,
+   "reference_zeros": 5
+  },
+  "common_valid": {
+   "n": 55,
+   "v2": {
+    "raw": 0.7454545454545455,
+    "kappa": 0.6134538152610443,
+    "fmr": "5/48"
+   },
+   "v3": {
+    "raw": 0.7090909090909091,
+    "kappa": 0.5491803278688525,
+    "fmr": "1/48"
+   },
+   "only_v2_correct": [
+    "M2-002",
+    "M2-006",
+    "M2-007",
+    "M2-014",
+    "M2-028",
+    "M2-029",
+    "M2-034",
+    "M2-036",
+    "M2-059"
+   ],
+   "only_v3_correct": [
+    "M2-004",
+    "M2-016",
+    "M2-018",
+    "M2-027",
+    "M2-033",
+    "M2-045",
+    "M2-052"
+   ]
+  }
+ },
+ "qwen35-9b/s330": {
+  "v2_vs_adjudicated_zero_detection": {
+   "detected": 5,
+   "failed": 1,
+   "reference_zeros": 8
+  },
+  "v2_vs_A_zero_detection": {
+   "detected": 7,
+   "failed": 1,
+   "reference_zeros": 10
+  },
+  "v2_vs_B_zero_detection": {
+   "detected": 4,
+   "failed": 0,
+   "reference_zeros": 5
+  },
+  "v3_vs_adjudicated_zero_detection": {
+   "detected": 4,
+   "failed": 1,
+   "reference_zeros": 8
+  },
+  "v3_vs_A_zero_detection": {
+   "detected": 4,
+   "failed": 1,
+   "reference_zeros": 10
+  },
+  "v3_vs_B_zero_detection": {
+   "detected": 2,
+   "failed": 0,
+   "reference_zeros": 5
+  },
+  "common_valid": {
+   "n": 50,
+   "v2": {
+    "raw": 0.66,
+    "kappa": 0.49941107184923444,
+    "fmr": "7/43"
+   },
+   "v3": {
+    "raw": 0.72,
+    "kappa": 0.5790739627179795,
+    "fmr": "0/43"
+   },
+   "only_v2_correct": [
+    "M2-008",
+    "M2-014",
+    "M2-029",
+    "M2-045",
+    "M2-049",
+    "M2-056",
+    "M2-059"
+   ],
+   "only_v3_correct": [
+    "M2-016",
+    "M2-019",
+    "M2-022",
+    "M2-027",
+    "M2-033",
+    "M2-034",
+    "M2-036",
+    "M2-042",
+    "M2-046",
+    "M2-052"
+   ]
+  }
+ },
+ "qwen35-9b/s331": {
+  "v2_vs_adjudicated_zero_detection": {
+   "detected": 3,
+   "failed": 1,
+   "reference_zeros": 8
+  },
+  "v2_vs_A_zero_detection": {
+   "detected": 4,
+   "failed": 1,
+   "reference_zeros": 10
+  },
+  "v2_vs_B_zero_detection": {
+   "detected": 3,
+   "failed": 1,
+   "reference_zeros": 5
+  },
+  "v3_vs_adjudicated_zero_detection": {
+   "detected": 3,
+   "failed": 2,
+   "reference_zeros": 8
+  },
+  "v3_vs_A_zero_detection": {
+   "detected": 3,
+   "failed": 3,
+   "reference_zeros": 10
+  },
+  "v3_vs_B_zero_detection": {
+   "detected": 2,
+   "failed": 2,
+   "reference_zeros": 5
+  },
+  "common_valid": {
+   "n": 46,
+   "v2": {
+    "raw": 0.6739130434782609,
+    "kappa": 0.4970845481049562,
+    "fmr": "4/40"
+   },
+   "v3": {
+    "raw": 0.7391304347826086,
+    "kappa": 0.5874439461883407,
+    "fmr": "1/40"
+   },
+   "only_v2_correct": [
+    "M2-046",
+    "M2-049",
+    "M2-050"
+   ],
+   "only_v3_correct": [
+    "M2-022",
+    "M2-027",
+    "M2-028",
+    "M2-031",
+    "M2-045",
+    "M2-052"
+   ]
+  }
+ }
+}
