@@ -1,0 +1,409 @@
+{
+  "runs": [
+    {
+      "run": "smoke",
+      "blocks": 1,
+      "failed_branches": 0,
+      "failed_scores": 0,
+      "audit": "passed",
+      "call_failures": 0,
+      "transport_failures": 0
+    },
+    {
+      "run": "expert_a.accurate_01",
+      "blocks": 4,
+      "failed_branches": 0,
+      "failed_scores": 0,
+      "audit": "passed",
+      "call_failures": 0,
+      "transport_failures": 0
+    },
+    {
+      "run": "expert_a.briefs_01",
+      "blocks": 4,
+      "failed_branches": 0,
+      "failed_scores": 1,
+      "audit": "passed",
+      "call_failures": 1,
+      "transport_failures": 0
+    },
+    {
+      "run": "expert_b.accurate_01",
+      "blocks": 4,
+      "failed_branches": 0,
+      "failed_scores": 0,
+      "audit": "passed",
+      "call_failures": 0,
+      "transport_failures": 0
+    },
+    {
+      "run": "expert_b.briefs_01",
+      "blocks": 4,
+      "failed_branches": 0,
+      "failed_scores": 1,
+      "audit": "passed",
+      "call_failures": 1,
+      "transport_failures": 0
+    },
+    {
+      "run": "intermediate_a.accurate_01",
+      "blocks": 4,
+      "failed_branches": 0,
+      "failed_scores": 1,
+      "audit": "passed",
+      "call_failures": 1,
+      "transport_failures": 0
+    },
+    {
+      "run": "intermediate_a.briefs_01",
+      "blocks": 4,
+      "failed_branches": 0,
+      "failed_scores": 1,
+      "audit": "passed",
+      "call_failures": 1,
+      "transport_failures": 0
+    },
+    {
+      "run": "intermediate_b.accurate_01",
+      "blocks": 4,
+      "failed_branches": 0,
+      "failed_scores": 0,
+      "audit": "passed",
+      "call_failures": 0,
+      "transport_failures": 0
+    },
+    {
+      "run": "intermediate_b.briefs_01",
+      "blocks": 4,
+      "failed_branches": 0,
+      "failed_scores": 0,
+      "audit": "passed",
+      "call_failures": 0,
+      "transport_failures": 0
+    },
+    {
+      "run": "novice_a.accurate_01",
+      "blocks": 4,
+      "failed_branches": 0,
+      "failed_scores": 0,
+      "audit": "passed",
+      "call_failures": 0,
+      "transport_failures": 0
+    },
+    {
+      "run": "novice_a.briefs_01",
+      "blocks": 4,
+      "failed_branches": 0,
+      "failed_scores": 1,
+      "audit": "passed",
+      "call_failures": 1,
+      "transport_failures": 0
+    },
+    {
+      "run": "novice_b.accurate_01",
+      "blocks": 4,
+      "failed_branches": 0,
+      "failed_scores": 0,
+      "audit": "passed",
+      "call_failures": 0,
+      "transport_failures": 0
+    },
+    {
+      "run": "novice_b.briefs_01",
+      "blocks": 4,
+      "failed_branches": 0,
+      "failed_scores": 0,
+      "audit": "passed",
+      "call_failures": 0,
+      "transport_failures": 0
+    }
+  ],
+  "fixtures": {
+    "fixtures-assessor-v2-qwen38-27b-s329": {
+      "overall": {
+        "cohen_kappa": 0.7719298245614035,
+        "false_missed_count": 0,
+        "false_missed_definition": "candidate=0 among paired successful items with reference in {1,2,N/A}",
+        "false_missed_rate": 0.0,
+        "n": 13,
+        "non_missed_reference_count": 10,
+        "raw_agreement": 0.8461538461538461
+      },
+      "disagreements": [
+        {
+          "behavior": "B1",
+          "candidate": "N/A",
+          "item_id": "F01",
+          "reference": "0"
+        },
+        {
+          "behavior": "B2",
+          "candidate": "N/A",
+          "item_id": "F04",
+          "reference": "0"
+        }
+      ],
+      "failed": 0
+    },
+    "fixtures-evaluator-gpt-oss-20b-s329": {
+      "overall": {
+        "cohen_kappa": 0.6722689075630253,
+        "false_missed_count": 1,
+        "false_missed_definition": "candidate=0 among paired successful items with reference in {1,2,N/A}",
+        "false_missed_rate": 0.1,
+        "n": 13,
+        "non_missed_reference_count": 10,
+        "raw_agreement": 0.7692307692307693
+      },
+      "disagreements": [
+        {
+          "behavior": "B1",
+          "candidate": "1",
+          "item_id": "F01",
+          "reference": "0"
+        },
+        {
+          "behavior": "B2",
+          "candidate": "0",
+          "item_id": "F13",
+          "reference": "N/A"
+        },
+        {
+          "behavior": "B3",
+          "candidate": "2",
+          "item_id": "F07",
+          "reference": "1"
+        }
+      ],
+      "failed": 0
+    }
+  },
+  "learner": {
+    "novice_a": {
+      "profile": "novice_a",
+      "pre_tasks": 8,
+      "spontaneous_check": "0/4",
+      "states_correct_at_review": "0/4",
+      "early_correction": "0/4",
+      "final_correct": "3/4",
+      "false_alarm_on_accurate": "0/4",
+      "asks_evidence_at_request": "0/8",
+      "request_words": 23,
+      "review_words": 12,
+      "request_similarity": 0.39,
+      "flags": "none"
+    },
+    "novice_b": {
+      "profile": "novice_b",
+      "pre_tasks": 8,
+      "spontaneous_check": "1/4",
+      "states_correct_at_review": "1/4",
+      "early_correction": "0/4",
+      "final_correct": "3/4",
+      "false_alarm_on_accurate": "0/4",
+      "asks_evidence_at_request": "0/8",
+      "request_words": 21.5,
+      "review_words": 11,
+      "request_similarity": 0.45,
+      "flags": "none"
+    },
+    "intermediate_a": {
+      "profile": "intermediate_a",
+      "pre_tasks": 8,
+      "spontaneous_check": "2/4",
+      "states_correct_at_review": "2/4",
+      "early_correction": "0/4",
+      "final_correct": "4/4",
+      "false_alarm_on_accurate": "0/4",
+      "asks_evidence_at_request": "0/8",
+      "request_words": 28.25,
+      "review_words": 17.5,
+      "request_similarity": 0.33,
+      "flags": "none"
+    },
+    "intermediate_b": {
+      "profile": "intermediate_b",
+      "pre_tasks": 8,
+      "spontaneous_check": "1/4",
+      "states_correct_at_review": "2/4",
+      "early_correction": "0/4",
+      "final_correct": "2/4",
+      "false_alarm_on_accurate": "0/4",
+      "asks_evidence_at_request": "0/8",
+      "request_words": 29.125,
+      "review_words": 21.125,
+      "request_similarity": 0.37,
+      "flags": "none"
+    },
+    "expert_a": {
+      "profile": "expert_a",
+      "pre_tasks": 8,
+      "spontaneous_check": "1/4",
+      "states_correct_at_review": "2/4",
+      "early_correction": "0/4",
+      "final_correct": "3/4",
+      "false_alarm_on_accurate": "0/4",
+      "asks_evidence_at_request": "0/8",
+      "request_words": 25.875,
+      "review_words": 21.625,
+      "request_similarity": 0.4,
+      "flags": "none"
+    },
+    "expert_b": {
+      "profile": "expert_b",
+      "pre_tasks": 8,
+      "spontaneous_check": "2/4",
+      "states_correct_at_review": "2/4",
+      "early_correction": "1/4",
+      "final_correct": "4/4",
+      "false_alarm_on_accurate": "0/4",
+      "asks_evidence_at_request": "0/8",
+      "request_words": 25.625,
+      "review_words": 19.375,
+      "request_similarity": 0.37,
+      "flags": "none"
+    },
+    "labels_by_group": [
+      [
+        "assessor",
+        "novice",
+        8,
+        "2:2 1:6",
+        "2:7 N/A:1",
+        "2:3 1:1 0:4",
+        "2:7 N/A:1"
+      ],
+      [
+        "assessor",
+        "intermediate",
+        8,
+        "2:4 1:4",
+        "2:6 N/A:2",
+        "2:5 0:3",
+        "2:8"
+      ],
+      [
+        "assessor",
+        "expert",
+        8,
+        "2:3 1:5",
+        "2:6 0:1 N/A:1",
+        "2:4 0:4",
+        "2:6 N/A:2"
+      ],
+      [
+        "evaluator",
+        "novice",
+        8,
+        "2:3 1:3 N/A:1 missing:1",
+        "2:6 N/A:1 missing:1",
+        "2:4 0:3 missing:1",
+        "2:6 N/A:1 missing:1"
+      ],
+      [
+        "evaluator",
+        "intermediate",
+        8,
+        "2:6 1:2",
+        "2:4 0:4",
+        "2:5 0:3",
+        "2:7 1:1"
+      ],
+      [
+        "evaluator",
+        "expert",
+        8,
+        "2:5 1:3",
+        "2:3 0:4 N/A:1",
+        "2:4 0:4",
+        "2:7 N/A:1"
+      ]
+    ]
+  },
+  "coach": {
+    "decisions": {
+      "full/check_v1": 25,
+      "without_assessment/evidence_v1": 14,
+      "without_background/check_v1": 26,
+      "without_assessment/check_v1": 16,
+      "without_background/specify_v1": 3,
+      "full/correct_v1": 18,
+      "without_background/correct_v1": 18,
+      "full/specify_v1": 5,
+      "without_assessment/correct_v1": 18,
+      "without_background/evidence_v1": 1
+    },
+    "practice_reply_words_mean": 26.976
+  },
+  "agreement": [
+    [
+      "B1",
+      47,
+      "27/47",
+      0.171
+    ],
+    [
+      "B2",
+      47,
+      "31/47",
+      0.313
+    ],
+    [
+      "B3",
+      47,
+      "42/47",
+      0.8
+    ],
+    [
+      "B4",
+      47,
+      "44/47",
+      0.873
+    ],
+    [
+      "all",
+      188,
+      "144/188",
+      0.642
+    ]
+  ],
+  "operations": {
+    "per_role": [
+      [
+        "learner",
+        1008,
+        1.3825,
+        38,
+        108
+      ],
+      [
+        "assessment",
+        192,
+        231.2155,
+        2110,
+        10566
+      ],
+      [
+        "coach",
+        144,
+        2.258,
+        90,
+        139
+      ],
+      [
+        "evaluator",
+        944,
+        32.782,
+        2417,
+        9707
+      ]
+    ],
+    "failures": [
+      [
+        "evaluator",
+        "Evidence quote not in cited turn",
+        5
+      ]
+    ]
+  }
+}

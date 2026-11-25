@@ -15,6 +15,19 @@ outputs/*
 !outputs/rq1-v2-sc/
 !outputs/rq1-main2/
 outputs/rq1/code-snapshot/
+# RQ2 pilot reports, transcripts, pooled analyses and review packets are tracked; raw run
+# files (shards/, smoke/, fixtures-*/, traces) stay local and are shared out of band. The
+# calibration key unblinds the review items, so it never enters Git.
+!outputs/rq2-pilot*/
+outputs/rq2-pilot*/*
+!outputs/rq2-pilot*/report.md
+!outputs/rq2-pilot*/report.json
+!outputs/rq2-pilot*/transcripts/
+!outputs/rq2-pilot*/pooled/
+!outputs/rq2-pilot*/review/
+outputs/rq2-pilot*/review/evaluator/key.private.csv
+!outputs/rq2-coach-replay/
+outputs/rq2-coach-replay/trace-coach.jsonl
 .run.lock
 .env
 .env.*

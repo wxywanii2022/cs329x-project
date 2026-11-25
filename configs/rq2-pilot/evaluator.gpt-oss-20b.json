@@ -1,0 +1,41 @@
+{
+  "model": {
+    "adapter": "command",
+    "model_id": "openai/gpt-oss-20b@6cee5e81ee83917806bbde320786a8fb61efebee",
+    "family": "openai-gpt-oss",
+    "command": [
+      ".venv/bin/python",
+      "-m",
+      "adaptive_tutor.adapters.local_chat",
+      "--schema",
+      "annotation",
+      "--thinking",
+      "default",
+      "--reasoning-effort",
+      "high",
+      "--top-p",
+      "1.0",
+      "--top-k",
+      "0",
+      "--min-p",
+      "0",
+      "--presence-penalty",
+      "0",
+      "--repetition-penalty",
+      "1.0",
+      "--http-timeout",
+      "1700"
+    ],
+    "temperature": 1.0,
+    "supports_seed": true,
+    "timeout_seconds": 1800
+  },
+  "rubric_version": "v0.2",
+  "contract_version": "decision-point-v2",
+  "seed": 329,
+  "budget": {
+    "max_output_tokens": 32768,
+    "max_context_bytes": 200000,
+    "transport_attempts": 3
+  }
+}

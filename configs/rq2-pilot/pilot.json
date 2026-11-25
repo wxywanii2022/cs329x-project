@@ -1,0 +1,152 @@
+{
+  "seed": 329,
+  "mode": "research",
+  "split": "development",
+  "profiles": [
+    "novice_a",
+    "novice_b",
+    "intermediate_a",
+    "intermediate_b",
+    "expert_a",
+    "expert_b"
+  ],
+  "pairs": [
+    "briefs_01",
+    "accurate_01"
+  ],
+  "replicates": 2,
+  "orientations": [
+    "AB",
+    "BA"
+  ],
+  "require_distinct_families": true,
+  "role_max_output_tokens": {
+    "assessment": 32768,
+    "evaluator": 32768
+  },
+  "budget": {
+    "max_coaching_turns": 2,
+    "max_coaching_tokens": 16000,
+    "max_output_tokens": 1500,
+    "max_context_bytes": 200000,
+    "transport_attempts": 3
+  },
+  "models": {
+    "learner": {
+      "adapter": "command",
+      "model_id": "google/gemma-4-31B-it-qat-w4a16-ct@52f3f65bc7a02d555763bc923bd1d9094898219d",
+      "family": "google-gemma-4",
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "adaptive_tutor.adapters.local_chat",
+        "--schema",
+        "utterance",
+        "--thinking",
+        "off",
+        "--top-p",
+        "0.95",
+        "--top-k",
+        "64",
+        "--min-p",
+        "0",
+        "--presence-penalty",
+        "0",
+        "--repetition-penalty",
+        "1.0",
+        "--http-timeout",
+        "540"
+      ],
+      "temperature": 1.0,
+      "supports_seed": true,
+      "timeout_seconds": 600
+    },
+    "assessment": {
+      "adapter": "command",
+      "model_id": "Qwen/Qwen3.8-27B-FP8@017b9c7af6b5689d5dd426a76e0bc077eb5ca20a",
+      "family": "qwen3.8",
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "adaptive_tutor.adapters.local_vllm",
+        "--thinking",
+        "on",
+        "--top-p",
+        "0.95",
+        "--top-k",
+        "20",
+        "--min-p",
+        "0",
+        "--presence-penalty",
+        "0",
+        "--repetition-penalty",
+        "1.0",
+        "--http-timeout",
+        "3300"
+      ],
+      "temperature": 1.0,
+      "supports_seed": true,
+      "timeout_seconds": 3600
+    },
+    "coach": {
+      "adapter": "command",
+      "model_id": "mistralai/Ministral-3-14B-Instruct-2512@29439f81c2be264d8d393273f99e7db9c0961120",
+      "family": "mistral-ministral-3",
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "adaptive_tutor.adapters.local_chat",
+        "--schema",
+        "decision",
+        "--thinking",
+        "default",
+        "--top-p",
+        "1.0",
+        "--top-k",
+        "0",
+        "--min-p",
+        "0",
+        "--presence-penalty",
+        "0",
+        "--repetition-penalty",
+        "1.0",
+        "--http-timeout",
+        "540"
+      ],
+      "temperature": 0.05,
+      "supports_seed": true,
+      "timeout_seconds": 600
+    },
+    "evaluator": {
+      "adapter": "command",
+      "model_id": "openai/gpt-oss-20b@6cee5e81ee83917806bbde320786a8fb61efebee",
+      "family": "openai-gpt-oss",
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "adaptive_tutor.adapters.local_chat",
+        "--schema",
+        "annotation",
+        "--thinking",
+        "default",
+        "--reasoning-effort",
+        "high",
+        "--top-p",
+        "1.0",
+        "--top-k",
+        "0",
+        "--min-p",
+        "0",
+        "--presence-penalty",
+        "0",
+        "--repetition-penalty",
+        "1.0",
+        "--http-timeout",
+        "1700"
+      ],
+      "temperature": 1.0,
+      "supports_seed": true,
+      "timeout_seconds": 1800
+    }
+  }
+}
