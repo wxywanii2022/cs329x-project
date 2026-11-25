@@ -91,3 +91,156 @@ The report is a set of pointers; the transcripts are the evidence. For each prof
 
 Change prompts only after reading transcripts, and record every change as a new prompt
 version in a new output directory.
+
+## Changes after pilot 1 (2026-11-23; tested in pilot 2)
+
+Pilot 1 (`outputs/rq2-pilot`, job 2004211) ran clean but exposed problems in the task
+assistant, the coach prompt, the learner prompt and the task's B2 design. Each is fixed
+in a new version; `outputs/rq2-pilot` keeps the v1 behavior. The v1 prompts are kept
+next to the new ones, and `tasks.py`/`coaching.py` v1 are in commit 028495e.
+
+**Task agent `scripted-table-v2` (`tasks.py`).** v1 applied a review-turn fix only when
+the learner used words like "wrong" or "error" together with "fix". In 88 of 120
+records the learner gave the right figure at review ("100 to 128 is 28%, not 35%.
+Please check the math"), but v1 fixed only 19, and 26 final drafts kept the wrong
+figure. The B4 decision turn was also misplaced. v2:
+
+- applies the fix at review when the learner gives the correct figure, rejects the
+  claimed one ("not 35%"), or calls the claim wrong and asks for a fix;
+- treats a question about the figure ("Is the 35% figure accurate?") as a targeted
+  check. Generic re-checks ("Is this accurate?") and acceptances ("the numbers look
+  right") still are not;
+- after the disclosure, corrects on any request to correct or on a restated correct
+  figure, unless the learner says to leave the draft. Accurate drafts are never
+  "corrected";
+- replies "I have left the draft as it is. Tell me if you want any changes." instead
+  of "The draft is available for your review."
+
+Replaying pilot 1's learner turns through v2 (same words, so only indicative):
+review-turn fixes 19 -> 88 of 120, wrong final drafts 26 -> 0. All new checks are
+questions about the figure, and no acceptance is misread. Behavior labels are
+unaffected, because the assessor and evaluator read the learner's words, not the
+agent's rules.
+
+**Coach prompt `coach_v2`.** With v1, Ministral never chose "none" (0/144). In the full
+condition only 22/48 exercises targeted a behavior the assessor scored 0 or 1, with
+rationales like "demonstrated B4, so reinforce it". v1 never explained the label scale.
+v2 defines the four behaviors and the 2/1/0/null labels, says only 0 and 1 are gaps,
+prefers a missed behavior over a partial one, makes "none" a normal outcome, and
+forbids reinforcing a behavior already performed. The same prompt serves all three
+coached conditions. The coach's JSON now puts `brief_rationale` first, so the
+non-reasoning model states its evidence before choosing. The replay below tests it on
+pilot 1's inputs.
+
+**Learner prompt `learner_v2`.** In pilot 1 the experts acted much like the novices.
+The assessor gave B1=2 in 3 of 8 expert pre-tasks against 2 of 8 for novices.
+Experts checked the wrong figure in only 3 of 8, and novices' mean pre-task score
+(71%, evaluator) was above experts' (64%). No learner declined practice (0/288 replies). The v1 prompt never told the
+learner to act on its knowledge and habits, and never mentioned the phrase the runner
+uses to detect a decline ("skip this practice"), so declining was effectively
+impossible. v2 asks the learner to:
+
+- use the profile's knowledge when relevant, hold its misconceptions as real beliefs,
+  and follow its habits with their stated frequency;
+- not do more than this person would, and not hide what they know;
+- treat time limits as real;
+- decline practice with "skip this practice";
+- not expect learning to be guaranteed;
+- write short, plain first-person messages.
+
+It sets no score targets. The profiles themselves are unchanged.
+
+**Learner view v2 (`tasks.public_task`).** v1 showed the learner the agent's table ID
+and description. The codebook counts "a named source" as B2=2, and section 13 separates
+supplying a dataset from requiring support. So the frozen assessor scored 2 whenever
+the learner repeated the table name, and N/A when it did not ("the task supplies the
+table"; it also gave N/A on fixture F04). B2 was never 0 and measured echoing, not
+asking for support. v2 shows only the goal. The agent still holds the table and cites
+it when asked. Five new fixtures (`data/rq2/task_v2_fixtures`, built by
+`scripts/build_rq2_task_v2_fixtures.py`) check that B2 now uses 0, 1 and 2 on this
+format. The original 13 fixtures are untouched, because the RQ1 v3 preregistration pins
+their hashes.
+
+**Not changed: the evidence disclosure and the post-task ceiling.** The uncoached
+post-task improves a lot (pilot 1: targeted checks 9/24 before, 17/24 after). That is
+the disclosure teaching every branch, which the guide's two-stage design requires. The
+no-coaching branch is the control for exactly this effect, so it stays. It is reported
+as a ceiling: there is still room to improve for novices, but less for intermediates and experts.
+
+**Coach replay (2026-11-24, job 2018098).** `scripts/rq2_coach_replay.py` re-sent pilot 1's
+144 recorded coach requests with only the system prompt changed (inputs, model and
+seeds held fixed). Full results are in `outputs/rq2-coach-replay/summary.md`.
+
+| condition | targets an assessor gap (v1 → v2) | targets a behavior scored 2 | "none" when the assessor found no gap |
+| --- | --- | --- | --- |
+| full | 22/47 → 41/42 | 24/47 → 1/42 | 0/6 → 5/6 |
+| without_background | 22/47 → 41/41 | 25/47 → 0/41 | 0/6 → 6/6 |
+| without_assessment | 11/48 → 9/31 | 26/48 → 18/31 | 0/6 → 2/6 |
+
+The without_assessment coach never sees the labels, so its row measures agreement with
+the assessor, not instruction following. It now chooses "none" 17 times out of 48.
+
+Two of the 144 calls failed: the model wrote past the 1,500-token output cap without
+finishing the JSON. xgrammar's default JSON grammar allows unlimited whitespace
+between tokens, which is a known way for a low-temperature model to loop. The coach
+server now runs with `--structured-outputs-config '{"disable_any_whitespace": true}'`.
+That flag is a server setting, not a request or code change. Checked offline: the
+compact grammar rejects a 400-newline object that the default grammar accepts. With
+the rationale capped at 1,000 characters, the coach's JSON can no longer reach the
+cap. Learner and evaluator servers are unchanged.
+
+## Running pilot 2
+
+Same design and models as pilot 1, with all changes above, into a new directory.
+Requirements:
+
+- one node with 4 GPUs of at least 48 GB each (FarmShare: 4x L40S; SC: RTX 6000 Ada);
+- about 64 GB of host RAM;
+- about 75 GB of disk for the weights;
+- about 3 hours of runtime.
+
+```bash
+git clone https://github.com/wxywanii2022/cs329x-project.git && cd cs329x-project && git checkout cren8-dev
+python3 -m venv .venv && .venv/bin/pip install "vllm==0.32.0" huggingface_hub && .venv/bin/pip install -e .
+
+# Once, on a node with internet access (pinned revisions; about 75 GB):
+bash scripts/rq2_download_models.sh
+
+# FarmShare (the script's defaults):
+mkdir -p outputs/logs && RUNS=outputs/rq2-pilot-2 sbatch scripts/rq2_pilot.sbatch
+
+# Another Slurm cluster: point the caches at your scratch, both when downloading and
+# when submitting, and override the partition flags. For example, on SC:
+export SCRATCH_DIR=/nlp/scr/$USER ASSESSOR_HUB=/nlp/scr/$USER/hf/hub MODEL_HUB=/nlp/scr/$USER/hf/hub
+bash scripts/rq2_download_models.sh
+mkdir -p outputs/logs && RUNS=outputs/rq2-pilot-2 sbatch --account=nlp --partition=jag-standard \
+    --gres=gpu:rtx6000ada:4 --mem=128G scripts/rq2_pilot.sbatch
+```
+
+- **Progress:** `outputs/logs/rq2-pilot-<job>.out`. The smoke block finishes first, and
+  a failed branch there stops the job before the 12 shards start.
+- **Resume:** after a time limit, preemption or crash, run the same `sbatch` command.
+  Completed calls, branches and scores are reused. Never edit `src/adaptive_tutor/`
+  while a run is active, because runners read the prompt files on every call.
+- **Results:** `outputs/rq2-pilot-2/report.md` and `transcripts/` are written at the end.
+  Re-create them with `python3 scripts/rq2_pilot_report.py outputs/rq2-pilot-2`, then
+  run `python3 scripts/rq2_pooled_analysis.py outputs/rq2-pilot-2` (descriptive paired
+  contrasts) and `python3 scripts/rq2_review_packets.py outputs/rq2-pilot-2` (the
+  human review packets).
+- **Sharing:** the reports, transcripts, `pooled/` and `review/` are small and tracked
+  in Git (see `.gitignore`). Raw run files (`shards/`, `smoke/`, `fixtures-*`) are
+  about 20 MB. Share them out of band, for example with `tar czf rq2-pilot-2.tgz
+  outputs/rq2-pilot-2`. `review/evaluator/key.private.csv` unblinds the calibration
+  items, so it stays out of Git and away from annotators.
+
+What pilot 2 must show before held-out work (the gates are in
+`docs/rq2-preregistration-draft.md`):
+
+- experts and novices differ in the overlapping but distinct way their profiles describe;
+- some learners decline practice;
+- B2 takes the values 0, 1 and 2;
+- no final draft stays wrong after an explicit correction request;
+- the coach chooses "none" when the assessor finds no gap.
+
+Held-out task pairs (`split: "test"`, 6 incorrect-growth and 2 accurate) are in
+`tasks.json` for the main run. They must not be run until the preregistration is frozen.

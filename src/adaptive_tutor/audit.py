@@ -54,7 +54,7 @@ def audit_run(output: Path) -> dict:
             packet = read_json(output / "blinded" / f"{blind_id}.json")
             require(payload == evaluator_payload(packet, behavior), "Evaluator prefix mismatch")
         if role in {"learner", "coach"}:
-            require(set(payload["task"]) == {"instructions", "assistant_data"}, "Private task data leaked")
+            require(set(payload["task"]) == {"instructions"}, "Private task data leaked")
     count = 0
     for block in manifest["blocks"]:
         if not block.get("snapshot_hash"):

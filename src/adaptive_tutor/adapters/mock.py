@@ -32,7 +32,7 @@ class MockAdapter:
                               brief_rationale="Offline fixture selected one allowed exercise.")
         else:
             task = payload.get("task", {})
-            numeric = bool(task.get("assistant_data"))
+            numeric = "no factual report" not in task.get("instructions", "").lower()
             stage = payload["stage"]
             if stage == "practice":
                 choices = ["I am not sure how to apply this yet.", "I would check the calculation using the initial count.",

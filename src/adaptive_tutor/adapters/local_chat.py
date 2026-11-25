@@ -39,10 +39,14 @@ def utterance_schema(payload: dict) -> dict:
 
 
 def decision_schema(payload: dict) -> dict:
-    """One branch for "none" and one per bank exercise, matching schema.parse_decision."""
+    """One branch for "none" and one per bank exercise, matching schema.parse_decision.
+
+    The rationale comes first so a non-reasoning model states its evidence before it
+    commits to an action (coach_v2 asks for the same order).
+    """
     def branch(action, exercise_id, target):
-        properties = {"action": {"const": action}, "exercise_id": exercise_id,
-                      "target_behavior": target, "brief_rationale": RATIONALE}
+        properties = {"brief_rationale": RATIONALE, "action": {"const": action}, "exercise_id": exercise_id,
+                      "target_behavior": target}
         return {"type": "object", "additionalProperties": False,
                 "required": list(properties), "properties": properties}
 

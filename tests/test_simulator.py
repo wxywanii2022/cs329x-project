@@ -116,16 +116,80 @@ class ContractsTest(unittest.TestCase):
         self.assertIn("revised draft agrees", agent.disclosure())
         self.assertNotIn("35%", agent.finish("Thanks"))
 
+    def test_task_agent_v2_recognizes_pilot_phrasings(self):
+        # Learner turns from the first live pilot (outputs/rq2-pilot) that v1 mishandled.
+        def review(text, form="A", pair="briefs_01"):
+            agent = ScriptedTaskAgent(load_tasks()[pair, form])
+            agent.opening("Summarize this")
+            return agent, agent.follow_up(text)
+        for text in ("Wait, 100 to 128 is 28%, not 35%. Please check the math and make it concise.",
+                     "Wait, why is the growth 35%? If it went from 100 to 128, isn't that a 28% increase?",
+                     "The growth percentage seems off. Can we fix that?"):
+            with self.subTest(text=text):
+                agent, response = review(text)
+                self.assertTrue(agent.corrected)
+                self.assertIn("Revised draft", response)
+        for text in ("This looks good and concise. Is the 35% figure accurate based on the table?",
+                     "The growth percentage seems high. Is it really 35% if it went from 100 to 128?"):
+            with self.subTest(text=text):
+                agent, response = review(text)
+                self.assertTrue(agent.discovered)
+                self.assertFalse(agent.corrected)
+                self.assertTrue(response.startswith("Calculation check"))
+        for text in ("That looks good and concise. I'll send it over.", "Looks good. Is this accurate?",
+                     "Could you just make sure the numbers are accurate?",
+                     "The summary looks accurate. I'll send it over: reservations rose from 200 to 250, a 20% increase."):
+            with self.subTest(text=text):
+                agent, _ = review(text, form="B")
+                self.assertFalse(agent.discovered or agent.corrected)
+        agent, response = review("The numbers look right: 100 to 128 is 28% growth.", pair="accurate_01")
+        self.assertFalse(agent.discovered)
+        agent, response = review("Wait, is that 28% growth calculated based on the September figure?", pair="accurate_01")
+        self.assertTrue(response.startswith("Calculation check"))
+        self.assertFalse(agent.corrected)
+        self.assertNotIn("Calculation:", agent.finish("The calculation is correct. Thanks for confirming."))
+
+    def test_task_agent_v2_correction_after_disclosure(self):
+        for text, fixed in (("Isn't that a 25% increase? Could you check that number again?", True),
+                            ("The evidence shows a 25% growth, but the draft said 20%. Please fix the number.", True),
+                            ("Thanks for correcting that. Please give me the final summary.", True),
+                            ("Thanks, leave the draft as it is.", False), ("Thanks, that's fine.", False)):
+            with self.subTest(text=text):
+                agent = ScriptedTaskAgent(load_tasks()["briefs_01", "B"])
+                agent.opening("Summarize this")
+                agent.follow_up("Looks good.")
+                agent.disclosure()
+                final = agent.finish(text)
+                self.assertEqual(agent.corrected, fixed)
+                self.assertIn("25%" if fixed else "20%", final)
+
     def test_learner_task_supplies_no_requirements_or_values(self):
         # v0.2: supplied requirements remove B1, supplied sources remove B2.
         for task in load_tasks().values():
             visible = public_task(task)
-            self.assertEqual(set(visible), {"instructions", "assistant_data"})
+            self.assertEqual(set(visible), {"instructions"})
+            for source in task["sources"]:
+                self.assertNotIn(source["source_id"], canonical(visible))
             self.assertEqual(task["rubric_version"], RUBRIC_VERSION)
             for source in task["sources"]:
                 for value in (source["baseline"], source["current"], task["private_answer_key"]["growth_percent"]):
                     self.assertNotIn(str(value), canonical(visible))
             self.assertNotRegex(task["instructions"].lower(), r"bullet|one-page|one page|source column|cite")
+
+    def test_held_out_pairs_are_matched_and_separate_from_development(self):
+        tasks = load_tasks()
+        test_pairs = {p for p, _ in tasks if tasks[p, "A"]["split"] == "test"}
+        incorrect = {p for p in test_pairs if tasks[p, "A"]["error_schedule"]["kind"] == "incorrect_growth"}
+        self.assertGreaterEqual(len(incorrect), 6)
+        self.assertTrue(test_pairs.isdisjoint(config().pairs))
+        for pair in test_pairs:
+            a, b = tasks[pair, "A"], tasks[pair, "B"]
+            # Matched forms: same split, protocol and opportunities; different topic and values.
+            self.assertEqual((a["split"], a["error_schedule"]["kind"], a["opportunities"]),
+                             (b["split"], b["error_schedule"]["kind"], b["opportunities"]))
+            self.assertNotEqual(a["sources"][0]["source_id"], b["sources"][0]["source_id"])
+            self.assertNotEqual((a["sources"][0]["baseline"], a["sources"][0]["current"]),
+                                (b["sources"][0]["baseline"], b["sources"][0]["current"]))
 
     def test_rq2_uses_the_frozen_rq1_codebook_and_contract(self):
         self.assertEqual((RUBRIC_VERSION, ASSESSMENT_CONTRACT), ("v0.2", "decision-point-v2"))
@@ -234,10 +298,22 @@ class RunTest(unittest.TestCase):
                 roles.add(event["request"]["role"])
         self.assertEqual(roles, {"assessment", "evaluator"})
 
+    def test_learner_and_coach_use_the_post_pilot_prompts(self):
+        versions = {}
+        for event in Journal.read(self.output / "events.jsonl"):
+            if event["kind"] == "call_attempt" and event["request"]["role"] in {"learner", "coach"}:
+                versions.setdefault(event["request"]["role"], set()).add(event["request"]["prompt_version"])
+                if event["request"]["role"] == "learner":
+                    # The runner only recognizes a decline by this phrase, so the learner must know it.
+                    self.assertIn('"skip this practice"', event["request"]["system_prompt"])
+        self.assertEqual(versions, {"learner": {"learner_v2"}, "coach": {"coach_v2"}})
+
     def test_post_history_retains_observed_assignment_without_table_values(self):
         state = self.pre["snapshot"]
         self.assertIn("Task assignment:", state["messages"][0]["content"])
-        self.assertIn("service_table_v1", state["messages"][0]["content"])
+        # Learner view v2: the goal only, so the table name cannot be echoed for B2.
+        self.assertIn("completed service requests", state["messages"][0]["content"])
+        self.assertNotIn("service_table_v1", state["messages"][0]["content"])
         self.assertNotIn("128", state["messages"][0]["content"])
         self.assertEqual(state["environment_state"]["task"], load_tasks()["briefs_01", "A"])
         for condition in CONDITIONS:

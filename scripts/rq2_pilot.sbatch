@@ -6,12 +6,14 @@
 #
 # GPU0 assessor (frozen v2 Qwen3.8-27B-FP8, the exact RQ1 server arguments), GPU1 learner,
 # GPU2 coach, GPU3 evaluator; every server listens on 127.0.0.1 only. Stages:
-#   1. smoke: one complete block (novice_a, briefs_01, AB); any failure stops the job here.
-#      In parallel: the v2 assessor and the evaluator on the 13 v0.2 fixtures.
+#   1. smoke: one complete block (first profile and pair of the config, AB); a failed branch stops the job.
+#      In parallel: the v2 assessor and the evaluator on the 13 v0.2 fixtures and on the
+#      5 learner-view-v2 fixtures (data/rq2/task_v2_fixtures).
 #   2. pilot: the config split into one shard per profile x pair, run concurrently.
 #   3. audit every run and write outputs/rq2-pilot/report.md (scripts/rq2_pilot_report.py).
 # Rerunning the same command resumes: completed calls, branches and scores are reused.
-# New model weights and caches live under /scratch/users/$USER, not $HOME.
+# New model weights and caches live under /scratch/users/$USER, not $HOME (see ASSESSOR_HUB/MODEL_HUB
+# below to run elsewhere; on another cluster also pass its sbatch --account/--partition/--gres).
 #SBATCH --job-name=rq2-pilot
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
@@ -33,10 +35,14 @@ ROOT=$(pwd)
 PY="$ROOT/.venv/bin/python"
 RUNS="$ROOT/${RUNS:-outputs/rq2-pilot}"
 SCRATCH=${SCRATCH_DIR:-/scratch/users/$USER}
+# Model caches (scripts/rq2_download_models.sh uses the same defaults). On another cluster set
+# SCRATCH_DIR, and ASSESSOR_HUB / MODEL_HUB if the weights live elsewhere (one hub for all is fine).
+ASSESSOR_HUB=${ASSESSOR_HUB:-$HOME/.cache/huggingface/hub}
+MODEL_HUB=${MODEL_HUB:-$SCRATCH/hf/hub}
 mkdir -p "$ROOT/outputs/logs" && mkdir -m 700 -p "$RUNS"
 [ -f "$CONFIG" ] || { echo "missing $CONFIG"; exit 2; }
 
-export HF_HOME="$HOME/.cache/huggingface" HF_HUB_OFFLINE=1 VLLM_NO_USAGE_STATS=1 DO_NOT_TRACK=1
+export HF_HOME="${HF_HOME:-$HOME/.cache/huggingface}" HF_HUB_OFFLINE=1 VLLM_NO_USAGE_STATS=1 DO_NOT_TRACK=1
 # Compile/kernel caches on scratch, not $HOME (HF_HOME is pinned above, so this does
 # not move the frozen Qwen weights).
 export XDG_CACHE_HOME="$SCRATCH/cache" VLLM_CACHE_ROOT="$SCRATCH/cache/vllm" \
@@ -71,18 +77,19 @@ cleanup() {
 trap cleanup EXIT
 
 # Assessor: unchanged from scripts/rq1_vllm.sbatch / rq1_vllm_sc.sbatch.
-serve assessment 0 "$HOME/.cache/huggingface/hub" --max-model-len 131072 --reasoning-parser qwen3 \
+serve assessment 0 "$ASSESSOR_HUB" --max-model-len 131072 --reasoning-parser qwen3 \
     --language-model-only --gpu-memory-utilization 0.92 --max-num-seqs 4
-serve learner 1 "$SCRATCH/hf/hub" --max-model-len 32768 --language-model-only \
+serve learner 1 "$MODEL_HUB" --max-model-len 32768 --language-model-only \
     --gpu-memory-utilization 0.90 --max-num-seqs 16
 # The repo ships both formats; only the HF weights are downloaded (config.json, model-*.safetensors),
 # so pin them: "auto" would pick Mistral format from params.json and look for consolidated.safetensors.
 # The tokenizer is Mistral's own (tekken.json): this repo's HF tokenizer.json has the known
 # pre-tokenizer regex bug (transformers asks for fix_mistral_regex=True, which vLLM never sets).
-serve coach 2 "$SCRATCH/hf/hub" --max-model-len 32768 --language-model-only \
+serve coach 2 "$MODEL_HUB" --max-model-len 32768 --language-model-only \
     --gpu-memory-utilization 0.90 --max-num-seqs 16 \
-    --tokenizer-mode mistral --config-format hf --load-format safetensors
-serve evaluator 3 "$SCRATCH/hf/hub" --max-model-len 65536 --reasoning-parser openai_gptoss \
+    --tokenizer-mode mistral --config-format hf --load-format safetensors \
+    --structured-outputs-config '{"disable_any_whitespace": true}'
+serve evaluator 3 "$MODEL_HUB" --max-model-len 65536 --reasoning-parser openai_gptoss \
     --gpu-memory-utilization 0.90 --max-num-seqs 16
 
 for role in assessment learner coach evaluator; do
@@ -136,8 +143,8 @@ stop_runs() {  # Resume later with the same command; unfinished calls are retrie
 }
 trap stop_runs USR1
 
-fixtures() {  # <name> <tutor-assess config> <role whose server answers>
-    local out="$RUNS/fixtures-$1-s329" data="$ROOT/data/rq2/v02_fixtures"
+fixtures() {  # <name> <tutor-assess config> <role whose server answers> [fixture dir under data/rq2]
+    local out="$RUNS/fixtures-$1-s329" data="$ROOT/data/rq2/${4:-v02_fixtures}"
     mkdir -m 700 -p "$out"
     local status=0
     TUTOR_ASSESSMENT_LOCAL_URL="http://127.0.0.1:${PORT[$3]}/v1/chat/completions" TUTOR_ASSESSMENT_TRACE_LOG="$out/trace.jsonl" \
@@ -150,11 +157,18 @@ fixtures() {  # <name> <tutor-assess config> <role whose server answers>
 
 # Stage 1: smoke block (must be clean) alongside the fixture checks.
 SMOKE="$RUNS/smoke"
-shard_config "$SMOKE" '{"profiles": ["novice_a"], "pairs": ["briefs_01"], "orientations": ["AB"], "replicates": 1}'
+# The config's first profile and pair (pilot: novice_a, briefs_01), so a test-split config works too.
+SMOKE_SET=$("$PY" -c 'import json,sys; c=json.load(open(sys.argv[1])); print(json.dumps({"profiles": c["profiles"][:1], "pairs": c["pairs"][:1], "orientations": ["AB"], "replicates": 1}))' "$CONFIG")
+shard_config "$SMOKE" "$SMOKE_SET"
 fixtures assessor-v2-qwen38-27b "$ROOT/configs/v2/assessment.qwen38-27b-fp8.json" assessment &
 FIX1=$!
 fixtures evaluator-gpt-oss-20b "$ROOT/configs/rq2-pilot/evaluator.gpt-oss-20b.json" evaluator &
 FIX2=$!
+# Learner view v2 (goal only, no table name): does B2 now use the 0/1/2 range?
+fixtures taskv2-assessor-v2-qwen38-27b "$ROOT/configs/v2/assessment.qwen38-27b-fp8.json" assessment task_v2_fixtures &
+FIX3=$!
+fixtures taskv2-evaluator-gpt-oss-20b "$ROOT/configs/rq2-pilot/evaluator.gpt-oss-20b.json" evaluator task_v2_fixtures &
+FIX4=$!
 start_run "$SMOKE"
 smoke_status=0
 wait "${PIDS[0]}" || smoke_status=$?
@@ -175,7 +189,7 @@ EOF
 if [ "$gate" = crashed ] || [ "$gate" = branches ]; then
     echo "smoke block failed ($gate); not starting the pilot. Inspect $SMOKE (events.jsonl, run-*.err, trace-*.jsonl)."
     tail -n 20 "$SMOKE/run-$ATTEMPT.err" || true
-    wait $FIX1 $FIX2 || true
+    wait $FIX1 $FIX2 $FIX3 $FIX4 || true
     exit 1
 fi
 [ "$gate" = ok ] || echo "WARNING: smoke evaluator scores failed; continuing for learner transcripts. Inspect $SMOKE/trace-evaluator.jsonl."
@@ -193,7 +207,7 @@ done
 echo "started ${#PIDS[@]} shards"
 status=0
 for pid in "${PIDS[@]}"; do wait "$pid" || status=1; done
-wait $FIX1 $FIX2 || true
+wait $FIX1 $FIX2 $FIX3 $FIX4 || true
 
 # Stage 3: audit and report (also runnable later on a login node).
 for out in "$SMOKE" "$RUNS"/shards/*; do

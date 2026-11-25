@@ -274,7 +274,7 @@ def main(argv) -> int:
         report["fixtures"][path.parent.name] = {"overall": {k: v for k, v in overall.items() if not isinstance(v, list)},
                                                 "disagreements": result["disagreements"], "failed": failed}
     if rows:
-        md += ["## v0.2 fixtures (13 constructed items; not an accuracy estimate)", "",
+        md += ["## v0.2 fixtures (constructed items; not an accuracy estimate; taskv2 = 5 learner-view-v2 items, others = 13)", "",
                table(["run", "n", "raw", "κ", "false-missed", "failed", "disagreements"], rows), ""]
 
     # Learner realism on uncoached pre-tasks

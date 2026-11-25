@@ -1,0 +1,6 @@
+item_id,behavior,label,reason
+T01,B1,0,"Judgeable request, no output properties, none supplied by the task"
+T02,B2,0,Evidence-dependent request with no support requirement; the task supplies no source
+T03,B2,1,Broad accuracy instruction without a usable support standard
+T04,B2,2,Requested calculation and a source for each figure
+T05,B2,2,Task-relevant source type required for the figures

@@ -59,7 +59,7 @@ def mechanical_checks(record: dict) -> dict:
         return {"arithmetic_correct": None, "source_reference_present": None, "source_references_valid": None}
     artifact = record["final_artifact"]
     percentages = [float(x) for x in re.findall(r"(?<![\d.])(\d+(?:\.\d+)?)\s*%", artifact)]
-    ids = {s["source_id"] for s in record["task"]["assistant_data"]}
+    ids = {key["source_id"]}  # numeric protocol: exactly one source table
     references = re.findall(r"\bSource\s+([\w-]+)", artifact)
     return {"arithmetic_correct": bool(percentages) and all(abs(x - key["growth_percent"]) < 1e-8 for x in percentages),
             "source_reference_present": key["source_id"] in artifact,
