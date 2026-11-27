@@ -1,0 +1,373 @@
+{
+  "blocks": 48,
+  "pairs": [
+    "accurate_01",
+    "briefs_01"
+  ],
+  "contrasts": {
+    "all:full-no_coaching": {
+      "n": 44,
+      "pairs": 2,
+      "mean": 8.52,
+      "ci95": [
+        -0.19,
+        17.33
+      ]
+    },
+    "all:without_assessment-no_coaching": {
+      "n": 44,
+      "pairs": 2,
+      "mean": 8.71,
+      "ci95": [
+        1.99,
+        16.38
+      ]
+    },
+    "all:without_background-no_coaching": {
+      "n": 48,
+      "pairs": 2,
+      "mean": 7.73,
+      "ci95": [
+        -4.25,
+        19.1
+      ]
+    },
+    "all:full-without_assessment": {
+      "n": 41,
+      "pairs": 2,
+      "mean": 1.22,
+      "ci95": [
+        -11.35,
+        12.8
+      ]
+    },
+    "all:full-without_background": {
+      "n": 44,
+      "pairs": 2,
+      "mean": 1.52,
+      "ci95": [
+        -5.59,
+        9.19
+      ]
+    },
+    "expert:full-no_coaching": {
+      "n": 16,
+      "pairs": 2,
+      "mean": 7.29,
+      "ci95": [
+        -6.25,
+        23.7
+      ]
+    },
+    "expert:without_assessment-no_coaching": {
+      "n": 16,
+      "pairs": 2,
+      "mean": 0.26,
+      "ci95": [
+        -8.33,
+        11.2
+      ]
+    },
+    "expert:without_background-no_coaching": {
+      "n": 16,
+      "pairs": 2,
+      "mean": 3.39,
+      "ci95": [
+        -3.91,
+        10.42
+      ]
+    },
+    "expert:full-without_assessment": {
+      "n": 16,
+      "pairs": 2,
+      "mean": 7.03,
+      "ci95": [
+        -13.28,
+        27.86
+      ]
+    },
+    "expert:full-without_background": {
+      "n": 16,
+      "pairs": 2,
+      "mean": 3.91,
+      "ci95": [
+        -9.64,
+        18.49
+      ]
+    },
+    "intermediate:full-no_coaching": {
+      "n": 15,
+      "pairs": 2,
+      "mean": 13.89,
+      "ci95": [
+        2.86,
+        26.49
+      ]
+    },
+    "intermediate:without_assessment-no_coaching": {
+      "n": 16,
+      "pairs": 2,
+      "mean": 11.98,
+      "ci95": [
+        2.34,
+        21.88
+      ]
+    },
+    "intermediate:without_background-no_coaching": {
+      "n": 16,
+      "pairs": 2,
+      "mean": 11.98,
+      "ci95": [
+        -3.91,
+        25.0
+      ]
+    },
+    "intermediate:full-without_assessment": {
+      "n": 15,
+      "pairs": 2,
+      "mean": 2.78,
+      "ci95": [
+        -11.2,
+        16.67
+      ]
+    },
+    "intermediate:full-without_background": {
+      "n": 15,
+      "pairs": 2,
+      "mean": 1.11,
+      "ci95": [
+        -15.89,
+        25.89
+      ]
+    },
+    "novice:full-no_coaching": {
+      "n": 13,
+      "pairs": 2,
+      "mean": 3.85,
+      "ci95": [
+        -8.33,
+        18.75
+      ]
+    },
+    "novice:without_assessment-no_coaching": {
+      "n": 12,
+      "pairs": 2,
+      "mean": 15.62,
+      "ci95": [
+        -3.47,
+        33.33
+      ]
+    },
+    "novice:without_background-no_coaching": {
+      "n": 16,
+      "pairs": 2,
+      "mean": 7.81,
+      "ci95": [
+        -15.1,
+        28.91
+      ]
+    },
+    "novice:full-without_assessment": {
+      "n": 10,
+      "pairs": 2,
+      "mean": -10.42,
+      "ci95": [
+        -32.08,
+        7.92
+      ]
+    },
+    "novice:full-without_background": {
+      "n": 13,
+      "pairs": 2,
+      "mean": -0.96,
+      "ci95": [
+        -14.58,
+        11.86
+      ]
+    }
+  },
+  "behaviors": {
+    "all:B1": {
+      "n": 43,
+      "pairs": 2,
+      "mean": 0.09,
+      "ci95": [
+        -0.14,
+        0.33
+      ]
+    },
+    "all:B2": {
+      "n": 40,
+      "pairs": 2,
+      "mean": 0.53,
+      "ci95": [
+        0.05,
+        1.1
+      ]
+    },
+    "all:B3": {
+      "n": 38,
+      "pairs": 2,
+      "mean": 0.13,
+      "ci95": [
+        -0.18,
+        0.42
+      ]
+    },
+    "all:B4": {
+      "n": 25,
+      "pairs": 2,
+      "mean": 0.0,
+      "ci95": [
+        -0.5,
+        0.14
+      ]
+    },
+    "expert:B1": {
+      "n": 15,
+      "pairs": 2,
+      "mean": 0.13,
+      "ci95": [
+        -0.19,
+        0.43
+      ]
+    },
+    "expert:B2": {
+      "n": 15,
+      "pairs": 2,
+      "mean": 0.67,
+      "ci95": [
+        0.0,
+        1.71
+      ]
+    },
+    "expert:B3": {
+      "n": 13,
+      "pairs": 2,
+      "mean": -0.15,
+      "ci95": [
+        -0.67,
+        0.0
+      ]
+    },
+    "expert:B4": {
+      "n": 10,
+      "pairs": 2,
+      "mean": 0.1,
+      "ci95": [
+        0.0,
+        0.3
+      ]
+    },
+    "intermediate:B1": {
+      "n": 15,
+      "pairs": 2,
+      "mean": 0.13,
+      "ci95": [
+        0.0,
+        0.38
+      ]
+    },
+    "intermediate:B2": {
+      "n": 14,
+      "pairs": 2,
+      "mean": 0.57,
+      "ci95": [
+        0.0,
+        1.12
+      ]
+    },
+    "intermediate:B3": {
+      "n": 13,
+      "pairs": 2,
+      "mean": 0.31,
+      "ci95": [
+        0.0,
+        1.2
+      ]
+    },
+    "intermediate:B4": {
+      "n": 9,
+      "pairs": 2,
+      "mean": -0.22,
+      "ci95": [
+        -0.75,
+        0.0
+      ]
+    },
+    "novice:B1": {
+      "n": 13,
+      "pairs": 2,
+      "mean": 0.0,
+      "ci95": [
+        -0.38,
+        0.42
+      ]
+    },
+    "novice:B2": {
+      "n": 11,
+      "pairs": 2,
+      "mean": 0.27,
+      "ci95": [
+        0.0,
+        0.8
+      ]
+    },
+    "novice:B3": {
+      "n": 12,
+      "pairs": 2,
+      "mean": 0.25,
+      "ci95": [
+        -0.5,
+        1.2
+      ]
+    },
+    "novice:B4": {
+      "n": 6,
+      "pairs": 1,
+      "mean": 0.17,
+      "ci95": null
+    }
+  },
+  "baseline": {
+    "all": 55.25,
+    "expert": 52.08,
+    "intermediate": 58.04,
+    "novice": 55.99
+  },
+  "failures": {
+    "all": {
+      "full": 4,
+      "without_assessment": 4
+    },
+    "expert": {},
+    "intermediate": {
+      "full": 1
+    },
+    "novice": {
+      "without_assessment": 4,
+      "full": 3
+    }
+  },
+  "coaching": {
+    "all": {
+      "complete": 117,
+      "none": 22,
+      "declined": 5
+    },
+    "expert": {
+      "complete": 38,
+      "none": 10
+    },
+    "intermediate": {
+      "complete": 43,
+      "none": 4,
+      "declined": 1
+    },
+    "novice": {
+      "complete": 36,
+      "none": 8,
+      "declined": 4
+    }
+  }
+}
