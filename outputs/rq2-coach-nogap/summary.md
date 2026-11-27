@@ -4,6 +4,8 @@ Recorded full-condition coach requests re-sent with the same prompt, model and s
 
 | blocks | n | none | exercise targets |
 |---|---|---|---|
-| all | 48 | 7/48 | B1:1, B2:21, B3:18, B4:1
-| without_assessment coach also chose none on these messages | 20 | 3/20 | B2:8, B3:9
-| without_assessment coach chose an exercise | 28 | 4/28 | B1:1, B2:13, B3:9, B4:1
+| all | 48 | 47/48 | B2:1
+| without_assessment coach also chose none on these messages | 20 | 20/20 | 
+| without_assessment coach chose an exercise | 28 | 27/28 | B2:1
+
+Among 48 decisions that received an assessment, 1 exercises target a behavior the sent assessment labeled 2 or null.

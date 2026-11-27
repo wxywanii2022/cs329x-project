@@ -14,7 +14,8 @@ decisions, so it says nothing about practice uptake or post-task effects.
 --no-gap is the adaptation-sanity check for the full coach. Pilot 2 had no block where the
 assessor found no gap, so "none when no gap" could not be observed. This mode replays only
 full-condition decisions with the same prompt and inputs, except that every assessor label 0
-or 1 is rewritten to 2 (with a neutral reason); 2 and null stay. The messages are unchanged
+or 1 is rewritten to 2 (with a neutral reason) in both copies the coach receives (annotations
+and items); 2 and null stay. The messages are unchanged
 and the prompt tells the coach to check the assessment against them, so the summary also
 reports the blocks where the without_assessment coach, reading the same messages, chose none.
 """
@@ -56,22 +57,39 @@ def recorded_decisions(pilot: Path):
 
 
 def labels(assessment):
-    # Pilot 1 stored items/behavior_id; the assessor's decision-point output stores annotations/behavior.
+    # Pilot 1 stored only items/behavior_id; pilot 2 stores annotations/behavior as well.
     assessment = assessment or {}
     if "annotations" in assessment:
-        return {x["behavior"]: x["label"] for x in assessment["annotations"]}
+        found = {x["behavior"]: x["label"] for x in assessment["annotations"]}
+        items = {x["behavior_id"]: x["label"] for x in assessment.get("items", [])}
+        assert not items or items == found, "assessment copies disagree"
+        return found
     return {x["behavior_id"]: x["label"] for x in assessment.get("items", [])}
 
 
 NO_GAP_REASON = "Clearly performed at this decision point."
 
 
+def label_fidelity(rows):
+    """Replayed decisions that target a behavior the assessment actually sent labeled 2 or null."""
+    sent = [r for r in rows if r.get("sent_labels")]
+    off_target = sum(r["replay"]["action"] == "exercise" and r["sent_labels"].get(r["replay"]["target_behavior"]) not in (0, 1)
+                     for r in sent)
+    return (f"Among {len(sent)} decisions that received an assessment, {off_target} exercises target a behavior "
+            "the sent assessment labeled 2 or null.")
+
+
 def no_gap(request):
     """Copy of a full-condition coach request whose assessment shows no gap (0/1 -> 2)."""
     new = copy.deepcopy(request)
-    for item in new["payload"]["assessment"]["annotations"]:
+    assessment = new["payload"]["assessment"]
+    # The coach sees both copies: the assessor's annotations and the simulation score items.
+    for item in assessment["annotations"]:
         if item["label"] in (0, 1):
             item.update(label=2, reason=NO_GAP_REASON, unclear_rule="")
+    for item in assessment.get("items", []):
+        if item["label"] in (0, 1):
+            item.update(label=2, brief_rationale=NO_GAP_REASON)
     return new
 
 
@@ -89,7 +107,8 @@ def summarize_no_gap(rows):
              "| blocks | n | none | exercise targets |", "|---|---|---|---|",
              line("all", rows),
              line("without_assessment coach also chose none on these messages", agree),
-             line("without_assessment coach chose an exercise", [r for r in rows if r not in agree]), ""]
+             line("without_assessment coach chose an exercise", [r for r in rows if r not in agree]), "",
+             label_fidelity(rows), ""]
     return "\n".join(lines)
 
 
@@ -122,7 +141,7 @@ def summarize(rows):
         lines.append("")
     changed = sum(r["v1"]["action"] != r["replay"]["action"] or r["v1"].get("exercise_id") != r["replay"].get("exercise_id")
                   for r in rows)
-    lines += [f"Decisions that changed: {changed}/{len(rows)}.", ""]
+    lines += [f"Decisions that changed: {changed}/{len(rows)}.", "", label_fidelity(rows), ""]
     return "\n".join(lines)
 
 
@@ -175,8 +194,9 @@ def main():
                "prompt_version": new["prompt_version"],
                "assessor_labels": labels(read_json(assessment_path) if assessment_path.exists() else None),
                "v1": parse_decision(v1, bank), "replay": decision, "usage": response["usage"]}
-        if args.no_gap:
+        if new["payload"].get("assessment"):
             row["sent_labels"] = labels(new["payload"]["assessment"])
+        if args.no_gap:
             row["without_assessment_action"] = other.get((shard.name, block["block_id"]))
         with lock, out_path.open("a", encoding="utf-8") as handle:
             handle.write(json.dumps(row, sort_keys=True) + "\n")

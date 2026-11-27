@@ -101,6 +101,8 @@ tasks, the pilot is rerun into a new directory, and the gate is checked again.
 
 Gate (b) replaced "none is chosen at least once where the assessor saw no gap" on 2026-11-27, before the replay was run: in pilot 2 the assessor found a gap in all 48 blocks, so that case never occurred. The prompt tells the coach to check the assessment against the messages, so where the messages still show a gap an exercise is a defensible choice; the subset where the without_assessment coach saw no gap from the messages alone is the one where both signals agree.
 
+Result (2026-11-27, `outputs/rq2-coach-nogap`): gate (b) passes. The full coach (coach_v2, unchanged) chose "none" in 20/20 of that subset and 47/48 overall; the one exercise targets B2. A first run on 2026-11-27 reported 3/20, but it had rewritten only the assessment's `annotations` and left the second copy of the labels (`items`) at 0/1, so the coach still saw the original gaps; that run is superseded and its numbers should not be cited. A stricter coach prompt (assessment-first rules) was also tried: it passed (b) as well but made the without_assessment coach choose "none" in 48/48 blocks, so it was not adopted. Gate (a): 48/48 full-condition exercises target an assessor 0/1.
+
 For comparison, the assessor reached κ 0.87 and 2/52 false-missed on RQ1 Main 2.
 
 ## 7. Audits after the run
