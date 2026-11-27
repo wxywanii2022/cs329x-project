@@ -267,7 +267,7 @@ def main(argv) -> int:
         result = load(path)
         overall = result["overall"]
         disagreements = ", ".join(f"{d['item_id']} {d['behavior']} ref {d['reference']}→{d['candidate']}" for d in result["disagreements"])
-        failed = len(result.get("failed_predictions") or [])
+        failed = result.get("failed_predictions") or 0  # a count (rq1.metrics), not a list
         rows.append([path.parent.name, overall.get("n"), round(overall["raw_agreement"], 3) if overall.get("raw_agreement") is not None else None,
                      round(overall["cohen_kappa"], 3) if overall.get("cohen_kappa") is not None else None,
                      overall.get("false_missed_count"), failed, disagreements or "none"])
