@@ -52,4 +52,5 @@ done
 curl -sf "http://127.0.0.1:$PORT/health" >/dev/null || { echo "coach server not healthy"; exit 1; }
 echo "coach server ready"
 
-"$PY" scripts/rq2_coach_replay.py --pilot "$PILOT" --output "$OUT" --prompt "$PROMPT" --config "$CONFIG"
+# REPLAY_ARGS adds flags, e.g. REPLAY_ARGS=--no-gap for the full-coach no-gap check.
+"$PY" scripts/rq2_coach_replay.py --pilot "$PILOT" --output "$OUT" --prompt "$PROMPT" --config "$CONFIG" ${REPLAY_ARGS:-}

@@ -28,6 +28,8 @@ outputs/rq2-pilot*/*
 outputs/rq2-pilot*/review/evaluator/key.private.csv
 !outputs/rq2-coach-replay/
 outputs/rq2-coach-replay/trace-coach.jsonl
+!outputs/rq2-coach-nogap/
+outputs/rq2-coach-nogap/trace-coach.jsonl
 .run.lock
 .env
 .env.*
