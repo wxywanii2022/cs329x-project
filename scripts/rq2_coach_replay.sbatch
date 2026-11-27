@@ -38,7 +38,7 @@ CUDA_VISIBLE_DEVICES=0 HF_HUB_CACHE="$MODEL_HUB" "$ROOT/.venv/bin/vllm" serve "$
     --served-model-name "$ID" --host 127.0.0.1 --port "$PORT" --seed 0 --max-model-len 32768 \
     --language-model-only --gpu-memory-utilization 0.90 --max-num-seqs 16 \
     --tokenizer-mode mistral --config-format hf --load-format safetensors \
-    --structured-outputs-config '{"disable_any_whitespace": true}' \
+    --structured-outputs-config '{"backend": "xgrammar", "disable_any_whitespace": true}' \
     > "$ROOT/outputs/logs/vllm-coach-replay-${SLURM_JOB_ID:-local}.log" 2>&1 &
 SERVER=$!
 trap 'kill $SERVER 2>/dev/null || true; wait $SERVER 2>/dev/null || true' EXIT

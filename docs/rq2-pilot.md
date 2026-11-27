@@ -183,8 +183,10 @@ the assessor, not instruction following. It now chooses "none" 17 times out of 4
 Two of the 144 calls failed: the model wrote past the 1,500-token output cap without
 finishing the JSON. xgrammar's default JSON grammar allows unlimited whitespace
 between tokens, which is a known way for a low-temperature model to loop. The coach
-server now runs with `--structured-outputs-config '{"disable_any_whitespace": true}'`.
-That flag is a server setting, not a request or code change. Checked offline: the
+server now runs with `--structured-outputs-config '{"backend": "xgrammar", "disable_any_whitespace": true}'`.
+That flag is a server setting, not a request or code change. vLLM 0.32.0 accepts it only
+with the backend named explicitly (with the default "auto" the server exits at startup), so
+the config also pins `"backend": "xgrammar"`, the grammar the default already used. Checked offline: the
 compact grammar rejects a 400-newline object that the default grammar accepts. With
 the rationale capped at 1,000 characters, the coach's JSON can no longer reach the
 cap. Learner and evaluator servers are unchanged.

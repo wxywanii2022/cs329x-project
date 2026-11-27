@@ -88,7 +88,7 @@ serve learner 1 "$MODEL_HUB" --max-model-len 32768 --language-model-only \
 serve coach 2 "$MODEL_HUB" --max-model-len 32768 --language-model-only \
     --gpu-memory-utilization 0.90 --max-num-seqs 16 \
     --tokenizer-mode mistral --config-format hf --load-format safetensors \
-    --structured-outputs-config '{"disable_any_whitespace": true}'
+    --structured-outputs-config '{"backend": "xgrammar", "disable_any_whitespace": true}'
 serve evaluator 3 "$MODEL_HUB" --max-model-len 65536 --reasoning-parser openai_gptoss \
     --gpu-memory-utilization 0.90 --max-num-seqs 16
 
