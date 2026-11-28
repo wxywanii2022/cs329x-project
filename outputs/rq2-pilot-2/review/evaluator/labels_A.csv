@@ -1,0 +1,81 @@
+item_id,behavior,annotator,label,na_reason,reason
+E001,B4,A,N/A,no_opportunity,"m007: No problem was established, as the evidence confirms the draft."
+E002,B1,A,1,,m002: Specifies that the summary should be brief.
+E003,B2,A,1,,boundary: m002 requests table-based information but does not specify traceable evidence or a calculation method.
+E004,B2,A,1,,boundary: m002 requests grounding in the table without a specific evidence standard.
+E005,B1,A,1,,m002: Specifies brevity as a deliverable requirement.
+E006,B2,A,0,,m002: Requests a factual summary without specifying evidence requirements.
+E007,B1,A,2,,"boundary: m002 explicitly specifies brevity and the intended audience, although the audience was already stated in the task."
+E008,B3,A,0,,m004: Requests an email format without checking any factual claim.
+E009,B3,A,0,,boundary: m004 requests source references for traceability but does not explicitly verify a claim.
+E010,B2,A,0,,m002: States time pressure but provides no evidence requirement.
+E011,B2,A,2,,"m002: Explicitly requests source tables, column names, and calculations."
+E012,B4,A,2,,m004: Identifies the incorrect growth rate and specifies the correction to 25%.
+E013,B3,A,2,,m004: Identifies the specific 35% claim and requests verification.
+E014,B4,A,2,,m007: Identifies the discrepancy and requests correction from 35% to 28%.
+E015,B3,A,0,,m004: Accepts the draft without checking any claim.
+E016,B4,A,N/A,no_opportunity,"m007: Requests verification, but the evidence has not established a problem requiring revision."
+E017,B1,A,1,,m002: Specifies a short summary.
+E018,B1,A,1,,m002: Specifies brevity; grounding in data is not an additional deliverable attribute.
+E019,B2,A,1,,boundary: m002 requests table-based grounding but provides no specific evidence standard.
+E020,B2,A,0,,m002: Specifies length but provides no evidence requirement.
+E021,B3,A,0,,m004: Accepts the draft without verifying any claim.
+E022,B4,A,2,,m007: Identifies the missing email draft and explicitly requests the email text.
+E023,B3,A,0,,m004: Accepts the draft without checking its claims.
+E024,B4,A,N/A,no_opportunity,m007: No problem was established; the evidence confirms the draft.
+E025,B3,A,2,,m004: Explicitly selects the growth percentage for verification.
+E026,B1,A,1,,boundary: m002 specifies a concrete ten-minute time constraint but no other deliverable requirement.
+E027,B2,A,0,,m002: Specifies brevity and time pressure but no evidence requirement.
+E028,B4,A,2,,"boundary: m007 identifies a perceived discrepancy and explicitly requests changing 25% to 20%, although the proposed correction is incorrect."
+E029,B2,A,0,,m002: Specifies brevity without requesting evidence.
+E030,B2,A,1,,boundary: m002 requests data-based grounding without specifying a concrete evidence standard.
+E031,B3,A,0,,m004: Accepts the draft without checking any claim.
+E032,B2,A,0,,m002: Specifies length and audience but no evidence requirement.
+E033,B3,A,2,,m004: Selects the specific 25% growth claim for verification.
+E034,B2,A,0,,m002: Specifies length without requesting evidence.
+E035,B4,A,2,,m007: Identifies the unmet email-format requirement and requests the corresponding revision.
+E036,B4,A,2,,m007: Identifies the missing email deliverable and explicitly requests an actual email.
+E037,B4,A,2,,"boundary: m007 explicitly requests changing the percentage to 22%, although the proposed correction is incorrect."
+E038,B4,A,2,,m004: Identifies the incorrect 35% claim and specifies 28% as the correction.
+E039,B3,A,2,,"m004: Independently checks the specific growth claim, although the calculation method is incorrect."
+E040,B2,A,1,,boundary: m002 requests data-based information without specifying a concrete evidence requirement.
+E041,B1,A,1,,m002: Specifies that the summary should be brief.
+E042,B3,A,0,,m004: Rephrases and accepts the numerical claim without verifying it.
+E043,B4,A,2,,m004: Identifies the numerical discrepancy and explicitly requests correction to 28%.
+E044,B1,A,0,,m002: Requests a summary without specifying additional deliverable attributes.
+E045,B2,A,1,,boundary: m002 requests data-based grounding without a specific evidence standard.
+E046,B1,A,2,,m002: Specifies both length and email format.
+E047,B4,A,2,,"boundary: m007 identifies the missing source name and explicitly requests its addition, although it was not previously required."
+E048,B3,A,0,,m004: Accepts the draft without actively verifying a claim.
+E049,B2,A,0,,m002: Specifies length and time constraints but no evidence requirement.
+E050,B1,A,1,,m002: Specifies a short summary.
+E051,B4,A,2,,m007: Identifies the discrepancy between the calculation and the draft and requests correction.
+E052,B4,A,2,,m007: Identifies the incorrect 20% claim and explicitly requests changing it to 25%.
+E053,B1,A,2,,"boundary: m002 specifies brevity and audience, although the audience was already stated in the task."
+E054,B1,A,0,,m002: Requests a summary using the table but specifies no deliverable attributes.
+E055,B1,A,1,,m002: Specifies brevity as the deliverable requirement.
+E056,B1,A,2,,"m002: Specifies brevity, audience, and required supporting content."
+E057,B2,A,0,,m002: Specifies brevity and audience without requesting evidence.
+E058,B3,A,0,,m004: Accepts the draft without verifying any claim.
+E059,B1,A,0,,m002: Specifies an information source but no additional deliverable attributes.
+E060,B3,A,0,,m004: Accepts the draft without checking any claim.
+E061,B2,A,1,,boundary: m002 requests use of service request data but does not specify how the claims should be supported.
+E062,B3,A,1,,m004: Requests a general accuracy check without selecting an individual claim.
+E063,B1,A,0,,m002: Requests a data-based summary without specifying additional deliverable attributes.
+E064,B4,A,2,,boundary: m007 implicitly requests incorporating the corrected calculation into the final summary.
+E065,B4,A,2,,m007: Identifies the numerical error and provides the intended correction to 25%.
+E066,B3,A,0,,boundary: m004 requests source attribution but does not explicitly check a factual claim.
+E067,B2,A,1,,boundary: m002 requests data-based grounding without specifying a concrete evidence standard.
+E068,B1,A,0,,m002: Requests a summary without specifying deliverable attributes.
+E069,B3,A,0,,m004: Accepts the draft without verifying its claims.
+E070,B4,A,N/A,no_opportunity,"m007: No problem was established, as the evidence confirms the draft."
+E071,B2,A,0,,m002: Specifies length and audience without requesting evidence.
+E072,B4,A,2,,m007: Identifies the missing draft and implicitly requests the previously specified email deliverable.
+E073,B2,A,1,,boundary: m002 requests data-based grounding without a specific evidence standard.
+E074,B1,A,2,,boundary: m002 specifies both a concrete time constraint and a concise deliverable.
+E075,B3,A,0,,m004: Accepts the draft without verifying any claim.
+E076,B3,A,0,,m004: Requests a change in format without verifying a factual claim.
+E077,B1,A,0,,m002: Requests a table-based summary without specifying additional deliverable attributes.
+E078,B4,A,2,,m007: Identifies the incorrect percentage and specifies the correction to 28%.
+E079,B3,A,0,,m004: Accepts the draft without verifying any claim.
+E080,B1,A,2,,"boundary: m002 specifies brevity and audience, although the audience was already stated in the task."
